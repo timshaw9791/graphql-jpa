@@ -108,7 +108,30 @@ insert into thing (id, type) values
 
 -- User
 insert into user(id, first_name, last_name) values
-	('1000','Bob', 'Austin');
-	
+	('1000','Bob', 'Austin'),('1001','Tim', 'Shaw');
+
 insert into spaceship(id, name, createddate,createduser) values
 	('1000','X-Wing', sysdate, '1000');
+
+	-- Privi
+insert into privi(id, name) values
+	('1000','删除用户功能' ),('1001','查看用户功能'),('1002','修改用户功能');
+
+	-- role
+insert into roles(id, name) values
+	('1000','管理员角色' ),('1001','guest角色'),('1002','普通角色');
+
+-- RolePrevilegeItem
+insert into role_previlege_item(id, parent_id, privi_id) values
+	('1000','1000', '1000'),('1001','1000', '1001'),('1002','1000', '1002'),
+	('1003','1001', '1001'),('1004','1002', '1001'),('1005','1002', '1002');
+
+
+-- UserRoleItem
+insert into User_Role_Item(id, parent_id, role_id) values
+	('1000','1000', '1000'),('1001','1000', '1001'),('1002','1000', '1002'),
+	('1004','1001', '1001'),('1005','1001', '1002');
+
+
+
+

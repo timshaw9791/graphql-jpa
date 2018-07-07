@@ -114,7 +114,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     GraphQLObjectType getQueryType() {
         GraphQLObjectType.Builder queryType = GraphQLObjectType.newObject().name("QueryType_JPA").description("All encompassing schema for this JPA environment");
         queryType.fields(entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(this::getQueryFieldDefinition).collect(Collectors.toList()));
-        //TODO 要将所有的分录Entry排除
+        //TODO 要将所有的分录Entry排除,类型必须有，但不是顶级的，无法从此处开始查询数据，必须从顶级实体开始查询。
         queryType.fields(entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(this::getQueryFieldPageableDefinition).collect(Collectors.toList()));
         //TODO 这个embedd类型的也可以先排除
         queryType.fields(entityManager.getMetamodel().getEmbeddables().stream().filter(this::isNotIgnored).map(this::getQueryEmbeddedFieldDefinition).collect(Collectors.toList()));
