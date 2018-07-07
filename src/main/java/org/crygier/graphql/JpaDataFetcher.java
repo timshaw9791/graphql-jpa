@@ -35,6 +35,7 @@ public class JpaDataFetcher implements DataFetcher {
         Root root = query.from(entityType);
 
         List<Argument> arguments = new ArrayList<>();
+        List<Order> orders=new ArrayList<>();
 
         // Loop through all of the fields being requested
         // TODO 似乎并没有深入到下一级，应该要迭代。
@@ -50,11 +51,11 @@ public class JpaDataFetcher implements DataFetcher {
                     // Process the orderBy clause
                     Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
                     if (orderByArgument.isPresent()) {
-                        //TODO 明显应该放到最后一起采用query.orderBy(orderBy...)来做的.
-                        if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName()))
-                            query.orderBy(cb.desc(fieldPath));
-                        else
-                            query.orderBy(cb.asc(fieldPath));
+                        if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
+                            orders.add(cb.desc(fieldPath));
+                        }else {
+                            orders.add(cb.asc(fieldPath));
+                        }
                     }
 
 
@@ -75,6 +76,8 @@ public class JpaDataFetcher implements DataFetcher {
                 }
             }
         });
+
+        query.orderBy(orders);
 
         //最终将所有的非orderby形式的argument转化成predicate，并转成where子句，TODO 应该在返回后加上ExtendJpaDataFetcher里自带的过滤器filter生成的Predicate
         arguments.addAll(field.getArguments());
