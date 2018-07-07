@@ -28,6 +28,7 @@ public class JpaDataFetcher implements DataFetcher {
         return getQuery(environment, environment.getFields().iterator().next()).getResultList();
     }
 
+    //TODO 修改本方法，以便ExtendJPADataFetcher加查询加条件
     protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = cb.createQuery((Class) entityType.getJavaType());
@@ -36,6 +37,7 @@ public class JpaDataFetcher implements DataFetcher {
         List<Argument> arguments = new ArrayList<>();
 
         // Loop through all of the fields being requested
+        // TODO 似乎并没有深入到下一级，应该要迭代。
         field.getSelectionSet().getSelections().forEach(selection -> {
             if (selection instanceof Field) {
                 Field selectedField = (Field) selection;
@@ -48,18 +50,22 @@ public class JpaDataFetcher implements DataFetcher {
                     // Process the orderBy clause
                     Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
                     if (orderByArgument.isPresent()) {
+                        //TODO 明显应该放到最后一起采用query.orderBy(orderBy...)来做的.
                         if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName()))
                             query.orderBy(cb.desc(fieldPath));
                         else
                             query.orderBy(cb.asc(fieldPath));
                     }
 
+
+                    //TODO 此处的指定的过滤参数似乎意义不大，不过留着吧。
                     // Process arguments clauses
                     arguments.addAll(selectedField.getArguments().stream()
                             .filter(it -> !"orderBy".equals(it.getName()))
                             .map(it -> new Argument(selectedField.getName() + "." + it.getName(), it.getValue()))
                             .collect(Collectors.toList()));
 
+                    //检查关系，TODO 此处没看懂，需要调试，但是更应该采用entitygraph来达到目的
                     // Check if it's an object and the foreign side is One.  Then we can eagerly fetch causing an inner join instead of 2 queries
                     if (fieldPath.getModel() instanceof SingularAttribute) {
                         SingularAttribute attribute = (SingularAttribute) fieldPath.getModel();
@@ -70,8 +76,8 @@ public class JpaDataFetcher implements DataFetcher {
             }
         });
 
+        //最终将所有的非orderby形式的argument转化成predicate，并转成where子句，TODO 应该在返回后加上ExtendJpaDataFetcher里自带的过滤器filter生成的Predicate
         arguments.addAll(field.getArguments());
-
         List<Predicate> predicates = arguments.stream().map(it -> getPredicate(cb, root, environment, it)).collect(Collectors.toList());
         query.where(predicates.toArray(new Predicate[predicates.size()]));
 

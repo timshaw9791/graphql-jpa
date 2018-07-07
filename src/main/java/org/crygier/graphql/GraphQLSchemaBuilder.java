@@ -114,7 +114,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     GraphQLObjectType getQueryType() {
         GraphQLObjectType.Builder queryType = GraphQLObjectType.newObject().name("QueryType_JPA").description("All encompassing schema for this JPA environment");
         queryType.fields(entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(this::getQueryFieldDefinition).collect(Collectors.toList()));
+        //TODO 要将所有的分录Entry排除
         queryType.fields(entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(this::getQueryFieldPageableDefinition).collect(Collectors.toList()));
+        //TODO 这个embedd类型的也可以先排除
         queryType.fields(entityManager.getMetamodel().getEmbeddables().stream().filter(this::isNotIgnored).map(this::getQueryEmbeddedFieldDefinition).collect(Collectors.toList()));
 
         return queryType.build();
@@ -125,6 +127,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 .name(entityType.getName())
                 .description(getSchemaDocumentation(entityType.getJavaType()))
                 .type(new GraphQLList(getObjectType(entityType)))
+                //TODO 采用JpaDataFetcher
                 .dataFetcher(new JpaDataFetcher(entityManager, entityType))
                 .argument(entityType.getAttributes().stream().filter(this::isValidInput).filter(this::isNotIgnored).flatMap(this::getArgument).collect(Collectors.toList()))
                 .build();
@@ -139,7 +142,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 .argument(embeddableType.getAttributes().stream().filter(this::isValidInput).filter(this::isNotIgnored).flatMap(this::getArgument).collect(Collectors.toList()))
                 .build();
     }
-
+//查询实体信息时可分页 TODO 应该添加过滤条件信息
     private GraphQLFieldDefinition getQueryFieldPageableDefinition(EntityType<?> entityType) {
         GraphQLObjectType pageType = GraphQLObjectType.newObject()
                 .name(entityType.getName() + "Connection")
@@ -153,6 +156,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 .name(entityType.getName() + "Connection")
                 .description("'Connection' request wrapper object for " + entityType.getName() + ".  Use this object in a query to request things like pagination or aggregation in an argument.  Use the 'content' field to request actual fields ")
                 .type(pageType)
+                //采用的是ExtendedJpaDataFetcher来处理
                 .dataFetcher(new ExtendedJpaDataFetcher(entityManager, entityType))
                 .argument(paginationArgument)
                 .build();
