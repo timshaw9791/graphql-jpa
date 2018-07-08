@@ -35,7 +35,7 @@ public class JpaDataFetcher implements DataFetcher {
                 if (selection instanceof Field) {
                     Field selectedField = (Field) selection;
                     // "__typename" is part of the graphql introspection spec and has to be ignored by jpa
-                    if (!"__typename".equals(selectedField.getName())) {
+                    if (!"__typename".equals(selectedField.getName()) && !"parent".equals(selectedField.getName())) {
                         Path fieldPath = root.get(selectedField.getName());
 
                         // Process the orderBy clause
