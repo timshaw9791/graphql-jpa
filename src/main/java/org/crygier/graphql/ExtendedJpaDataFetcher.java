@@ -31,14 +31,13 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         QueryFilter qfilter=extractQfilterInformation(environment,field);
         PageInformation pageInformation = extractPageInformation(environment, field);
 
-
         // See which fields we're requesting
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
         Optional<Field> totalElementsSelection = getSelectionField(field, "totalElements");
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
         if (contentSelection.isPresent())
-            result.put("content", getQuery(environment, contentSelection.get(),qfilter).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
+            result.put("content", getQuery(environment,contentSelection.get(),qfilter,false).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
@@ -54,20 +53,9 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
     }
 
     private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root root = query.from(entityType);
-        SingularAttribute idAttribute = entityType.getId(Object.class);
 
-        query.select(cb.count(root.get(idAttribute.getName())));
+        return super.getQuery(environment,field,qfilter,true);
 
-
-
-        //TODO where子句需要充分考虑到所有的条件，应该与父类集成
-        List<Predicate> predicates = field.getArguments().stream().map(it -> cb.equal(root.get(it.getName()), convertValue(environment, it, it.getValue()))).collect(Collectors.toList());
-        query.where(predicates.toArray(new Predicate[predicates.size()]));
-
-        return entityManager.createQuery(query);
     }
 
     private Optional<Field> getSelectionField(Field field, String fieldName) {
