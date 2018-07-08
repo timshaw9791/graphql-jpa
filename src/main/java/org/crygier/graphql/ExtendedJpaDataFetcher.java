@@ -100,11 +100,11 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
     }
 
 
-    public static final String QFILTER_KEY="k";
-    public static final String QFILTER_VALUE="v";
-    public static final String QFILTER_OPERATE="o";
-    public static final String QFILTER_ANDOR="x";
-    public static final String QFILTER_NEXT="n";
+     static final String QFILTER_KEY="k";
+     static final String QFILTER_VALUE="v";
+     static final String QFILTER_OPERATE="o";
+     static final String QFILTER_ANDOR="x";
+     static final String QFILTER_NEXT="n";
 
     private QueryFilter extractQfilterInformation(DataFetchingEnvironment environment, Field field) {
         Optional<Argument> qfilterRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.QFILTER_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
@@ -129,7 +129,8 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         String v=vf.isPresent()?((StringValue) vf.get().getValue()).getValue():null;
 
         Optional<ObjectField> xf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_ANDOR.equals(it.getName())).findFirst();
-        String x=xf.isPresent()?((StringValue) xf.get().getValue()).getValue():null;
+
+        QueryFilterCombinator x=xf.isPresent()?QueryFilterCombinator.valueOf(((EnumValue)xf.get().getValue()).getName()):null;
 
         Optional<ObjectField> nf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_NEXT.equals(it.getName())).findFirst();
         QueryFilter qf=nf.isPresent()?getQFilter((ObjectValue)nf.get().getValue()):null;

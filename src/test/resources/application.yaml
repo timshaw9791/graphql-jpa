@@ -6,6 +6,6 @@ spring:
     console.enabled: true
 logging:
   level: info
-  #level.org.hibernate.type.descriptor.sql: trace
+  level.org.hibernate.type.descriptor.sql: trace
   level.org.hibernate.SQL: debug
   #level.org.hibernate.loader: debug

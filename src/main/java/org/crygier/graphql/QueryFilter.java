@@ -13,7 +13,7 @@ public class QueryFilter {
         return o;
     }
 
-    public String getAndor() {
+    public QueryFilterCombinator getAndor() {
         return andor;
     }
 
@@ -24,10 +24,10 @@ public class QueryFilter {
     private String k;
     private String v;
     private QueryFilterOperator o;
-    private String andor;
+    private QueryFilterCombinator andor;
     private QueryFilter next;
 
-    public QueryFilter(String k, QueryFilterOperator o, String v, String andor, QueryFilter next) {
+    public QueryFilter(String k, QueryFilterOperator o, String v, QueryFilterCombinator andor, QueryFilter next) {
         this.k = k;
         this.v = v;
         this.o = o;
@@ -75,3 +75,33 @@ enum QueryFilterOperator{
 
 }
 
+
+
+enum QueryFilterCombinator{
+    AND(0,"AND","and"),
+    OR(1,"OR","or"),
+    NOT(2,"NOT","!");
+
+
+    private QueryFilterCombinator(int value,String name,String description){
+        this.value=value;
+        this.name=name;
+        this.description=description;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    private int value;
+    private String name;
+    private String description;
+}

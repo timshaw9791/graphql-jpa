@@ -31,8 +31,9 @@ public class JpaDataFetcher implements DataFetcher {
             selectionSet.getSelections().forEach(selection -> {
                 if (selection instanceof Field) {
                     Field selectedField = (Field) selection;
+                    String selectedFieldName=selectedField.getName();
                     // "__typename" is part of the graphql introspection spec and has to be ignored by jpa
-                    if (!"__typename".equals(selectedField.getName()) && !"parent".equals(selectedField.getName())) {
+                    if (!"__typename".equals(selectedFieldName) && !"parent".equals(selectedFieldName)) {
                         Path fieldPath = root.get(selectedField.getName());
 
                         // Process the orderBy clause
@@ -50,33 +51,19 @@ public class JpaDataFetcher implements DataFetcher {
                         // Process arguments clauses
                         arguments.addAll(selectedField.getArguments().stream()
                                 .filter(it -> !"orderBy".equals(it.getName()))
-                                .map(it -> new Argument(selectedField.getName() + "." + it.getName(), it.getValue()))
+                                .map(it -> new Argument(selectedFieldName + "." + it.getName(), it.getValue()))
                                 .collect(Collectors.toList()));
 
-                        Path root2=null;
+                        Path root2=joinIfNecessary((From)root,selectedFieldName);
                         Subgraph subgraph2=null;
-                        //找到对应的属性信息
-                        Attribute selectedFieldAttribute = JpaDataFetcher.this.entityManager.getMetamodel().entity(root.getJavaType()).getAttribute(selectedField.getName());
-                        //如果是one2many属性或者many2one，则直接用entitygraph中增加属性节点，以便join进来，
-                        if ((selectedFieldAttribute instanceof PluralAttribute &&
-                                ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY)
-                                ||(selectedFieldAttribute instanceof SingularAttribute
-                                && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE)
-                                ) {
-                            //left outer join的形式加入
-                            root2 = ((From) root).join(selectedField.getName(),JoinType.LEFT);
+                        if(root2!=root){
                             if (entityGraph != null ) {
                                 subgraph2 = entityGraph.addSubgraph(selectedField.getName());
                             } else {
                                 subgraph2 = subgraph.addSubgraph(selectedField.getName());
                             }
-                        }else if(putonselect){
-                            if(entityGraph!=null){
-                                entityGraph.addAttributeNodes(selectedField.getName());
-                            }else{
-                                subgraph.addAttributeNodes(selectedField.getName());
-                            }
                         }
+
                         //如果还有下一层，则需要递归。
                         if (((Field) selection).getSelectionSet() != null) {
                             travelFieldSelection(cb, root2, ((Field) selection).getSelectionSet(), arguments, orders, null,subgraph2,false);
@@ -105,7 +92,11 @@ public class JpaDataFetcher implements DataFetcher {
         query.orderBy(orders);
 
         //TODO 处理queryFilter
-        //predicates.add(getPredicate(cb,root,environment,queryFilter));
+        Predicate predicatebyfilter=getPredicate(cb,root,environment,queryFilter);
+        if(predicatebyfilter!=null){
+            predicates.add(predicatebyfilter);
+        }
+
 
         //最终将所有的非orderby形式的argument转化成predicate，并转成where子句，TODO 应该在返回后加上ExtendJpaDataFetcher里自带的过滤器filter生成的Predicate
         arguments.addAll(field.getArguments());
@@ -119,37 +110,75 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, QueryFilter queryFilter) {
-        Path path = null;
+        if(queryFilter==null ){
+            return null;
+        }
+
         String k=queryFilter.getK(),v=queryFilter.getV();
         QueryFilterOperator qfo=queryFilter.getO();
-        return null;
-        /*if (!k.contains(".")) {
-            Attribute argumentEntityAttribute = getAttribute(environment, k);
-            //似乎只能采用但字段不带点号的，且不带关系的标量==式断言，因此这里的join意义不大，但是
-            // If the argument is a list, let's assume we need to join and do an 'in' clause
-            if (argumentEntityAttribute instanceof PluralAttribute) {
-                Join join = root.join(argument.getName());
-                return join.in(convertValue(environment, argument, argument.getValue()));
+        QueryFilterCombinator qfc=queryFilter.getAndor();
+
+
+        List<String> parts = Arrays.asList(k.split("\\."));
+        Path path =root;
+        //TODO 这里要做报错处理，因为很可能数据导航写错了。
+        for (String part : parts) {
+            //如果(From)path不能转换，则说明queryfilter的k写错了。因为如果含有.那必须是形如roleItems.role.id这样的除最后一段外均为关系(可以作为From)的path
+            From temp = joinIfNecessary((From) path, part);
+            if (temp == path) {//如果没变动，说明到顶了，该属性为简单类型，拿到路径。
+                path = temp.get(part);
+            } else {
+                path = temp;
             }
-
-            path = root.get(k);
-            //TODO 默认用用了equal
-
-
-            return cb.equal(path, convertValue(environment, argument, argument.getValue()));
-        } else {
-            List<String> parts = Arrays.asList(argument.getName().split("\\."));
-            for (String part : parts) {
-                if (path == null) {
-                    path = root.get(part);
-                } else {
-                    path = path.get(part);
-                }
-            }
-
-            return cb.equal(path, convertValue(environment, argument, argument.getValue()));
         }
-        */
+            Predicate result=null;
+            //TODO 需要进一步扩展
+            switch(qfo){
+                case LIKE:result=cb.like(path,v);break;
+                case ISNULL:result=cb.isNull(path);;break;
+               // case GREATTHAN:cb.greaterThan(path,)
+                case EQUEAL:result=cb.equal(path,v);;break;
+            }
+            //操作符没有，则直接返回
+            if(qfc==null){
+                return result;
+            }
+            Predicate next=getPredicate(cb,root,environment,queryFilter.getNext());
+            //如果下一个predicate本身为空，则也直接返回
+            if(next==null){
+                return result;
+            }
+
+            switch(queryFilter.getAndor()){
+                case AND:return result=cb.and(result,next);
+                case OR:return result=cb.or(result,next);
+               // case NOT:
+            }
+            return result;
+
+    }
+
+    /**
+     *
+     * @param currentjoin -当前join
+     * @param attributeName - 当前join对应的实体类中的某属性名称
+     * @return
+     */
+    private From joinIfNecessary(From currentjoin, String attributeName) {
+        //根据属性名拿到所在实体里对应的属性值，此处可能因为该属性不存在而报错，这说明queryfilter表达式写错了。
+        Attribute selectedFieldAttribute = JpaDataFetcher.this.entityManager.getMetamodel().entity(currentjoin.getJavaType()).getAttribute(attributeName);
+        //如果该属性是one2many或者many2one，则检查是否需要在当前from中添加join（如果之前存在就不添加，否则要添加）
+        if ((selectedFieldAttribute instanceof PluralAttribute &&
+                ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY)
+                || (selectedFieldAttribute instanceof SingularAttribute
+                && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE)
+                ) {
+            Optional<Join> optjoin = currentjoin.getJoins().stream().filter(join -> attributeName.equals(((Join) join).getAttribute().getName())).findFirst();
+            //如果不存在则添加,并将返回的from设置为新的join
+            return optjoin.isPresent()?optjoin.get():currentjoin.join(attributeName);
+        }else{//如果为简单类型，则说明用不到新的join，返回旧有的。
+            return currentjoin;
+        }
     }
 
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, Argument argument) {
@@ -257,4 +286,6 @@ public class JpaDataFetcher implements DataFetcher {
 
         return null;
     }
+
+
 }

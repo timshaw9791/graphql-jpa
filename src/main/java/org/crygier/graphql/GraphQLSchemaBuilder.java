@@ -397,7 +397,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_KEY).description("键：role.id或者role.privilegeItem.name").type(Scalars.GraphQLString).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_VALUE).description("值：现在所有的都用字符串，或者null,或者适用于like的 '%abc'").type(Scalars.GraphQLString).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_OPERATE).description("操作符:>,<，=，notnull，isnul，等，后续需要改为枚举").type(queryFilterOperatorEnum).build())
-                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_ANDOR).description("后续改为枚举，AND，ON").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_ANDOR).description("后续改为枚举，AND，ON").type(queryFilterCombinatorEnum).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_NEXT).description("下一个，或者为null").type(GraphQLTypeReference.typeRef("Qfilter")))
                             .build()).build();
 
@@ -412,6 +412,10 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
 
     private static final GraphQLEnumType queryFilterOperatorEnum =new GraphQLEnumType("QueryFilterOperator",
             "查询过滤操作符", Arrays.stream(QueryFilterOperator.values())
+            .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(),qfo.getDescription(),qfo.getValue())).collect(Collectors.toList()));
+
+    private static final GraphQLEnumType queryFilterCombinatorEnum =new GraphQLEnumType("QueryFilterCombinator",
+            "查询表达式组合操作符", Arrays.stream(QueryFilterCombinator.values())
             .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(),qfo.getDescription(),qfo.getValue())).collect(Collectors.toList()));
 
 
