@@ -24,5 +24,5 @@ class User {
 	String lastName;
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "parent",orphanRemoval = true)
-	List<UserRoleItem> roleItems;
+	Set<UserRoleItem> roleItems;
 }

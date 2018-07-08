@@ -3,7 +3,9 @@ package org.crygier.graphql;
 import graphql.language.*;
 import graphql.schema.*;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
+import javax.persistence.Subgraph;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Attribute;
@@ -27,6 +29,65 @@ public class JpaDataFetcher implements DataFetcher {
     public Object get(DataFetchingEnvironment environment) {
         return getQuery(environment, environment.getFields().iterator().next()).getResultList();
     }
+    private void travelFieldSelection(CriteriaBuilder cb,Path root,SelectionSet selectionSet,List<Argument> arguments,List<Order> orders,EntityGraph entityGraph,Subgraph subgraph){
+        if(selectionSet!=null){
+            selectionSet.getSelections().forEach(selection -> {
+                if (selection instanceof Field) {
+                    Field selectedField = (Field) selection;
+                    // "__typename" is part of the graphql introspection spec and has to be ignored by jpa
+                    if (!"__typename".equals(selectedField.getName())) {
+                        Path fieldPath = root.get(selectedField.getName());
+
+                        // Process the orderBy clause
+                        Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
+                        if (orderByArgument.isPresent()) {
+                            if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
+                                orders.add(cb.desc(fieldPath));
+                            } else {
+                                orders.add(cb.asc(fieldPath));
+                            }
+                        }
+
+                        //TODO 此处的指定的过滤参数似乎意义不大，不过留着吧。
+                        // Process arguments clauses
+                        arguments.addAll(selectedField.getArguments().stream()
+                                .filter(it -> !"orderBy".equals(it.getName()))
+                                .map(it -> new Argument(selectedField.getName() + "." + it.getName(), it.getValue()))
+                                .collect(Collectors.toList()));
+
+                        Path root2=null;
+                        Subgraph subgraph2=null;
+                        //找到对应的属性信息
+                        Attribute selectedFieldAttribute = JpaDataFetcher.this.entityManager.getMetamodel().entity(root.getJavaType()).getAttribute(selectedField.getName());
+                        //如果是one2many属性或者many2one，则直接用entitygraph中增加属性节点，以便join进来，
+                        if ((selectedFieldAttribute instanceof PluralAttribute &&
+                                ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY)
+                                ||(selectedFieldAttribute instanceof SingularAttribute
+                                && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE)
+                                ) {
+                            //left outer join的形式加入
+                            root2 = ((From) root).join(selectedField.getName(),JoinType.LEFT);
+                            if (entityGraph != null) {
+                                subgraph2 = entityGraph.addSubgraph(selectedField.getName());
+                            } else {
+                                subgraph2 = subgraph.addSubgraph(selectedField.getName());
+                            }
+                        }else{
+                            if(entityGraph!=null){
+                                entityGraph.addAttributeNodes(selectedField.getName());
+                            }else{
+                                subgraph.addAttributeNodes(selectedField.getName());
+                            }
+                        }
+                        //如果还有下一层，则需要递归。
+                        if (((Field) selection).getSelectionSet() != null) {
+                            travelFieldSelection(cb, root2, ((Field) selection).getSelectionSet(), arguments, orders, null,subgraph2);
+                        }
+                    }
+                }
+            });
+        }
+    }
 
     //TODO 修改本方法，以便ExtendJPADataFetcher加查询加条件
     protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field) {
@@ -36,46 +97,11 @@ public class JpaDataFetcher implements DataFetcher {
 
         List<Argument> arguments = new ArrayList<>();
         List<Order> orders=new ArrayList<>();
+        EntityGraph graph = entityManager.createEntityGraph(entityType.getJavaType());
 
         // Loop through all of the fields being requested
-        // TODO 似乎并没有深入到下一级，应该要迭代。
-        field.getSelectionSet().getSelections().forEach(selection -> {
-            if (selection instanceof Field) {
-                Field selectedField = (Field) selection;
-
-                // "__typename" is part of the graphql introspection spec and has to be ignored by jpa
-                if(!"__typename".equals(selectedField.getName())) {
-
-                    Path fieldPath = root.get(selectedField.getName());
-
-                    // Process the orderBy clause
-                    Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
-                    if (orderByArgument.isPresent()) {
-                        if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
-                            orders.add(cb.desc(fieldPath));
-                        }else {
-                            orders.add(cb.asc(fieldPath));
-                        }
-                    }
-
-
-                    //TODO 此处的指定的过滤参数似乎意义不大，不过留着吧。
-                    // Process arguments clauses
-                    arguments.addAll(selectedField.getArguments().stream()
-                            .filter(it -> !"orderBy".equals(it.getName()))
-                            .map(it -> new Argument(selectedField.getName() + "." + it.getName(), it.getValue()))
-                            .collect(Collectors.toList()));
-
-                    //检查关系，TODO 此处没看懂，需要调试，但是更应该采用entitygraph来达到目的
-                    // Check if it's an object and the foreign side is One.  Then we can eagerly fetch causing an inner join instead of 2 queries
-                    if (fieldPath.getModel() instanceof SingularAttribute) {
-                        SingularAttribute attribute = (SingularAttribute) fieldPath.getModel();
-                        if (!attribute.isOptional() && (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_ONE))
-                            root.fetch(selectedField.getName());
-                    }
-                }
-            }
-        });
+        //迭代的形式以便组成一条语句
+        travelFieldSelection(cb,root,field.getSelectionSet(),arguments,orders,graph,null);
 
         query.orderBy(orders);
 
@@ -84,7 +110,10 @@ public class JpaDataFetcher implements DataFetcher {
         List<Predicate> predicates = arguments.stream().map(it -> getPredicate(cb, root, environment, it)).collect(Collectors.toList());
         query.where(predicates.toArray(new Predicate[predicates.size()]));
 
-        return entityManager.createQuery(query.distinct(true));
+        //将entitygraph加入
+        TypedQuery tquery=entityManager.createQuery(query.distinct(true));
+        tquery.setHint("javax.persistence.fetchgraph", graph);
+        return tquery;
     }
 
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, Argument argument) {
