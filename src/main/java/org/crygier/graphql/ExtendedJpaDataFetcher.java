@@ -122,7 +122,8 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
             return null;
         }
         StringValue k = (StringValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_KEY.equals(it.getName())).findFirst().get().getValue();
-        StringValue o = (StringValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_OPERATE.equals(it.getName())).findFirst().get().getValue();
+
+        EnumValue o = (EnumValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_OPERATE.equals(it.getName())).findFirst().get().getValue();
 
         Optional<ObjectField> vf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_VALUE.equals(it.getName())).findFirst();
         String v=vf.isPresent()?((StringValue) vf.get().getValue()).getValue():null;
@@ -132,7 +133,7 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
 
         Optional<ObjectField> nf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_NEXT.equals(it.getName())).findFirst();
         QueryFilter qf=nf.isPresent()?getQFilter((ObjectValue)nf.get().getValue()):null;
-        return new QueryFilter(k.getValue(),o.getValue(),v,x,qf);
+        return new QueryFilter(k.getValue(),QueryFilterOperator.valueOf(o.getName()),v,x,qf);
 
     }
 

@@ -1,19 +1,7 @@
 package org.crygier.graphql;
 
 import graphql.Scalars;
-import graphql.schema.GraphQLArgument;
-import graphql.schema.GraphQLEnumType;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLInputObjectField;
-import graphql.schema.GraphQLInputObjectType;
-import graphql.schema.GraphQLInputType;
-import graphql.schema.GraphQLList;
-import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLOutputType;
-import graphql.schema.GraphQLScalarType;
-import graphql.schema.GraphQLSchema;
-import graphql.schema.GraphQLType;
-import graphql.schema.GraphQLTypeReference;
+import graphql.schema.*;
 import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.slf4j.Logger;
@@ -34,14 +22,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -415,7 +396,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                             .description("过滤表达式")
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_KEY).description("键：role.id或者role.privilegeItem.name").type(Scalars.GraphQLString).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_VALUE).description("值：现在所有的都用字符串，或者null,或者适用于like的 '%abc'").type(Scalars.GraphQLString).build())
-                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_OPERATE).description("操作符:>,<，=，notnull，isnul，等，后续需要改为枚举").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_OPERATE).description("操作符:>,<，=，notnull，isnul，等，后续需要改为枚举").type(queryFilterOperatorEnum).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_ANDOR).description("后续改为枚举，AND，ON").type(Scalars.GraphQLString).build())
                             .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_NEXT).description("下一个，或者为null").type(GraphQLTypeReference.typeRef("Qfilter")))
                             .build()).build();
@@ -428,6 +409,10 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                     .value("ASC", 0, "Ascending")
                     .value("DESC", 1, "Descending")
                     .build();
+
+    private static final GraphQLEnumType queryFilterOperatorEnum =new GraphQLEnumType("QueryFilterOperator",
+            "查询过滤操作符", Arrays.stream(QueryFilterOperator.values())
+            .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(),qfo.getDescription(),qfo.getValue())).collect(Collectors.toList()));
 
 
 }

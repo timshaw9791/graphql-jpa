@@ -96,6 +96,7 @@ public class JpaDataFetcher implements DataFetcher {
         List<Argument> arguments = new ArrayList<>();
         List<Order> orders=new ArrayList<>();
         EntityGraph graph = entityManager.createEntityGraph(entityType.getJavaType());
+        List<Predicate> predicates=new ArrayList<>();
 
         // Loop through all of the fields being requested
         //迭代的形式以便组成一条语句
@@ -103,9 +104,12 @@ public class JpaDataFetcher implements DataFetcher {
 
         query.orderBy(orders);
 
+        //TODO 处理queryFilter
+        //predicates.add(getPredicate(cb,root,environment,queryFilter));
+
         //最终将所有的非orderby形式的argument转化成predicate，并转成where子句，TODO 应该在返回后加上ExtendJpaDataFetcher里自带的过滤器filter生成的Predicate
         arguments.addAll(field.getArguments());
-        List<Predicate> predicates = arguments.stream().map(it -> getPredicate(cb, root, environment, it)).collect(Collectors.toList());
+        predicates.addAll(arguments.stream().map(it -> getPredicate(cb, root, environment, it)).collect(Collectors.toList()));
         query.where(predicates.toArray(new Predicate[predicates.size()]));
 
         //将entitygraph加入
@@ -114,11 +118,45 @@ public class JpaDataFetcher implements DataFetcher {
         return tquery;
     }
 
+    private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, QueryFilter queryFilter) {
+        Path path = null;
+        String k=queryFilter.getK(),v=queryFilter.getV();
+        QueryFilterOperator qfo=queryFilter.getO();
+        return null;
+        /*if (!k.contains(".")) {
+            Attribute argumentEntityAttribute = getAttribute(environment, k);
+            //似乎只能采用但字段不带点号的，且不带关系的标量==式断言，因此这里的join意义不大，但是
+            // If the argument is a list, let's assume we need to join and do an 'in' clause
+            if (argumentEntityAttribute instanceof PluralAttribute) {
+                Join join = root.join(argument.getName());
+                return join.in(convertValue(environment, argument, argument.getValue()));
+            }
+
+            path = root.get(k);
+            //TODO 默认用用了equal
+
+
+            return cb.equal(path, convertValue(environment, argument, argument.getValue()));
+        } else {
+            List<String> parts = Arrays.asList(argument.getName().split("\\."));
+            for (String part : parts) {
+                if (path == null) {
+                    path = root.get(part);
+                } else {
+                    path = path.get(part);
+                }
+            }
+
+            return cb.equal(path, convertValue(environment, argument, argument.getValue()));
+        }
+        */
+    }
+
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, Argument argument) {
         Path path = null;
         if (!argument.getName().contains(".")) {
             Attribute argumentEntityAttribute = getAttribute(environment, argument);
-
+            //似乎只能采用但字段不带点号的，且不带关系的标量==式断言，因此这里的join意义不大，但是
             // If the argument is a list, let's assume we need to join and do an 'in' clause
             if (argumentEntityAttribute instanceof PluralAttribute) {
                 Join join = root.join(argument.getName());
@@ -187,11 +225,29 @@ public class JpaDataFetcher implements DataFetcher {
         return entityType.getAttribute(argument.getName());
     }
 
+    private Attribute getAttribute(DataFetchingEnvironment environment, String attributeName) {
+        GraphQLObjectType objectType = getObjectType(environment, attributeName);
+        EntityType entityType = getEntityType(objectType);
+
+        return entityType.getAttribute(attributeName);
+    }
+
     private EntityType getEntityType(GraphQLObjectType objectType) {
         return entityManager.getMetamodel().getEntities().stream().filter(it -> it.getName().equals(objectType.getName())).findFirst().get();
     }
 
     private GraphQLObjectType getObjectType(DataFetchingEnvironment environment, Argument argument) {
+        GraphQLType outputType = environment.getFieldType();
+        if (outputType instanceof GraphQLList)
+            outputType = ((GraphQLList) outputType).getWrappedType();
+
+        if (outputType instanceof GraphQLObjectType)
+            return (GraphQLObjectType) outputType;
+
+        return null;
+    }
+
+    private GraphQLObjectType getObjectType(DataFetchingEnvironment environment, String attributeName) {
         GraphQLType outputType = environment.getFieldType();
         if (outputType instanceof GraphQLList)
             outputType = ((GraphQLList) outputType).getWrappedType();
