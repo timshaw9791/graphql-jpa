@@ -45,6 +45,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.crygier.graphql.ExtendedJpaDataFetcher.*;
+
 /**
  * A wrapper for the {@link GraphQLSchema.Builder}. In addition to exposing the traditional builder functionality,
  * this class constructs an initial {@link GraphQLSchema} by scanning the given {@link EntityManager} for relevant
@@ -55,6 +57,7 @@ import java.util.stream.Stream;
 public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
 
     public static final String PAGINATION_REQUEST_PARAM_NAME = "paginationRequest";
+    public static final String QFILTER_REQUEST_PARAM_NAME = "qfilter";
     private static final Logger log = LoggerFactory.getLogger(GraphQLSchemaBuilder.class);
 
     private final EntityManager entityManager;
@@ -159,6 +162,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 //采用的是ExtendedJpaDataFetcher来处理
                 .dataFetcher(new ExtendedJpaDataFetcher(entityManager, entityType))
                 .argument(paginationArgument)
+                .argument(roleArgument)
                 .build();
     }
 
@@ -401,6 +405,21 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                             .field(GraphQLInputObjectField.newInputObjectField().name("size").description("How many results should this page contain").type(Scalars.GraphQLInt).build())
                             .build()
                     ).build();
+
+
+    GraphQLArgument roleArgument =
+            GraphQLArgument.newArgument()
+                    .name(QFILTER_REQUEST_PARAM_NAME)
+                    .type(GraphQLInputObjectType.newInputObject()
+                            .name("Qfilter")
+                            .description("过滤表达式")
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_KEY).description("键：role.id或者role.privilegeItem.name").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_VALUE).description("值：现在所有的都用字符串，或者null,或者适用于like的 '%abc'").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_OPERATE).description("操作符:>,<，=，notnull，isnul，等，后续需要改为枚举").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_ANDOR).description("后续改为枚举，AND，ON").type(Scalars.GraphQLString).build())
+                            .field(GraphQLInputObjectField.newInputObjectField().name(QFILTER_NEXT).description("下一个，或者为null").type(GraphQLTypeReference.typeRef("Qfilter")))
+                            .build()).build();
+
 
     private static final GraphQLEnumType orderByDirectionEnum =
             GraphQLEnumType.newEnum()

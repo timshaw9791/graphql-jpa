@@ -1,9 +1,6 @@
 package org.crygier.graphql;
 
-import graphql.language.Argument;
-import graphql.language.Field;
-import graphql.language.IntValue;
-import graphql.language.ObjectValue;
+import graphql.language.*;
 import graphql.schema.DataFetchingEnvironment;
 
 import javax.persistence.EntityManager;
@@ -31,7 +28,9 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
 
+        QueryFilter qfilter=extractQfilterInformation(environment,field);
         PageInformation pageInformation = extractPageInformation(environment, field);
+
 
         // See which fields we're requesting
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
@@ -39,13 +38,13 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
         if (contentSelection.isPresent())
-            result.put("content", getQuery(environment, contentSelection.get()).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
+            result.put("content", getQuery(environment, contentSelection.get(),qfilter).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
-                    .map(contentField -> getCountQuery(environment, contentField).getSingleResult())
+                    .map(contentField -> getCountQuery(environment, contentField,qfilter).getSingleResult())
                     // if no "content" was selected an empty Field can be used
-                    .orElseGet(() -> getCountQuery(environment, new Field()).getSingleResult());
+                    .orElseGet(() -> getCountQuery(environment, new Field(),qfilter).getSingleResult());
 
             result.put("totalElements", totalElements);
             result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.size)).longValue());
@@ -54,13 +53,17 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         return result;
     }
 
-    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field) {
+    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root root = query.from(entityType);
-
         SingularAttribute idAttribute = entityType.getId(Object.class);
+
         query.select(cb.count(root.get(idAttribute.getName())));
+
+
+
+        //TODO where子句需要充分考虑到所有的条件，应该与父类集成
         List<Predicate> predicates = field.getArguments().stream().map(it -> cb.equal(root.get(it.getName()), convertValue(environment, it, it.getValue()))).collect(Collectors.toList());
         query.where(predicates.toArray(new Predicate[predicates.size()]));
 
@@ -95,6 +98,44 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
             this.size = size;
         }
     }
+
+
+    public static final String QFILTER_KEY="k";
+    public static final String QFILTER_VALUE="v";
+    public static final String QFILTER_OPERATE="o";
+    public static final String QFILTER_ANDOR="x";
+    public static final String QFILTER_NEXT="n";
+
+    private QueryFilter extractQfilterInformation(DataFetchingEnvironment environment, Field field) {
+        Optional<Argument> qfilterRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.QFILTER_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
+        if (qfilterRequest.isPresent()) {
+            field.getArguments().remove(qfilterRequest.get());
+            ObjectValue qfilterValues = (ObjectValue) qfilterRequest.get().getValue();
+            return getQFilter(qfilterValues);
+        }else{
+            return null;
+        }
+    }
+
+    private QueryFilter getQFilter(ObjectValue qfilterValues){
+        if(qfilterValues==null){
+            return null;
+        }
+        StringValue k = (StringValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_KEY.equals(it.getName())).findFirst().get().getValue();
+        StringValue o = (StringValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_OPERATE.equals(it.getName())).findFirst().get().getValue();
+
+        Optional<ObjectField> vf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_VALUE.equals(it.getName())).findFirst();
+        String v=vf.isPresent()?((StringValue) vf.get().getValue()).getValue():null;
+
+        Optional<ObjectField> xf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_ANDOR.equals(it.getName())).findFirst();
+        String x=xf.isPresent()?((StringValue) xf.get().getValue()).getValue():null;
+
+        Optional<ObjectField> nf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_NEXT.equals(it.getName())).findFirst();
+        QueryFilter qf=nf.isPresent()?getQFilter((ObjectValue)nf.get().getValue()):null;
+        return new QueryFilter(k.getValue(),o.getValue(),v,x,qf);
+
+    }
+
 
 
 }

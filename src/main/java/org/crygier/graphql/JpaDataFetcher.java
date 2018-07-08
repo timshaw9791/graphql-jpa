@@ -3,10 +3,7 @@ package org.crygier.graphql;
 import graphql.language.*;
 import graphql.schema.*;
 
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.Subgraph;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
@@ -27,9 +24,9 @@ public class JpaDataFetcher implements DataFetcher {
 
     @Override
     public Object get(DataFetchingEnvironment environment) {
-        return getQuery(environment, environment.getFields().iterator().next()).getResultList();
+        return getQuery(environment, environment.getFields().iterator().next(),null).getResultList();
     }
-    private void travelFieldSelection(CriteriaBuilder cb,Path root,SelectionSet selectionSet,List<Argument> arguments,List<Order> orders,EntityGraph entityGraph,Subgraph subgraph){
+    private void travelFieldSelection(CriteriaBuilder cb,Path root,SelectionSet selectionSet,List<Argument> arguments,List<Order> orders,EntityGraph entityGraph,Subgraph subgraph,boolean putonselect){
         if(selectionSet!=null){
             selectionSet.getSelections().forEach(selection -> {
                 if (selection instanceof Field) {
@@ -39,6 +36,7 @@ public class JpaDataFetcher implements DataFetcher {
                         Path fieldPath = root.get(selectedField.getName());
 
                         // Process the orderBy clause
+                        // TODO 排序如果出现在第二层会有一些问题，似乎没法影响到，似乎在指明one2many下分录的排序规则时，会碰到问题，可能跟entry以set形式出现有关系。many2one应该不会。
                         Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
                         if (orderByArgument.isPresent()) {
                             if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
@@ -67,12 +65,12 @@ public class JpaDataFetcher implements DataFetcher {
                                 ) {
                             //left outer join的形式加入
                             root2 = ((From) root).join(selectedField.getName(),JoinType.LEFT);
-                            if (entityGraph != null) {
+                            if (entityGraph != null ) {
                                 subgraph2 = entityGraph.addSubgraph(selectedField.getName());
                             } else {
                                 subgraph2 = subgraph.addSubgraph(selectedField.getName());
                             }
-                        }else{
+                        }else if(putonselect){
                             if(entityGraph!=null){
                                 entityGraph.addAttributeNodes(selectedField.getName());
                             }else{
@@ -81,7 +79,7 @@ public class JpaDataFetcher implements DataFetcher {
                         }
                         //如果还有下一层，则需要递归。
                         if (((Field) selection).getSelectionSet() != null) {
-                            travelFieldSelection(cb, root2, ((Field) selection).getSelectionSet(), arguments, orders, null,subgraph2);
+                            travelFieldSelection(cb, root2, ((Field) selection).getSelectionSet(), arguments, orders, null,subgraph2,false);
                         }
                     }
                 }
@@ -90,7 +88,7 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     //TODO 修改本方法，以便ExtendJPADataFetcher加查询加条件
-    protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field) {
+    protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field, QueryFilter queryFilter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = cb.createQuery((Class) entityType.getJavaType());
         Root root = query.from(entityType);
@@ -101,7 +99,7 @@ public class JpaDataFetcher implements DataFetcher {
 
         // Loop through all of the fields being requested
         //迭代的形式以便组成一条语句
-        travelFieldSelection(cb,root,field.getSelectionSet(),arguments,orders,graph,null);
+        travelFieldSelection(cb,root,field.getSelectionSet(),arguments,orders,graph,null,false);
 
         query.orderBy(orders);
 
@@ -128,7 +126,7 @@ public class JpaDataFetcher implements DataFetcher {
             }
 
             path = root.get(argument.getName());
-
+            //TODO 默认用用了equal
             return cb.equal(path, convertValue(environment, argument, argument.getValue()));
         } else {
             List<String> parts = Arrays.asList(argument.getName().split("\\."));
