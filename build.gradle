@@ -5,7 +5,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 group = 'com.crygier'
-version = '0.6'
+version = '0.71'
 
 jar {
     baseName = 'graphql-jpa'
@@ -14,12 +14,15 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-repositories {
-    mavenCentral()
-    maven {
-        url  "http://dl.bintray.com/andimarek/graphql-java"
+
+    repositories {
+        mavenCentral()
+        maven {
+            //TODO 添加snapshot repo
+            url  "https://repo.rdc.aliyun.com/repository/26140-release-CLWeLx/"
+        }
     }
-}
+
 
 configurations {
     provided
@@ -56,6 +59,17 @@ publishing {
             artifact sourcesJar
 		}
 	}
+    repositories {
+        maven {
+            //url  "http://dl.bintray.com/andimarek/graphql-java"
+            //TODO 添加snapshot repo
+            url = "https://repo.rdc.aliyun.com/repository/26140-release-CLWeLx/"
+            credentials {
+                username "$yunxiaomvnrepoUser"
+                password "$yunxiaomvnrepoPassword"
+            }
+        }
+    }
 }
 
 model {

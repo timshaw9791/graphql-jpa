@@ -88,11 +88,11 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
     }
 
 
-     static final String QFILTER_KEY="k";
-     static final String QFILTER_VALUE="v";
-     static final String QFILTER_OPERATE="o";
-     static final String QFILTER_ANDOR="x";
-     static final String QFILTER_NEXT="n";
+     static final String QFILTER_KEY="key";
+     static final String QFILTER_VALUE="value";
+     static final String QFILTER_OPERATE="operator";
+     static final String QFILTER_ANDOR="combinator";
+     static final String QFILTER_NEXT="next";
 
     private QueryFilter extractQfilterInformation(DataFetchingEnvironment environment, Field field) {
         Optional<Argument> qfilterRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.QFILTER_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();

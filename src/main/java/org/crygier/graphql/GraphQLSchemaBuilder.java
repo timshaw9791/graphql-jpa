@@ -111,7 +111,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 .name(entityType.getName())
                 .description(getSchemaDocumentation(entityType.getJavaType()))
                 .type(new GraphQLList(getObjectType(entityType)))
-                //TODO 采用JpaDataFetcher
                 .dataFetcher(new JpaDataFetcher(entityManager, entityType))
                 .argument(entityType.getAttributes().stream().filter(this::isValidInput).filter(this::isNotIgnored).flatMap(this::getArgument).collect(Collectors.toList()))
                 .build();

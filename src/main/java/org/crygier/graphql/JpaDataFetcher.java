@@ -51,7 +51,6 @@ public class JpaDataFetcher implements DataFetcher {
                             }
                         }
 
-                        //TODO 此处的指定的过滤参数似乎意义不大，不过留着吧。
                         // Process arguments clauses
                         arguments.addAll(selectedField.getArguments().stream()
                                 .filter(it -> !"orderBy".equals(it.getName()))
