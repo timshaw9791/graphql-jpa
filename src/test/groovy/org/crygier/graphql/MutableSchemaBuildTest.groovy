@@ -26,7 +26,11 @@ class MutableSchemaBuildTest extends Specification {
             .name("CreateDroidMutation")
             .field(GraphQLFieldDefinition.newFieldDefinition()
                 .name("name")
-                .type(GraphQLString))
+                .type(GraphQLString)
+                //.dataFetcher(new JpaDataFetcher(entityManager, entityType))
+    )
+
+
             .build()
 
     void setup() {

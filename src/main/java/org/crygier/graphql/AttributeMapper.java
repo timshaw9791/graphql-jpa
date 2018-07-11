@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLType;
 
 import java.util.Optional;
@@ -17,6 +18,6 @@ public interface AttributeMapper {
      * @param javaType
      * @return
      */
-    Optional<GraphQLType> getBasicAttributeType(Class javaType);
+    Optional<GraphQLScalarType> getBasicAttributeType(Class javaType);
 
 }

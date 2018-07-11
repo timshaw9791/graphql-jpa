@@ -3,12 +3,21 @@ package org.crygier.graphql
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.ExecutionResult
 import groovy.transform.CompileStatic
+import org.crygier.graphql.annotation.GRequestMapping
+import org.crygier.graphql.annotation.GRestController
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.model.users.Privi
+import org.crygier.graphql.model.users.PriviGroup
+import org.crygier.graphql.model.users.Role
+import org.crygier.graphql.model.users.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@GRestController("ABC")
 @RestController
 @CompileStatic
 class GraphQlController {
@@ -31,4 +40,14 @@ class GraphQlController {
         String variables;
     }
 
+/**
+ * Graphql
+ * @param User
+ * @return
+ */
+    @GRequestMapping(path = '/abc', method = RequestMethod.POST)
+   @SchemaDocumentation("GraphQlController.create测试下行不行")
+    User create(@RequestParam(name="role",required = true)Role role) {
+        return null;
+    }
 }
