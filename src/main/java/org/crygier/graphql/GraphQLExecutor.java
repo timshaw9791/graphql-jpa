@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A GraphQL executor capable of constructing a {@link GraphQLSchema} from a JPA {@link EntityManager}. The executor
@@ -38,7 +39,6 @@ public class GraphQLExecutor {
 
 
     private ListableBeanFactory listableBeanFactory;
-    Map<String,Method> mutationFeildNameMethodMap=new HashMap<>();
 
     private GraphQL graphQL;
     private GraphQLSchema graphQLSchema;
@@ -46,7 +46,7 @@ public class GraphQLExecutor {
 
     protected GraphQLExecutor(ListableBeanFactory listableBeanFactory) {
         this.listableBeanFactory=listableBeanFactory;
-        createGraphQL(null,mutationFeildNameMethodMap);
+        createGraphQL(null);
     }
 
     /**
@@ -57,7 +57,7 @@ public class GraphQLExecutor {
      */
     public GraphQLExecutor(EntityManager entityManager) {
         this.entityManager = entityManager;
-        createGraphQL(null,mutationFeildNameMethodMap);
+        createGraphQL(null);
     }
 
     /**
@@ -69,38 +69,29 @@ public class GraphQLExecutor {
      */
     public GraphQLExecutor(EntityManager entityManager, Collection<AttributeMapper> attributeMappers) {
         this.entityManager = entityManager;
-        createGraphQL(attributeMappers,mutationFeildNameMethodMap);
+        createGraphQL(attributeMappers);
     }
 
     @PostConstruct
     protected synchronized void createGraphQL() {
-        Map<String, Object> controllers;
-        controllers = listableBeanFactory.getBeansWithAnnotation(RestController.class);
-
-        controllers.entrySet().stream()
-                .filter(entry->(entry.getValue().getClass().getAnnotation(GRestController.class)!=null))
-                .forEach(entry->{
-                    Arrays.stream(entry.getValue().getClass().getDeclaredMethods())
-                            .filter(method->method.getAnnotation(GRequestMapping.class)!=null)
-                            .forEach(method->{
-                                String grc=entry.getValue().getClass().getAnnotation(GRestController.class).value();
-                                String grm=method.getAnnotation(GRequestMapping.class).path()[0];
-                                String mutationFieldName=("/"+grc+grm).replace("//","/").replace("/","_").substring(1);
-                                mutationFeildNameMethodMap.put(mutationFieldName,method);
-                            });
-                });
-
-
-
-        createGraphQL(null,mutationFeildNameMethodMap);
+        createGraphQL(null);
     }
 
-    protected synchronized void createGraphQL(Collection<AttributeMapper> attributeMappers,Map<String,Method> mutationFeildNameMethodMap) {
+    protected synchronized void createGraphQL(Collection<AttributeMapper> attributeMappers) {
+
+        Collection<Object> controllerObjects = listableBeanFactory.getBeansWithAnnotation(RestController.class)
+                .values().stream().filter(obj->
+                        Arrays.stream(obj.getClass().getAnnotations())
+                                //包含GRestController注解的类跳出来
+                                .filter(annotation -> GRestController.class.equals(annotation.annotationType())).findFirst().isPresent()
+                ).collect(Collectors.toList());
+
+
         if (entityManager != null) {
             if (builder == null && attributeMappers == null) {
-                this.builder = new GraphQLSchemaBuilder(entityManager,mutationFeildNameMethodMap);
+                this.builder = new GraphQLSchemaBuilder(entityManager,controllerObjects);
             } else if (builder == null) {
-                this.builder = new GraphQLSchemaBuilder(entityManager, mutationFeildNameMethodMap,attributeMappers);
+                this.builder = new GraphQLSchemaBuilder(entityManager, controllerObjects,attributeMappers);
             }
             this.graphQLSchema = builder.build();
             this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
@@ -121,6 +112,13 @@ public class GraphQLExecutor {
 
     @Transactional
     public ExecutionResult execute(String query, Map<String, Object> arguments) {
+        ExecutionResult executionResult= innerExecute(query,arguments);
+        return executionResult;
+    }
+
+
+
+    public ExecutionResult innerExecute(String query, Map<String, Object> arguments) {
         if (arguments == null)
             return graphQL.execute(query);
         return graphQL.execute(ExecutionInput.newExecutionInput().query(query).variables(arguments).build());
@@ -152,7 +150,7 @@ public class GraphQLExecutor {
      */
     public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder) {
         this.builder = builder;
-        createGraphQL(null,mutationFeildNameMethodMap);
+        createGraphQL(null);
         return this;
     }
 
@@ -166,7 +164,7 @@ public class GraphQLExecutor {
      */
     public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder, Collection<AttributeMapper> attributeMappers) {
         this.builder = builder;
-        createGraphQL(attributeMappers,mutationFeildNameMethodMap);
+        createGraphQL(attributeMappers);
         return this;
     }
 

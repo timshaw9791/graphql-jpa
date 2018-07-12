@@ -2,10 +2,13 @@ package org.crygier.graphql;
 
 import graphql.Scalars;
 import graphql.schema.*;
+import org.crygier.graphql.annotation.GRequestMapping;
+import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
@@ -59,6 +62,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     private final Map<EntityType, GraphQLInputObjectType> entityInputCache = new HashMap<>();
     private final List<AttributeMapper> attributeMappers = new ArrayList<>();
 
+    private final Map<Method,Object> methodTargetMap=new HashMap<>();
 
 
     /**
@@ -66,13 +70,33 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
      * entities to include in the GraphQL schema.
      * @param entityManager The manager containing the data models to include in the final GraphQL schema.
      */
-    public GraphQLSchemaBuilder(EntityManager entityManager,Map<String,Method> mutationFeildNameMethodMap) {
-        this(entityManager,mutationFeildNameMethodMap,null);
+    public GraphQLSchemaBuilder(EntityManager entityManager, Collection<Object> controllerObjects) {
+        this(entityManager,controllerObjects,null);
     }
-
-    public GraphQLSchemaBuilder(EntityManager entityManager,Map<String,Method> mutationFeildNameMethodMap, Collection<AttributeMapper> attributeMappers) {
+    /**
+     *
+     * @param entityManager
+     * @param controllerObjects  - 所有的对象必须都含有@GRestController注解
+     * @param attributeMappers
+     */
+    public GraphQLSchemaBuilder(EntityManager entityManager,Collection<Object> controllerObjects, Collection<AttributeMapper> attributeMappers) {
         this.entityManager = entityManager;
+
         populateStandardAttributeMappers();
+//初始化this.methodTargetMap
+        controllerObjects.stream()
+                .forEach(controllerObj -> {
+                    Arrays.stream(controllerObj.getClass().getDeclaredMethods())
+                            .forEach(method -> {
+                                if (Arrays.stream(method.getAnnotations()).filter(annotation ->
+                                        GRequestMapping.class.equals(annotation.annotationType()))
+                                        .findFirst().isPresent()) {
+                                    this.methodTargetMap.put(method, controllerObj);
+                                }
+
+                            });
+                });
+
         GraphQLObjectType querytype=getQueryType();
         if(attributeMappers!=null){
             this.attributeMappers.addAll(attributeMappers);
@@ -80,8 +104,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
         Stream<GraphQLInputType> additionalTypeStream=this.getInputTypeStreamForMutation();
         //把在mutation中可能会用到的输入类型放进去，这与在查询中用到的参数输入类型有所不同，在名称上他们相差一个后缀，在结构上query参数类型只包含标量，而mutation参数类型则包含嵌套对象（除了parent属性之外）
         additionalTypeStream.forEach(additionalType->super.additionalType(additionalType));
-        GraphQLObjectType mutationtype=getMutationType(mutationFeildNameMethodMap);
-
+        GraphQLObjectType mutationtype=getMutationType();
 
         super.query(querytype).mutation(mutationtype);
     }
@@ -157,61 +180,64 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
         queryType.fields(entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(this::getQueryFieldPageableDefinition).collect(Collectors.toList()));
         //TODO 这个embedd类型的也可以先排除
         queryType.fields(entityManager.getMetamodel().getEmbeddables().stream().filter(this::isNotIgnored).map(this::getQueryEmbeddedFieldDefinition).collect(Collectors.toList()));
-
         return queryType.build();
     }
 
 
-    private GraphQLObjectType getMutationType(Map<String,Method> mutationFeildNameMethodMap) {
+    private GraphQLObjectType getMutationType() {
 
         GraphQLObjectType.Builder queryType = newObject().name("Mutation").description("所有的mutation操作");
-        queryType.fields(mutationFeildNameMethodMap.entrySet().stream().map(this::getMutationInputFieldDefinition).collect(Collectors.toList()));
+        queryType.fields(this.methodTargetMap.entrySet().stream().map(entry->{
+            String grc=entry.getValue().getClass().getAnnotation(GRestController.class).value();
+            String grm =  entry.getKey().getAnnotation(GRequestMapping.class).path()[0];
+            String mutationFieldName = ("/" + grc + grm).replace("//", "/").replace("/", "_").substring(1);
+            List<GraphQLArgument> gqalist = getMutationGraphQLArgumentsByMethod(entry.getKey());
+            return newFieldDefinition()
+                    .name(mutationFieldName)
+                    .description(getSchemaDocumentation((AnnotatedElement)entry.getKey()))
+                    .type(this.getMutationReturnType(entry.getKey().getReturnType()))
+                    .dataFetcher(new MutationDataFetcher(entityManager, entry.getKey(),entry.getValue(),gqalist))
+                    .argument(gqalist)
+                    .build();
+        }).collect(Collectors.toList()));
         return queryType.build();
     }
 
 
-    GraphQLFieldDefinition getMutationInputFieldDefinition(Map.Entry<String, Method> keymethodmap) {
+    private List<GraphQLArgument> getMutationGraphQLArgumentsByMethod(Method targetMethod) {
         List<GraphQLArgument> gqalist = new ArrayList<>();
-        for (int i = 0; i < keymethodmap.getValue().getParameters().length; i++) {
-            Parameter param = keymethodmap.getValue().getParameters()[i];
-            Optional<Annotation> requestParamAnnotation = Arrays.stream(keymethodmap.getValue().getParameterAnnotations()[i])
-                    .filter(annotation -> annotation.annotationType().equals(RequestParam.class)).findFirst();
-            if (requestParamAnnotation.isPresent()) {
-                RequestParam rp = (RequestParam) requestParamAnnotation.get();
-                String typeName = rp.name();//TODO rp.value()
-                boolean required = rp.required();
-                String defaultValue = rp.defaultValue();//TODO
 
-                boolean isCollection = false;
-                Class typeClazz = param.getType();
-                if (param.isVarArgs()) {
-                    isCollection = true;
-                    typeClazz = param.getType();
-                } else if (typeClazz.isAssignableFrom(Collection.class)) {
-                    isCollection = true;
-                    typeClazz = param.getParameterizedType().getClass();//TODO 如果泛型没写好，那会抛异常吗？
-                }
+        Arrays.stream(targetMethod.getParameters()).forEach(parameter ->
+        {
+            //TODO 如果不能取出来，报错。因为所有的参数都需要暴露给graphql mutation
+            RequestParam rp = (RequestParam) Arrays.stream(parameter.getAnnotations())
+                    .filter(annotation -> annotation.annotationType().equals(RequestParam.class)).findFirst().get();
 
-                GraphQLInputType graphQLObjectInputType = getGraphQLInputTypeFromClassType(typeClazz);
-                graphQLObjectInputType=isCollection ? new GraphQLList(graphQLObjectInputType) : graphQLObjectInputType;
-                graphQLObjectInputType=required?GraphQLNonNull.nonNull(graphQLObjectInputType):    graphQLObjectInputType   ;
-                GraphQLArgument graphQLObjectField = GraphQLArgument.newArgument()
-                        .name(typeName+ MUTATION_INPUTTYPE_POSTFIX)
-                        .type(graphQLObjectInputType)
-                        .build();
-                gqalist.add(graphQLObjectField);
+            String typeName = rp.name();//TODO rp.value()
+            boolean required = rp.required();
+            String defaultValue = rp.defaultValue();//TODO
+
+            boolean isCollection = false;
+            Class typeClazz = parameter.getType();
+            if (parameter.isVarArgs()) {
+                isCollection = true;
+                typeClazz = parameter.getType();
+            } else if (typeClazz.isAssignableFrom(Collection.class)) {
+                isCollection = true;
+                typeClazz = parameter.getParameterizedType().getClass();//TODO 如果泛型没写好，那会抛异常吗？
             }
-        }
+            GraphQLInputType graphQLObjectInputType = getGraphQLInputTypeFromClassType(typeClazz);
+            graphQLObjectInputType = isCollection ? new GraphQLList(graphQLObjectInputType) : graphQLObjectInputType;
+            graphQLObjectInputType = required ? GraphQLNonNull.nonNull(graphQLObjectInputType) : graphQLObjectInputType;
+            GraphQLArgument graphQLObjectField = GraphQLArgument.newArgument()
+                    .name(typeName)
+                    .type(graphQLObjectInputType)
+                    .build();
+            gqalist.add(graphQLObjectField);
+        });
 
-        return newFieldDefinition()
-                .name(keymethodmap.getKey())
-                //.description(getSchemaDocumentation(keymethodmap.getValue())
-                .type(this.getMutationReturnType(keymethodmap.getValue().getReturnType()))
-                .dataFetcher(new MutationDataFetcher(entityManager, keymethodmap.getValue()))
-                .argument(gqalist)
-                .build();
+        return gqalist;
     }
-
 
 
 

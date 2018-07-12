@@ -47,7 +47,7 @@ class GraphQlController {
  */
     @GRequestMapping(path = '/abc', method = RequestMethod.POST)
    @SchemaDocumentation("GraphQlController.create测试下行不行")
-    User create(@RequestParam(name="role",required = true)Role role) {
+    User create(@RequestParam(name="role",required = true)Role role,@RequestParam(name="id",required = false)String id,@RequestParam(name="count",required = true)int count) {
         return null;
     }
 }
