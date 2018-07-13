@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+//TODO 其实可以和JpaDataFetcher二合一的，所有的都用这个
 public class ExtendedJpaDataFetcher extends JpaDataFetcher {
 
     public ExtendedJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType) {

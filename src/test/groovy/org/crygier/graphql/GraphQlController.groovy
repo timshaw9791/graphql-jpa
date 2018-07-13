@@ -45,9 +45,32 @@ class GraphQlController {
  * @param User
  * @return
  */
+
+   //@SchemaDocumentation("GraphQlController.create测试下行不行")
+  //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
+  //  @Validate(msg="一定要有姓名和id",value="exist('role{name,tel}')")
+  //  @Validate(msg="一定要有姓名和id",value="exist('role{id,name}')")
+
+    //1.赋值
+    //2.验证
+    //3.准备数据
+
+
+
+
     @GRequestMapping(path = '/abc', method = RequestMethod.POST)
-   @SchemaDocumentation("GraphQlController.create测试下行不行")
     User create(@RequestParam(name="role",required = true)Role role,@RequestParam(name="id",required = false)String id,@RequestParam(name="count",required = true)int count) {
-        return null;
+        return new User();//new User();
     }
 }
+
+//权限
+/*class UserService {
+    @Asset("exist('role(*)')")
+    createRole(Role role){
+            Role r=findOne(id)
+            r.set
+
+    }
+}
+*/

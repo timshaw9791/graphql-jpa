@@ -24,7 +24,9 @@ public class JpaDataFetcher implements DataFetcher {
 
     @Override
     public Object get(DataFetchingEnvironment environment) {
-        return getQuery(environment, environment.getFields().iterator().next(), null, false).getResultList();
+        TypedQuery typedQuery=getQuery(environment, environment.getFields().iterator().next(), null, false);
+        Object result=typedQuery.getSingleResult();
+        return result;
     }
 
     private void travelFieldSelection(CriteriaBuilder cb, Path root, SelectionSet selectionSet, List<Argument> arguments, List<Order> orders, EntityGraph entityGraph, Subgraph subgraph, boolean justforselectcount) {

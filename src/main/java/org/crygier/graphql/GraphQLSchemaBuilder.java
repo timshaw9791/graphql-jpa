@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import graphql.GraphQL;
 import graphql.Scalars;
 import graphql.schema.*;
 import org.crygier.graphql.annotation.GRequestMapping;
@@ -53,6 +54,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
 
     private final EntityManager entityManager;
 
+    //似乎是output类别的基础类型（包括枚举）的一个缓存
     private final Map<Class, GraphQLType> classCache = new HashMap<>();
 
     private final Map<Class, GraphQLInputType> classInputCache = new HashMap<>();
@@ -63,6 +65,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     private final List<AttributeMapper> attributeMappers = new ArrayList<>();
 
     private final Map<Method,Object> methodTargetMap=new HashMap<>();
+
+    //可用的mutation返回类型DataFetcher.
+    //private final Map<Class,DataFetcher> mutationReturnEntityClassDataFetcherMap=new HashMap<>();
 
 
     /**
@@ -93,7 +98,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                                         .findFirst().isPresent()) {
                                     this.methodTargetMap.put(method, controllerObj);
                                 }
-
                             });
                 });
 
@@ -192,17 +196,37 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
             String grm =  entry.getKey().getAnnotation(GRequestMapping.class).path()[0];
             String mutationFieldName = ("/" + grc + grm).replace("//", "/").replace("/", "_").substring(1);
             List<GraphQLArgument> gqalist = getMutationGraphQLArgumentsByMethod(entry.getKey());
+            //DataFetcher mutationReturnTypeDataFetcher=getMutationReturnTypeDataFetcher(entry.getKey().getReturnType());
+
+            EntityType entityType=entityManager.getMetamodel().getEntities().stream()
+                    .filter(et->et.getJavaType().equals(entry.getKey().getReturnType())).findFirst().orElse(null);
+
             return newFieldDefinition()
                     .name(mutationFieldName)
                     .description(getSchemaDocumentation((AnnotatedElement)entry.getKey()))
                     .type(this.getMutationReturnType(entry.getKey().getReturnType()))
-                    .dataFetcher(new MutationDataFetcher(entityManager, entry.getKey(),entry.getValue(),gqalist))
+                    .dataFetcher(new MutationDataFetcher(entityManager,entityType, entry.getKey(),entry.getValue(),gqalist))
                     .argument(gqalist)
                     .build();
         }).collect(Collectors.toList()));
         return queryType.build();
     }
 
+
+   /* private DataFetcher getMutationReturnTypeDataFetcher(Class<?> returnType) {
+        //如果是基础类型
+        if (this.getBasicAttributeType(returnType) != null) {
+            return null;
+            //如果是实体类型
+        } else {
+            DataFetcher result = this.mutationReturnEntityClassDataFetcherMap.get(returnType);
+            if (result == null) {
+                throw new RuntimeException("getMutationReturnTypeDataFetcher error!");
+            } else {
+                return result;
+            }
+        }
+    }*/
 
     private List<GraphQLArgument> getMutationGraphQLArgumentsByMethod(Method targetMethod) {
         List<GraphQLArgument> gqalist = new ArrayList<>();
@@ -242,11 +266,17 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
 
 
     GraphQLFieldDefinition getQueryFieldDefinition(EntityType<?> entityType) {
+
+
+        JpaDataFetcher jpaDataFetcher=new JpaDataFetcher(entityManager, entityType);
+
+        //this.mutationReturnEntityClassDataFetcherMap.put(entityType.getJavaType(),jpaDataFetcher);
+
         return newFieldDefinition()
                 .name(entityType.getName())
                 .description(getSchemaDocumentation(entityType.getJavaType()))
-                .type(new GraphQLList(getObjectType(entityType)))
-                .dataFetcher(new JpaDataFetcher(entityManager, entityType))
+                .type(getObjectType(entityType))
+                .dataFetcher(jpaDataFetcher)
                 .argument(entityType.getAttributes().stream().filter(this::isValidInput).filter(this::isNotIgnored).flatMap(this::getArgument).collect(Collectors.toList()))
                 .build();
     }
@@ -296,9 +326,13 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     }
 
     private GraphQLType getGraphQLTypeFromClassType(Class typeClazz){
-        GraphQLType graphQLObjectType = entityCache.entrySet().stream().filter(entry -> entry.getKey().getJavaType().equals(typeClazz))
+        GraphQLType graphQLObjectType=null;
+        Optional<GraphQLObjectType> graphQLObjectTypeOptional=entityCache.entrySet().stream().filter(entry -> entry.getKey().getJavaType().equals(typeClazz))
                 .map(entry -> entry.getValue())
-                .findFirst().get();
+                .findFirst();
+        if(graphQLObjectTypeOptional.isPresent()){
+            graphQLObjectType=graphQLObjectTypeOptional.get();
+        }
         if (graphQLObjectType == null) {
             graphQLObjectType = getBasicAttributeType(typeClazz);
         }
@@ -393,7 +427,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                     }
 
                     String name = attribute.getName();
-                    
 
                     return newFieldDefinition()
                             .name(name)
@@ -440,6 +473,11 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                 "Class could not be mapped to GraphQL: '" + javaType.getClass().getTypeName() + "'");
     }
 
+    /**
+     * 找到基础类型的类型，包括枚举enum
+     * @param javaType
+     * @return 如果没找到，则回返回null
+     */
     private GraphQLType getBasicAttributeType(Class javaType) {
         // First check our 'standard' and 'customized' Attribute Mappers.  Use them if possible
         Optional<AttributeMapper> customMapper = attributeMappers.stream()
@@ -467,8 +505,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
             return Scalars.GraphQLBigDecimal;
         }
 
-        throw new UnsupportedOperationException(
-                "Class could not be mapped to GraphQL: '" + javaType.getClass().getTypeName() + "'");
+        return null;
     }
 
     private GraphQLInputType getAttributeInputType(Attribute attribute) {
@@ -504,11 +541,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     }
     private Stream<GraphQLType> getAttributeType(Attribute attribute) {
         if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC) {
-            try {
-                return Stream.of(getBasicAttributeType(attribute.getJavaType()));
-            } catch (UnsupportedOperationException e) {
-                //fall through to the exception below
-                //which is more useful because it also contains the declaring member
+            GraphQLType graphQLType = getBasicAttributeType(attribute.getJavaType());
+            if (graphQLType != null) {
+                return Stream.of(graphQLType);
             }
         } else if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_MANY) {
             EntityType foreignType = (EntityType) ((PluralAttribute) attribute).getElementType();

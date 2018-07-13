@@ -94,7 +94,7 @@ public class GraphQLExecutor {
                 this.builder = new GraphQLSchemaBuilder(entityManager, controllerObjects,attributeMappers);
             }
             this.graphQLSchema = builder.build();
-            this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
+            this.graphQL = GraphQL.newGraphQL(graphQLSchema).instrumentation(new MutationReturnInstrumentation()).build();
         }
     }
 
