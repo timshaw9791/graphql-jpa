@@ -1,6 +1,5 @@
 package org.crygier.graphql
 
-import graphql.schema.GraphQLObjectType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootContextLoader
 import org.springframework.context.annotation.Configuration
@@ -8,8 +7,6 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 import javax.persistence.EntityManager
-import javax.persistence.metamodel.EntityType
-import java.util.stream.Collectors
 
 @Configuration
 @ContextConfiguration(loader = SpringBootContextLoader, classes = TestApplication)
@@ -27,7 +24,7 @@ class EmbeddedSchemaBuildTest extends Specification {
     def 'Correctly read embedded keys'() {
         when:
         def embeddingEntity = entityManager.getMetamodel().getEntities().stream().filter { e -> e.name == "EmbeddingTest"}.findFirst().get()
-        def graphQlObject = builder.getObjectType(embeddingEntity)
+        def graphQlObject = builder.getGraphQLOutputType(embeddingEntity)
 
         then:
         graphQlObject.fieldDefinitions.size() == 1

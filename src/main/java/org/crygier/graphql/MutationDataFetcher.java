@@ -65,7 +65,7 @@ public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
             Object instance = realclass.newInstance();
             ((ObjectValue) realArgValue).getObjectFields().stream().forEach(objectField -> {
                 PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(realclass, objectField.getName());
-                GraphQLType graphQLType2 = this.graphQlTypeMapper.getInputTypeByClass(propertyDescriptor.getPropertyType());
+                GraphQLType graphQLType2 = this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(propertyDescriptor.getPropertyType());
                try {
                    Object propertyValue = composeRealArgument(graphQLType2, objectField.getValue());
                    propertyDescriptor.getWriteMethod().invoke(instance, propertyValue);

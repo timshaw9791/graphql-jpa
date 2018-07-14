@@ -3,6 +3,7 @@ package org.crygier.graphql;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
@@ -67,9 +68,9 @@ public class GraphQLExecutor {
      *                      {@link javax.persistence.Entity} is extracted as {@link GraphQLSchema} objects.
      * @param attributeMappers Custom {@link AttributeMapper} list, if you need any non-standard mappings.
      */
-    public GraphQLExecutor(EntityManager entityManager, Collection<AttributeMapper> attributeMappers) {
+    public GraphQLExecutor(EntityManager entityManager, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.entityManager = entityManager;
-        createGraphQL(attributeMappers);
+        createGraphQL(customGraphQLScalarTypeMap);
     }
 
     @PostConstruct
@@ -77,7 +78,7 @@ public class GraphQLExecutor {
         createGraphQL(null);
     }
 
-    protected synchronized void createGraphQL(Collection<AttributeMapper> attributeMappers) {
+    protected synchronized void createGraphQL(Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
 
         Collection<Object> controllerObjects = listableBeanFactory.getBeansWithAnnotation(RestController.class)
                 .values().stream().filter(obj->
@@ -86,12 +87,27 @@ public class GraphQLExecutor {
                                 .filter(annotation -> GRestController.class.equals(annotation.annotationType())).findFirst().isPresent()
                 ).collect(Collectors.toList());
 
+        Map<Method,Object> methodTargetMap=new HashMap<>();
+        controllerObjects.stream()
+                .forEach(controllerObj -> {
+                    Arrays.stream(controllerObj.getClass().getDeclaredMethods())
+                            .forEach(method -> {
+                                if (Arrays.stream(method.getAnnotations()).filter(annotation ->
+                                        GRequestMapping.class.equals(annotation.annotationType()))
+                                        .findFirst().isPresent()) {
+                                    methodTargetMap.put(method, controllerObj);
+                                }
+                            });
+                });
+
+
+
 
         if (entityManager != null) {
-            if (builder == null && attributeMappers == null) {
-                this.builder = new GraphQLSchemaBuilder(entityManager,controllerObjects);
+            if (builder == null && customGraphQLScalarTypeMap == null) {
+                this.builder = new GraphQLSchemaBuilder(entityManager,methodTargetMap);
             } else if (builder == null) {
-                this.builder = new GraphQLSchemaBuilder(entityManager, controllerObjects,attributeMappers);
+                this.builder = new GraphQLSchemaBuilder(entityManager, methodTargetMap, customGraphQLScalarTypeMap);
             }
             this.graphQLSchema = builder.build();
             this.graphQL = GraphQL.newGraphQL(graphQLSchema).instrumentation(new MutationReturnInstrumentation()).build();
@@ -162,9 +178,9 @@ public class GraphQLExecutor {
      * @param attributeMappers Custom {@link AttributeMapper} list, if you need any non-standard mappings.
      * @return The same executor but with a new {@link GraphQL} schema.
      */
-    public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder, Collection<AttributeMapper> attributeMappers) {
+    public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.builder = builder;
-        createGraphQL(attributeMappers);
+        createGraphQL(customGraphQLScalarTypeMap);
         return this;
     }
 
