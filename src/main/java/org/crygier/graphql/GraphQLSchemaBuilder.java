@@ -1,6 +1,5 @@
 package org.crygier.graphql;
 
-import graphql.GraphQL;
 import graphql.Scalars;
 import graphql.schema.*;
 import org.crygier.graphql.annotation.GRequestMapping;
@@ -9,7 +8,6 @@ import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
@@ -20,13 +18,15 @@ import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.Type;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,7 +44,7 @@ import static org.crygier.graphql.ExtendedJpaDataFetcher.*;
  *
  * Note: This class should not be accessed outside this library.
  */
-public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
+public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGraphQlTypeMapper{
 
     public static final String PAGINATION_REQUEST_PARAM_NAME = "paginationRequest";
     public static final String QFILTER_REQUEST_PARAM_NAME = "qfilter";
@@ -120,7 +120,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
     private Stream<GraphQLInputType> getInputTypeStreamForMutation() {
 
         //embeded类型的
-        Stream<GraphQLInputType> embedGraphQLInputTypeStream=this.entityManager.getMetamodel().getEmbeddables().stream().filter(this::isNotIgnored).map(entityType -> {
+        Stream<GraphQLInputType> embedGraphQLInputTypeStream=this.entityManager.getMetamodel().getEmbeddables().stream().filter(this::isNotIgnored)
+                .filter(distinctByKey(o -> o.getJavaType()))//根据java类型去重
+                .map(entityType -> {
             GraphQLInputObjectType inputObjectType = newInputObject()
                     .name(entityType.getJavaType().getSimpleName() + MUTATION_INPUTTYPE_POSTFIX)
                     .description(getSchemaDocumentation(entityType.getJavaType()))
@@ -133,7 +135,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
             return inputObjectType;
         });
 //实体类型的
-        return Stream.concat(embedGraphQLInputTypeStream, this.entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored).map(entityType -> {
+        return Stream.concat(embedGraphQLInputTypeStream, this.entityManager.getMetamodel().getEntities().stream().filter(this::isNotIgnored)
+                .filter(distinctByKey(o -> o.getJavaType()))//根据java类型去重
+                .map(entityType -> {
             GraphQLInputObjectType inputObjectType = newInputObject()
                     .name(entityType.getName() + MUTATION_INPUTTYPE_POSTFIX)
                     .description(getSchemaDocumentation(entityType.getJavaType()))
@@ -147,8 +151,19 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
             entityInputCache.put(entityType, inputObjectType);
             return inputObjectType;
         }));
+
     }
 
+    /**
+     * 根据k来过滤的断言， TODO 可以挪到stream的工具中去
+     * @param keyExtractor 拿到key的function
+     * @param <T>
+     * @return
+     */
+    public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 
 
     private void populateStandardAttributeMappers() {
@@ -205,7 +220,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
                     .name(mutationFieldName)
                     .description(getSchemaDocumentation((AnnotatedElement)entry.getKey()))
                     .type(this.getMutationReturnType(entry.getKey().getReturnType()))
-                    .dataFetcher(new MutationDataFetcher(entityManager,entityType, entry.getKey(),entry.getValue(),gqalist))
+                    .dataFetcher(new MutationDataFetcher(entityManager,entityType, entry.getKey(),entry.getValue(),gqalist,this))
                     .argument(gqalist)
                     .build();
         }).collect(Collectors.toList()));
@@ -715,4 +730,23 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder {
             .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(),qfo.getDescription(),qfo.getValue())).collect(Collectors.toList()));
 
 
+    @Override
+    public Class getClazzByInputType(GraphQLType graphQLType) {
+        return this.entityInputCache.entrySet().stream().filter(entry->entry.getValue().equals(graphQLType)).map(entry->entry.getKey().getJavaType()).findFirst().orElse(null);
+
+    }
+
+    public GraphQLType getInputTypeByClass(Class<?> propertyType){
+        GraphQLType gqtype=this.entityInputCache.entrySet().stream().filter(entry->entry.getKey().getJavaType().equals(propertyType)).map(entry->(GraphQLType)entry.getValue()).findFirst()
+        .orElse((GraphQLType)this.classInputCache.get(propertyType));
+        if(gqtype!=null){
+            return gqtype;
+        }else if(String.class.equals(propertyType)) {
+            return Scalars.GraphQLString;
+        }else if(String.class.equals(propertyType)) {
+            return Scalars.GraphQLInt;
+        }else{
+            return null;
+        }
+    }
 }

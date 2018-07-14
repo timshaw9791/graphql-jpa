@@ -6,6 +6,7 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.model.entity.Department
 import org.crygier.graphql.model.users.Privi
 import org.crygier.graphql.model.users.PriviGroup
 import org.crygier.graphql.model.users.Role
@@ -59,8 +60,9 @@ class GraphQlController {
 
 
     @GRequestMapping(path = '/abc', method = RequestMethod.POST)
-    User create(@RequestParam(name="role",required = true)Role role,@RequestParam(name="id",required = false)String id,@RequestParam(name="count",required = true)int count) {
-        return new User();//new User();
+    Department create(@RequestParam(name="role",required = true)Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
+        System.out.println(new User().getId());
+        return new Department();//new User();
     }
 }
 

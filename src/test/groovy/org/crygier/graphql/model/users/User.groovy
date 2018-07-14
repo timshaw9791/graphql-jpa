@@ -1,5 +1,8 @@
 package org.crygier.graphql.model.users
 
+import cn.wzvtcsoft.x.bos.domain.BaseEntity
+import org.crygier.graphql.annotation.GraphQLIgnore
+
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -13,13 +16,17 @@ import javax.persistence.OneToMany
 @Entity
 @SchemaDocumentation("User who uses the application")
 @CompileStatic
-class User {
+class User{
 
 	@Id
 	@SchemaDocumentation("Primary Key for the User Class")
 	String id;
-	
+
+
 	String firstName;
+	public String getId(){
+		return id;
+	}
 	
 	String lastName;
 

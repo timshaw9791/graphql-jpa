@@ -18,7 +18,7 @@ import org.springframework.context.annotation.DependsOn
 class TestApplication {
 
     public static void main(String[] args) {
-        ApplicationContext ac = SpringApplication.run(TestApplication.class, args);
+        ApplicationContext ac =SpringApplication.run(TestApplication.class,args);
     }
 
     @Bean
@@ -34,3 +34,4 @@ class TestApplication {
     }
 
 }
+
