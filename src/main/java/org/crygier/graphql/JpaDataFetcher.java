@@ -25,7 +25,7 @@ public class JpaDataFetcher implements DataFetcher {
     @Override
     public Object get(DataFetchingEnvironment environment) {
         TypedQuery typedQuery=getQuery(environment, environment.getFields().iterator().next(), null, false);
-        Object result=typedQuery.getSingleResult();
+        Object result=typedQuery.getResultList().stream().findFirst().orElse(null);
         return result;
     }
 

@@ -3,7 +3,7 @@ package org.crygier.graphql;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLType;
 
-public interface IGraphQlTypeMapper {
+ interface IGraphQlTypeMapper {
     
     Class getClazzByInputType(GraphQLType graphQLType);
 

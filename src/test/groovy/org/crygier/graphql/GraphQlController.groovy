@@ -11,7 +11,9 @@ import org.crygier.graphql.model.users.Privi
 import org.crygier.graphql.model.users.PriviGroup
 import org.crygier.graphql.model.users.Role
 import org.crygier.graphql.model.users.User
+import org.crygier.graphql.repo.DepartmentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -28,6 +30,9 @@ class GraphQlController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    DepartmentRepository departmentRepository;
 
     @RequestMapping(path = '/graphql', method = RequestMethod.POST)
     ExecutionResult graphQl(@RequestBody final GraphQLInputQuery query) {
@@ -64,15 +69,16 @@ class GraphQlController {
         System.out.println(new User().getId());
         return new Department();//new User();
     }
-}
 
-//权限
-/*class UserService {
-    @Asset("exist('role(*)')")
-    createRole(Role role){
-            Role r=findOne(id)
-            r.set
+
+    @GRequestMapping(path = '/addDepartment', method = RequestMethod.POST)
+    Department create(@RequestParam(name="depart",required = true)Department depart) {
+        return this.departmentRepository.save(depart);
 
     }
+
+    @GRequestMapping(path = '/retriveDepartment', method = RequestMethod.POST)
+    Department create(@RequestParam(name="id",required = true)String id) {
+        return this.departmentRepository.findById(id).orElse(null);
+    }
 }
-*/

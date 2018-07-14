@@ -61,13 +61,7 @@ public class GraphQLExecutor {
         createGraphQL(null);
     }
 
-    /**
-     * Creates a read-only GraphQLExecutor using the entities discovered from the given {@link EntityManager}.
-     *
-     * @param entityManager The entity manager from which the JPA classes annotated with
-     *                      {@link javax.persistence.Entity} is extracted as {@link GraphQLSchema} objects.
-     * @param attributeMappers Custom {@link AttributeMapper} list, if you need any non-standard mappings.
-     */
+
     public GraphQLExecutor(EntityManager entityManager, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.entityManager = entityManager;
         createGraphQL(customGraphQLScalarTypeMap);
@@ -170,14 +164,7 @@ public class GraphQLExecutor {
         return this;
     }
 
-    /**
-     * Uses the given builder to re-create and replace the {@link GraphQLSchema}
-     * that this executor uses to execute its queries.
-     *
-     * @param builder The builder to recreate the current {@link GraphQLSchema} and {@link GraphQL} instances.
-     * @param attributeMappers Custom {@link AttributeMapper} list, if you need any non-standard mappings.
-     * @return The same executor but with a new {@link GraphQL} schema.
-     */
+
     public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.builder = builder;
         createGraphQL(customGraphQLScalarTypeMap);
