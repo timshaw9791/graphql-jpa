@@ -107,8 +107,8 @@ insert into thing (id, type) values
     ('2D1EBC5B7D2741979CF0E84451C5BBB1', 'Thing1');
 
 -- User
-insert into user(id, first_name, last_name) values
-	('1000','Bob', 'Austin'),('1001','Tim', 'Shaw');
+insert into user(id, first_name, last_name,CREATETIME,updatetime,number) values
+	('1000','Bob', 'Austin',0,0,'1000'),('1001','Tim', 'Shaw',0,0,'1001');
 
 insert into spaceship(id, name, createddate,createduser) values
 	('1000','X-Wing', sysdate, '1000');
@@ -124,13 +124,14 @@ insert into roles(id, name) values
 -- RolePrevilegeItem
 insert into role_previlege_item(id, parent_id, privi_id) values
 	('1000','1000', '1000'),('1001','1000', '1001'),('1002','1000', '1002'),
-	('1003','1001', '1001'),('1004','1002', '1001'),('1005','1002', '1002');
+	--('1003','1001', '1001'),
+	('1004','1002', '1001'),('1005','1002', '1002');
 
 
 -- UserRoleItem
 insert into User_Role_Item(id, parent_id, role_id) values
-	('1000','1000', '1000'),('1001','1000', '1001'),('1002','1000', '1002'),
-	('1004','1001', '1001'),('1005','1001', '1002');
+	('1000','1000', '1000'),('1001','1000', '1001'),('1002','1000', '1002');
+	--('1004','1001', '1001'),('1005','1001', '1002');
 
 
 insert into department(createactorid, createtime, number, updateactorid, updatetime, id) values

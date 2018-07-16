@@ -23,5 +23,5 @@ public class Role {
 	String name;
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "parent",orphanRemoval = true)
-	Set<RolePrevilegeItem> previlegeItems;
+	Set<RolePrevilegeItem> previlegeItems=null;
 }

@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import graphql.Scalars;
 import graphql.schema.*;
 import org.crygier.graphql.annotation.GRequestMapping;
@@ -485,7 +486,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     }
 
     private boolean isNotIgnored(Attribute attribute) {
-        return isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType());
+        return !(ICoreObject.class.equals(attribute.getJavaType()) && "parent".equals(attribute.getName())) && (isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType()));
     }
 
     private boolean isNotIgnored(ManagedType entityType) {

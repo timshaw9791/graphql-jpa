@@ -12,6 +12,7 @@ import org.crygier.graphql.model.users.PriviGroup
 import org.crygier.graphql.model.users.Role
 import org.crygier.graphql.model.users.User
 import org.crygier.graphql.repo.DepartmentRepository
+import org.crygier.graphql.repo.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.web.bind.annotation.RequestBody
@@ -33,6 +34,10 @@ class GraphQlController {
 
     @Autowired
     DepartmentRepository departmentRepository;
+
+
+    @Autowired
+    UserRepository userRepository;
 
     @RequestMapping(path = '/graphql', method = RequestMethod.POST)
     ExecutionResult graphQl(@RequestBody final GraphQLInputQuery query) {
@@ -63,7 +68,40 @@ class GraphQlController {
 
 
 
+   /*
 
+    UserService{
+
+
+
+        updatePassword(String id, String pwd){
+            findByid(id).set(pwd);
+        }
+
+        @Assert("exist('client(id,number)')")
+        createAcceptance(
+        @Item("client")
+        Client client){
+
+
+        }
+    }
+*/
+
+
+    @GRequestMapping(path = '/updateuser', method = RequestMethod.POST)
+    User createAcceptance(@RequestParam(name="userid",required = true)String userid) {
+        return this.userRepository.findById(userid).orElse(null)
+    }
+
+
+
+    @GRequestMapping(path = '/createAcceptance', method = RequestMethod.POST)
+    User createAcceptance(@RequestParam(name="client",required = true)User client) {
+        return this.userRepository.save(client);
+    }
+
+    //  @Validate(msg="一定要有姓名和id",value="exist('role{id} &&  id ')")
     @GRequestMapping(path = '/abc', method = RequestMethod.POST)
     Department create(@RequestParam(name="role",required = true)Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
         System.out.println(new User().getId());
@@ -76,7 +114,7 @@ class GraphQlController {
         return this.departmentRepository.save(depart);
 
     }
-
+    @SchemaDocumentation("根据id修改部门信息，并且返回部门信息")
     @GRequestMapping(path = '/retriveDepartment', method = RequestMethod.POST)
     Department create(@RequestParam(name="id",required = true)String id) {
         return this.departmentRepository.findById(id).orElse(null);
