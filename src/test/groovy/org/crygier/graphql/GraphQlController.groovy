@@ -90,8 +90,10 @@ class GraphQlController {
 
 
     @GRequestMapping(path = '/updateuser', method = RequestMethod.POST)
-    User createAcceptance(@RequestParam(name="userid",required = true)String userid) {
-        return this.userRepository.findById(userid).orElse(null)
+    List<User> createAcceptance(@RequestParam(name="userid",required = true)String userid) {
+        List<User> userList=new ArrayList<>();
+        userList.add(this.userRepository.findById(userid).orElse(null));
+        return userList;
     }
 
 

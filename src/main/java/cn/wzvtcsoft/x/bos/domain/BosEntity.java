@@ -84,21 +84,13 @@ public abstract class BosEntity extends CoreObject implements IEntity {
         this.createtime = createtime;
     }
 */
-//TODO 如果number没有,自动生成number
 
     @PrePersist
-    public void prePersist() {
-        if (!StringUtils.hasText(number)) {
-            this.updatetime = System.currentTimeMillis();
-            this.number = String.valueOf(System.currentTimeMillis()).substring(1);
-        }
-    }
-
     @PreUpdate
-    private void preUpdate() {
+    protected void prePersistOrUpdate() {
         this.updatetime = System.currentTimeMillis();
         if (!StringUtils.hasText(number)) {
-            this.number = "" + System.currentTimeMillis();
+            this.number = ""+System.currentTimeMillis();
         }
     }
 

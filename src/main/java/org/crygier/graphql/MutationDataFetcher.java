@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 
 import static graphql.Scalars.GraphQLString;
 
-public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
+public class MutationDataFetcher extends CollectionJpaDataFetcher {
 
     //protected EntityManager entityManager;
     protected Method controllerMethod;
@@ -28,7 +28,6 @@ public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
 
     public MutationDataFetcher(EntityManager entityManager, EntityType entityType, Method controllerMethod, Object target, List<GraphQLArgument> gqalist, IGraphQlTypeMapper graphQlTypeMapper) {
         super(entityManager, entityType);
-
         this.controllerMethod = controllerMethod;
         this.gqalist = gqalist;
         this.target = target;
@@ -38,6 +37,7 @@ public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
 
     /**
      * 还有枚举类型和，变量引用类型没有处理 TODO
+     *
      * @param graphQLType
      * @param realArgValue
      * @return
@@ -64,7 +64,15 @@ public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
         } else if (graphQLType instanceof GraphQLList) {//如果为列表
             final GraphQLType wrapptype = ((GraphQLList) graphQLType).getWrappedType();
             Set resultSet = new HashSet();
-            List<Value> listvalue = ((ArrayValue) realArgValue).getValues();
+            ArrayValue av = null;
+            if (realArgValue instanceof ArrayValue) {
+                av = (ArrayValue) realArgValue;
+            } else {
+                List<Value> vlist = new ArrayList<Value>();
+                vlist.add(realArgValue);
+                av = new ArrayValue(vlist);
+            }
+            List<Value> listvalue = av.getValues();
             for (Value value : listvalue) {
                 resultSet.add(composeRealArgument(((GraphQLInputObjectType) wrapptype), value));
             }
@@ -125,14 +133,21 @@ public class MutationDataFetcher extends JpaDataFetcher implements DataFetcher {
             return returnValue;
         } else if (returnValue == null) {
             return null;
-        } else if (IEntity.class.isAssignableFrom(returnValue.getClass())) {//拿到主键
-            String id = ((IEntity) returnValue).getId();
-            environment.getField().getArguments().clear();
-            environment.getField().getArguments().add(new Argument("id", new StringValue(id)));
-            return super.get(environment);
         } else {
-            //TODO  报错
-            return null;
+
+
+            if (IEntity.class.isAssignableFrom(returnValue.getClass())) {//拿到主键
+                String id = ((IEntity) returnValue).getId();
+                environment.getField().getArguments().clear();
+                environment.getField().getArguments().add(new Argument("id", new StringValue(id)));
+                return super.getForEntity(environment);
+            } else if (Collection.class.isAssignableFrom(returnValue.getClass())) {
+                //设置分页和过滤条件
+                return super.get(environment);
+            } else {
+                //TODO 只能抛错
+                throw new RuntimeException("返回类型不对头，mutation中不允许出现该类型");
+            }
         }
     }
 

@@ -17,14 +17,6 @@ targetCompatibility = 1.8
 
     repositories {
         mavenCentral()
-        maven {
-            //TODO 添加snapshot repo
-            url  "https://repo.rdc.aliyun.com/repository/26140-release-CLWeLx/"
-            credentials {
-                username "$yunxiaomvnrepoUser"
-                password "$yunxiaomvnrepoPassword"
-            }
-        }
     }
 
 

@@ -1,5 +1,6 @@
 package org.crygier.graphql.model.users
 
+import cn.wzvtcsoft.x.bos.domain.Entry
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
@@ -11,13 +12,7 @@ import javax.persistence.ManyToOne
 @Entity
 @SchemaDocumentation("RolePrevilegeItem who uses the application")
 @CompileStatic
-public class RolePrevilegeItem {
-	@Id
-	@SchemaDocumentation("Primary Key for the RolePrevilegeItem Class")
-	String id;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	public Role parent;
+public class RolePrevilegeItem extends Entry{
 
 	@ManyToOne(fetch =FetchType.LAZY)
 	Privi privi;

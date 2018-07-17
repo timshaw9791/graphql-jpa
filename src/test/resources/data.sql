@@ -114,12 +114,12 @@ insert into spaceship(id, name, createddate,createduser) values
 	('1000','X-Wing', sysdate, '1000');
 
 	-- Privi
-insert into privi(id, name) values
-	('1000','删除用户功能' ),('1001','查看用户功能'),('1002','修改用户功能');
+insert into privi(id, name,createactorid, createtime, number, updateactorid, updatetime) values
+	('1000','删除用户功能',null,0,'1000',null,0 ),('1001','查看用户功能',null,0,'1001',null,0),('1002','修改用户功能',null,0,'1002',null,0);
 
 	-- role
-insert into roles(id, name) values
-	('1000','管理员角色' ),('1001','guest角色'),('1002','普通角色');
+insert into roles(id, name,createactorid, createtime, number, updateactorid, updatetime) values
+	('1000','管理员角色' ,null,0,'1000',null,0),('1001','guest角色',null,0,'1001',null,0),('1002','普通角色',null,0,'1002',null,0);
 
 -- RolePrevilegeItem
 insert into role_previlege_item(id, parent_id, privi_id) values

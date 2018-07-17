@@ -18,10 +18,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-//TODO 其实可以和JpaDataFetcher二合一的，所有的都用这个
-public class ExtendedJpaDataFetcher extends JpaDataFetcher {
+public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
-    public ExtendedJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType) {
+    public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType) {
         super(entityManager, entityType);
     }
 
@@ -39,7 +38,7 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
         if (contentSelection.isPresent())
-            result.put("content", getQuery(environment,contentSelection.get(),qfilter,false).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
+            result.put("content", getQueryForEntity(environment, qfilter, contentSelection.get(), false).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
@@ -54,9 +53,26 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         return result;
     }
 
+    /**
+     *用来方便继承的
+     * @param environment
+     * @param qfilter - 过滤条件
+     * @param field -字段信息
+     * @param justforselectcount - 是否仅仅查询数量，
+     * @return 如果仅仅查询数量则返回TypedQuery<Long>、如果查询的是Entity，则返回TypedQuery<EntityType>
+     */
+    protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount) {
+        return super.getQuery(environment, field, qfilter, justforselectcount);
+    }
+    //用来方便继承的。
+    protected Object getForEntity(DataFetchingEnvironment environment) {
+        return super.get(environment);
+    }
+
+
     private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
 
-        return super.getQuery(environment,field,qfilter,true);
+        return getQueryForEntity(environment, qfilter, field, true);
 
     }
 

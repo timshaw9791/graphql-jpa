@@ -1,5 +1,6 @@
 package org.crygier.graphql.model.users
 
+import cn.wzvtcsoft.x.bos.domain.BosEntity
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
@@ -15,10 +16,7 @@ import javax.persistence.Table
 @SchemaDocumentation("UserRoleItem who uses the application")
 @CompileStatic
 @Table(name="roles")
-public class Role {
-	@Id
-	@SchemaDocumentation("Primary Key for the UserRoleItem Class")
-	String id;
+public class Role extends BosEntity{
 
 	String name;
 

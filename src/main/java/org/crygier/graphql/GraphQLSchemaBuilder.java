@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.*;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
+import javax.persistence.metamodel.Type;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -33,7 +31,7 @@ import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLInputObjectField.newInputObjectField;
 import static graphql.schema.GraphQLInputObjectType.newInputObject;
 import static graphql.schema.GraphQLObjectType.newObject;
-import static org.crygier.graphql.ExtendedJpaDataFetcher.*;
+import static org.crygier.graphql.CollectionJpaDataFetcher.*;
 
 /**
  * A wrapper for the {@link GraphQLSchema.Builder}. In addition to exposing the traditional builder functionality,
@@ -157,20 +155,42 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
         GraphQLObjectType.Builder queryType = newObject().name("Mutation_SpringMVC").description("将所有的SpringMVC.Controller中的Requestmapping方法暴露出来了");
         queryType.fields(this.methodTargetMap.entrySet().stream().map(entry -> {
+            Method method = entry.getKey();
             String grc = entry.getValue().getClass().getAnnotation(GRestController.class).value();
-            String grm = entry.getKey().getAnnotation(GRequestMapping.class).path()[0];
+            String grm = method.getAnnotation(GRequestMapping.class).path()[0];
             String mutationFieldName = ("/" + grc + grm).replace("//", "/").replace("/", "_").substring(1);
-            List<GraphQLArgument> gqalist = getMutationGraphQLArgumentsByMethod(entry.getKey());
+            List<GraphQLArgument> gqalist = getMutationGraphQLArgumentsByMethod(method);
+
+            boolean isCollectionReturnValue = false;
+            java.lang.reflect.Type type = method.getReturnType();
+            if (Collection.class.isAssignableFrom(method.getReturnType()) && method.getGenericReturnType() instanceof ParameterizedType) {
+                type = ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
+                isCollectionReturnValue = true;
+            }
+            final java.lang.reflect.Type typeforlamda = type;
+            final boolean isCollectionReturnValueForlamda = isCollectionReturnValue;
+
             EntityType entityType = entityManager.getMetamodel().getEntities().stream()
-                    .filter(et -> et.getJavaType().equals(entry.getKey().getReturnType())).findFirst().orElse(null);
-            return newFieldDefinition()
+                    .filter(et -> et.getJavaType().equals(typeforlamda)).findFirst().orElse(null);
+            if (entityType == null) {
+                return null;
+            }
+
+            return Optional.of(newFieldDefinition()
                     .name(mutationFieldName)
-                    .description(getSchemaDocumentation((AnnotatedElement) entry.getKey()))
-                    .type(getGraphQLTypeFromClassType(entry.getKey().getReturnType()))
+                    .description(getSchemaDocumentation((AnnotatedElement) entry.getKey())))
+                    .map(fieldDefinition -> {
+                        if (isCollectionReturnValueForlamda) {
+                            fieldDefinition.type(new GraphQLTypeReference(entityType.getName() + "Connection"));
+                        } else {
+                            fieldDefinition.type(getGraphQLOutputType(entityType));
+                        }
+                        return fieldDefinition;
+                    }).get()
                     .dataFetcher(new MutationDataFetcher(entityManager, entityType, entry.getKey(), entry.getValue(), gqalist, this))
                     .argument(gqalist)
                     .build();
-        }).collect(Collectors.toList()));
+        }).filter(gfd -> gfd != null).collect(Collectors.toList()));
         return queryType.build();
     }
 
@@ -219,7 +239,8 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                     if (managedType instanceof EntityType) {
                         fieldDefinition.type(getGraphQLOutputType(managedType)).dataFetcher(new JpaDataFetcher(entityManager, (EntityType) managedType));
                     } else {
-                        fieldDefinition.type(new GraphQLList(getGraphQLOutputType(managedType)));
+                        fieldDefinition.type(new GraphQLList(getGraphQLOutputType(managedType)))
+                                .dataFetcher(new CollectionJpaDataFetcher(entityManager, (EntityType) managedType));
                     }
                     return fieldDefinition;
                 }).get()
@@ -243,7 +264,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                 .description("'Connection' request wrapper object for " + entityType.getName() + ".  Use this object in a query to request things like pagination or aggregation in an argument.  Use the 'content' field to request actual fields ")
                 .type(pageType)
                 //采用的是ExtendedJpaDataFetcher来处理
-                .dataFetcher(new ExtendedJpaDataFetcher(entityManager, entityType))
+                .dataFetcher(new CollectionJpaDataFetcher(entityManager, entityType))
                 .argument(paginationArgument)
                 .argument(roleArgument)
                 .build();
@@ -481,16 +502,16 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
             SchemaDocumentation schemaDocumentation = annotatedElement.getAnnotation(SchemaDocumentation.class);
             return schemaDocumentation != null ? schemaDocumentation.value() : null;
         }
-
         return null;
     }
 
     private boolean isNotIgnored(Attribute attribute) {
-        return !(ICoreObject.class.equals(attribute.getJavaType()) && "parent".equals(attribute.getName())) && (isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType()));
+        boolean isEntryParent = ICoreObject.class.equals(attribute.getJavaType()) && "parent".equals(attribute.getName());
+        return !isEntryParent && (isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType()));
     }
 
     private boolean isNotIgnored(ManagedType entityType) {
-        return isNotIgnored(entityType.getJavaType());
+        return ICoreObject.class.isAssignableFrom(entityType.getJavaType()) && isNotIgnored(entityType.getJavaType());
     }
 
     private boolean isNotIgnored(Member member) {
