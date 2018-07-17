@@ -1,9 +1,12 @@
 TODO
 
-- 1.与bos-domain更紧密集成，去掉entry的顶级query和列表query
+- 0.与bos-domain更紧密集成，去掉entry的顶级query和列表query.ok
+- 0.编写更多基于bos-domain的测试用例.ok
+- 1.预留bos-validate（校验与错误提示)对接机制。
 - 2.进一步研究枚举enmu和embable的作用
-- 3.编写更多基于bos-domain的测试用例
-- 4.预留bos-validate（校验与错误提示)对接机制。
+- 3.错误处理机制对接
+
+
 
 
 

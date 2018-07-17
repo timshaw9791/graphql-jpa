@@ -94,7 +94,7 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
     }
 
     @Override
-    public Object get(DataFetchingEnvironment environment) {
+    public Object getResult(DataFetchingEnvironment environment) {
         Field field = environment.getFields().iterator().next();
         //TODO get mutation name,argument type.
         // field.getArguments().stream()
@@ -143,7 +143,7 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
                 return super.getForEntity(environment);
             } else if (Collection.class.isAssignableFrom(returnValue.getClass())) {
                 //设置分页和过滤条件
-                return super.get(environment);
+                return super.getResult(environment);
             } else {
                 //TODO 只能抛错
                 throw new RuntimeException("返回类型不对头，mutation中不允许出现该类型");

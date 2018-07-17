@@ -22,8 +22,17 @@ public class JpaDataFetcher implements DataFetcher {
         this.entityType = entityType;
     }
 
-    @Override
-    public Object get(DataFetchingEnvironment environment) {
+
+    public final Object get(DataFetchingEnvironment environment) {
+
+        Object result=this.getResult(environment);
+        //TODO 检查权限
+        //checkPermission();
+        return result;
+    }
+
+
+    public Object getResult(DataFetchingEnvironment environment) {
         TypedQuery typedQuery=getQuery(environment, environment.getFields().iterator().next(), null, false);
         Object result=typedQuery.getResultList().stream().findFirst().orElse(null);
         return result;

@@ -25,7 +25,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     }
 
     @Override
-    public Object get(DataFetchingEnvironment environment) {
+    public Object getResult(DataFetchingEnvironment environment) {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
 
@@ -66,14 +66,11 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     }
     //用来方便继承的。
     protected Object getForEntity(DataFetchingEnvironment environment) {
-        return super.get(environment);
+        return super.getResult(environment);
     }
 
-
     private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
-
         return getQueryForEntity(environment, qfilter, field, true);
-
     }
 
     private Optional<Field> getSelectionField(Field field, String fieldName) {
