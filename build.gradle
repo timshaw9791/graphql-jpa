@@ -70,17 +70,7 @@ publishing {
             artifact sourcesJar
 		}
 	}
-    repositories {
-        maven {
-            //url  "http://dl.bintray.com/andimarek/graphql-java"
-            //TODO 添加snapshot repo
-            url = "https://repo.rdc.aliyun.com/repository/26140-release-CLWeLx/"
-            credentials {
-                username "$yunxiaomvnrepoUser"
-                password "$yunxiaomvnrepoPassword"
-            }
-        }
-    }
+
 }
 
 model {
