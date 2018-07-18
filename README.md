@@ -2,9 +2,15 @@ TODO
 
 - 0.与bos-domain更紧密集成，去掉entry的顶级query和列表query.ok
 - 0.编写更多基于bos-domain的测试用例.ok
-- 1.预留bos-validate（校验与错误提示)对接机制。
-- 2.进一步研究枚举enmu和embable的作用
+- 1.预留graphql query查询权限bos-permission-query检查点的执行机制。
+- 2.bos-permission-query构思查询权限定义机制。
 - 3.错误处理机制对接
+- 4.输入正确性检查机制
+- 
+- 5.业务层执行权限校验机制
+
+
+
 
 
 

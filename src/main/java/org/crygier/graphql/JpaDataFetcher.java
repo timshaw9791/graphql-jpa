@@ -24,8 +24,8 @@ public class JpaDataFetcher implements DataFetcher {
 
 
     public final Object get(DataFetchingEnvironment environment) {
-
         Object result=this.getResult(environment);
+        //throw new CustomRuntimeException();
         //TODO 检查权限
         //checkPermission();
         return result;

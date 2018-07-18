@@ -1,4 +1,4 @@
-package org.crygier.graphql.model.entity;
+package org.crygier.graphql.model.users;
 
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity;

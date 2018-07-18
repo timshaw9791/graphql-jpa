@@ -45,7 +45,7 @@ public class GraphQLExecutor {
     private GraphQLSchema graphQLSchema;
     private GraphQLSchema.Builder builder;
 
-    protected GraphQLExecutor(ListableBeanFactory listableBeanFactory) {
+    public GraphQLExecutor(ListableBeanFactory listableBeanFactory) {
         this.listableBeanFactory=listableBeanFactory;
         createGraphQL(null);
     }

@@ -6,15 +6,11 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
-import org.crygier.graphql.model.entity.Department
-import org.crygier.graphql.model.users.Privi
-import org.crygier.graphql.model.users.PriviGroup
+import org.crygier.graphql.model.users.Department
 import org.crygier.graphql.model.users.Role
 import org.crygier.graphql.model.users.User
-import org.crygier.graphql.repo.DepartmentRepository
 import org.crygier.graphql.repo.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -33,7 +29,7 @@ class GraphQlController {
     private ObjectMapper objectMapper;
 
     @Autowired
-    DepartmentRepository departmentRepository;
+    org.crygier.graphql.repo.DepartmentRepository departmentRepository;
 
 
     @Autowired

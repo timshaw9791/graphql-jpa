@@ -6,7 +6,6 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.Id
 import javax.persistence.ManyToOne
 
 @Entity

@@ -1,13 +1,9 @@
 package org.crygier.graphql
 
-import javax.persistence.EntityManager
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootContextLoader
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ContextConfiguration
-
-import spock.lang.Ignore
 import spock.lang.Specification
 
 @Configuration

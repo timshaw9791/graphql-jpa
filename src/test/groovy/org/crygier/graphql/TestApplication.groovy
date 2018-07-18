@@ -1,6 +1,7 @@
 package org.crygier.graphql
 
 import groovy.transform.CompileStatic
+import org.crygier.graphql.GraphQLExecutor
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
