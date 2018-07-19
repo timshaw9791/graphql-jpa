@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 @Access(AccessType.FIELD)
 public class CoreObject implements ICoreObject, Serializable {
     private String id;
-
     @Id
     @GeneratedValue(generator = "bosidgenerator")
     @GenericGenerator(name = "bosidgenerator", strategy = "cn.wzvtcsoft.x.bos.domain.persist.BosidGenerator")
@@ -34,6 +33,9 @@ public class CoreObject implements ICoreObject, Serializable {
     private void setId(String id) {
         this.id = id;
     }
+
+
+    //version 乐观锁 TODO
 
     @Override
     final public boolean equals(Object obj) {

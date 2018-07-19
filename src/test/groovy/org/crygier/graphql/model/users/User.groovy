@@ -15,7 +15,7 @@ import javax.persistence.OneToMany
 @Bostype("C03")
 //默认匿名用户可以访问/默认登陆用户可以访问，默认所有用户禁止访问
 //context(x,访问自己的订单)
-//@QueryDeny(exceptPredicate=QueryPermission.permission,exceptAttrs="{}")
+//@QueryDeny(exceptPredicate=QueryPermission.permission)
 //@QueryAllow(exceptPredicate="",exceptAttrs="{}")
 class User extends BosEntity{
 
@@ -24,7 +24,7 @@ class User extends BosEntity{
 	String lastName;
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "parent",orphanRemoval = true)
-	Set<UserRoleItem> roleItems;
+	Set<UserRoleItem> roleItems=new HashSet<>();
 
 
 

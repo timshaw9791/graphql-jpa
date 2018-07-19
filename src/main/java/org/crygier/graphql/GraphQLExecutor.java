@@ -72,28 +72,30 @@ public class GraphQLExecutor {
         createGraphQL(null);
     }
 
+    //TODO 应该使用springApplication的生命周期时间来拿到这些bean
     protected synchronized void createGraphQL(Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
+        Map<Method, Object> methodTargetMap = new HashMap<>();
+        if(listableBeanFactory!=null) {
+            Collection<Object> controllerObjects = listableBeanFactory.getBeansWithAnnotation(RestController.class)
+                    .values().stream().filter(obj ->
+                            Arrays.stream(obj.getClass().getAnnotations())
+                                    //包含GRestController注解的类跳出来
+                                    .filter(annotation -> GRestController.class.equals(annotation.annotationType())).findFirst().isPresent()
+                    ).collect(Collectors.toList());
 
-        Collection<Object> controllerObjects = listableBeanFactory.getBeansWithAnnotation(RestController.class)
-                .values().stream().filter(obj->
-                        Arrays.stream(obj.getClass().getAnnotations())
-                                //包含GRestController注解的类跳出来
-                                .filter(annotation -> GRestController.class.equals(annotation.annotationType())).findFirst().isPresent()
-                ).collect(Collectors.toList());
 
-        Map<Method,Object> methodTargetMap=new HashMap<>();
-        controllerObjects.stream()
-                .forEach(controllerObj -> {
-                    Arrays.stream(controllerObj.getClass().getDeclaredMethods())
-                            .forEach(method -> {
-                                if (Arrays.stream(method.getAnnotations()).filter(annotation ->
-                                        GRequestMapping.class.equals(annotation.annotationType()))
-                                        .findFirst().isPresent()) {
-                                    methodTargetMap.put(method, controllerObj);
-                                }
-                            });
-                });
-
+            controllerObjects.stream()
+                    .forEach(controllerObj -> {
+                        Arrays.stream(controllerObj.getClass().getDeclaredMethods())
+                                .forEach(method -> {
+                                    if (Arrays.stream(method.getAnnotations()).filter(annotation ->
+                                            GRequestMapping.class.equals(annotation.annotationType()))
+                                            .findFirst().isPresent()) {
+                                        methodTargetMap.put(method, controllerObj);
+                                    }
+                                });
+                    });
+        }
 
 
 
