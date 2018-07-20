@@ -58,6 +58,8 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
                 value = ((StringValue) realArgValue).getValue();
             } else if (realArgValue instanceof IntValue) {
                 value = ((IntValue) realArgValue).getValue();
+            }else if(realArgValue instanceof BooleanValue){
+                value = Boolean.valueOf(((BooleanValue) realArgValue).isValue());
             }
 
             return ((GraphQLScalarType) graphQLType).getCoercing().parseValue(value);

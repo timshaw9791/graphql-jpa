@@ -2,6 +2,7 @@ package org.crygier.graphql
 
 import groovy.transform.CompileStatic
 import org.crygier.graphql.GraphQLExecutor
+import org.crygier.graphql.mlshop.controller.BusinessController
 import org.springframework.beans.factory.ListableBeanFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
@@ -23,7 +24,7 @@ class TestApplication {
     }
 
     @Bean
-    @DependsOn("GraphQlController")
+    @DependsOn(["GraphQlController","BusinessController"])
     public GraphQLExecutor graphQLExecutor(@Autowired ListableBeanFactory listableBeanFactory) {
 
         return new GraphQLExecutor( listableBeanFactory);
@@ -32,6 +33,10 @@ class TestApplication {
     @Bean("GraphQlController")
     public GraphQlController() {
         return new GraphQlController();
+    }
+    @Bean("BusinessController")
+    public BusinessController() {
+        return new BusinessController();
     }
 
 }

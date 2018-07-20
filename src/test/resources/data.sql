@@ -28,7 +28,7 @@ insert into User_Role_Item(id, parent_id, role_id) values
 	--('1004','1001', '1001'),('1005','1001', '1002');
 
 
-insert into department(createactorid, createtime, number, updateactorid, updatetime, id) values
- (null, 0, 'software', null, 0, 'Vub1QmDPFbOGU_I0L9r-S2A03'), (null, 0, 'auditing', null, 0, 'Vub1xmDPFbOGU_I0L9r-S2A03');
+--insert into department(createactorid, createtime, number, updateactorid, updatetime, id) values
+-- (null, 0, 'software', null, 0, 'Vub1QmDPFbOGU_I0L9r-S2A03'), (null, 0, 'auditing', null, 0, 'Vub1xmDPFbOGU_I0L9r-S2A03');
 
 

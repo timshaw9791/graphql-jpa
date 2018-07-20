@@ -8,7 +8,6 @@ import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation;
-import org.crygier.graphql.model.users.Department;
 import org.crygier.graphql.model.users.Role;
 import org.crygier.graphql.model.users.User;
 import org.crygier.graphql.repo.UserRepository;
@@ -37,8 +36,6 @@ class GraphQlController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    org.crygier.graphql.repo.DepartmentRepository departmentRepository;
 
 
     @Autowired
@@ -150,7 +147,6 @@ class GraphQlController {
     }
 
 
-
     @GRequestMapping(path = "/createAcceptance", method = RequestMethod.POST)
     User createAcceptance(@RequestParam(name="client",required = true)User client) {
         return this.userRepository.save(client);
@@ -158,20 +154,8 @@ class GraphQlController {
 
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id} &&  id ')")
     @GRequestMapping(path = "/abc", method = RequestMethod.POST)
-    Department create(@RequestParam(name="role",required = true)Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
-        System.out.println(new User().getId());
-        return new Department();//new User();
+    User create(@RequestParam(name="role",required = true)Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
+        return new User();
     }
 
-
-    @GRequestMapping(path = "/addDepartment", method = RequestMethod.POST)
-    Department create(@RequestParam(name="depart",required = true)Department depart) {
-        return this.departmentRepository.save(depart);
-
-    }
-    @SchemaDocumentation("根据id修改部门信息，并且返回部门信息")
-    @GRequestMapping(path = "/retriveDepartment", method = RequestMethod.POST)
-    Department create(@RequestParam(name="id",required = true)String id) {
-        return this.departmentRepository.findById(id).orElse(null);
-    }
 }

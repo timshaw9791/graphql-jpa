@@ -141,7 +141,8 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     }
 
     GraphQLObjectType getQueryType() {
-        GraphQLObjectType.Builder queryType = newObject().name("QueryType_JPA").description("DDD领域模型下的JPA查询");
+        GraphQLObjectType.Builder queryType = newObject().name("QueryType_JPA")
+                .description("DDD领域模型下的JPA查询,所有类型均有createtime（创建时间属性),updatedtime(修改时间属性)");
         //TODO 要将所有的分录Entry排除,类型必须有，但不是顶级的，无法从此处开始查询数据，必须从顶级实体开始查询。
         queryType.fields(Stream.concat(entityManager.getMetamodel().getEntities().stream(), entityManager.getMetamodel().getEmbeddables().stream())
                 .filter(this::isNotIgnored).map(this::getQueryFieldDefinition).collect(Collectors.toList()));
