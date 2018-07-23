@@ -44,15 +44,12 @@ class GraphQlController {
     @RequestMapping(path = "/graphql")
     ExecutionResult graphQl(@RequestBody Map<String,Object> map) {
         Map<String, Object> variables = null;
-/*
-        try {
-            variables = query.variables!=null ? objectMapper.readValue(query.variables, Map.class) : null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
+
+        String va=map.get("variables");
+        Map<String, Object> vsmap =  va? objectMapper.readValue(va, Map) : null;
+
         GraphQLInputQuery query=null;
-        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(), (Map)map.get("variables"));
+        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
        // if(result.getErrors()!=null && result.getErrors().size()==0){
             result=new ExecutionResultBos(result.getData(),null,result.getExtensions());
         //}
