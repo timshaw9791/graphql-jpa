@@ -1,6 +1,7 @@
 package org.crygier.graphql;
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
+import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.SchemaDocumentation;
@@ -75,70 +76,47 @@ public class QueryFilter {
 }
 
 //TODO 可能需要扩展或者更规范化
-enum QueryFilterOperator{
-    ISNULL(0,"ISNULL","is null"),
-    ISNOTNULL(1,"ISNOTNULL","is not null"),
-    GREATTHAN(2,"GREATTHAN",">"),
-    LESSTHAN(3,"LESSTHAN","<"),
-    NOTLESSTHAN(4,"NOTLESSTHAN",">="),
-    NOTGREATTHAN(5,"NOTGREATTHAN","<="),
-    EQUEAL(6,"EQUEAL","="),
-    IN(7,"IN","in"),
-    NOTIN(8,"NOTIN","not in"),
-    NOT(9,"NOT","not"),
-    LIKE(10,"LIKE","like");
 
-    private QueryFilterOperator(int value,String name,String description){
-        this.value=value;
-        this.name=name;
-        this.description=description;
+@SchemaDocumentation("查询过滤操作符")
+enum QueryFilterOperator implements BosEnum {
+    ISNULL("ISNULL","为空","is null"),
+    ISNOTNULL("ISNOTNULL","不为空","is not null"),
+    GREATTHAN("GREATTHAN","大于",">"),
+    LESSTHAN("LESSTHAN","小于","<"),
+    NOTLESSTHAN("NOTLESSTHAN","不小于",">="),
+    NOTGREATTHAN("NOTGREATTHAN","不大于","<="),
+    EQUEAL("EQUEAL","相等","="),
+    IN("IN","包含","in"),
+    NOTIN("NOTIN","不包含","not in"),
+    NOT("NOT","非","not"),
+    LIKE("LIKE","LIKE","like");
+
+    private QueryFilterOperator(String value,String name,String description){
+        this.ev = new BosEnum.EnumInnerValue(value, name, description);
     }
 
-    public int getValue() {
-        return value;
+    private BosEnum.EnumInnerValue ev = null;
+
+    @Override
+    public EnumInnerValue getEnumInnerValue() {
+        return this.ev;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    private int value;
-    private String name;
-    private String description;
-
 }
 
 
 
-enum QueryFilterCombinator{
-    AND(0,"AND","and"),
-    OR(1,"OR","or"),
-    NOT(2,"NOT","!");
+@SchemaDocumentation("查询表达式组合操作符")
+enum QueryFilterCombinator implements BosEnum {
+    AND("AND","and","并且的意思"),
+    OR("OR","or","或者的意思"),
+    NOT("NOT","!","取反");
 
-
-    private QueryFilterCombinator(int value,String name,String description){
-        this.value=value;
-        this.name=name;
-        this.description=description;
+    private QueryFilterCombinator(String value,String name,String description){
+        this.ev = new BosEnum.EnumInnerValue(value, name, description);
     }
-
-    public int getValue() {
-        return value;
+    private BosEnum.EnumInnerValue ev = null;
+    @Override
+    public BosEnum.EnumInnerValue getEnumInnerValue() {
+        return this.ev;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    private int value;
-    private String name;
-    private String description;
 }

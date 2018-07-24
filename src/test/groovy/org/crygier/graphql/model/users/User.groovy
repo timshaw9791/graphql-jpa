@@ -3,6 +3,7 @@ package org.crygier.graphql.model.users
 import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype
 import groovy.transform.CompileStatic
+import org.crygier.graphql.FieldNullEnum
 import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.CascadeType
@@ -26,6 +27,8 @@ class User extends BosEntity{
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "parent",orphanRemoval = true)
 	Set<UserRoleItem> roleItems=new HashSet<>();
 
+
+	FieldNullEnum filedNullEnum;
 
 
 }

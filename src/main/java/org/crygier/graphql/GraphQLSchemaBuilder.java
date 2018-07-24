@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import graphql.Scalars;
 import graphql.schema.*;
@@ -43,18 +44,25 @@ import static graphql.schema.GraphQLObjectType.newObject;
 public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGraphQlTypeMapper {
     private static final Logger log = LoggerFactory.getLogger(GraphQLSchemaBuilder.class);
 
-    public static final String PAGINATION_REQUEST_PARAM_NAME = "paginationRequest";
+    public static final String PAGINATION_REQUEST_PARAM_NAME = "paginator";
     public static final String QFILTER_REQUEST_PARAM_NAME = "qfilter";
     public static final String MUTATION_INPUTTYPE_POSTFIX = "_";
+    public static final String LISTQUERY_FILTER_POSTFIX = "__";
+    public static final String ENTRY_PARENT_PROPNAME = "parent";
+    public static final String ENTITY_LIST_NAME = "List";
+    public static final String[] QUERY_OUTPUT_FILTER_PROPS = {"id", "number"};
 
     private final EntityManager entityManager;
     private final Map<Method, Object> methodTargetMap = new HashMap<>();
 
     private final Map<Class, GraphQLScalarType> classGraphQlScalarTypeMap = new HashMap<>();
-    private final Map<Class, GraphQLEnumType> enumClassGraphQlEnumTypeMap = new HashMap<>();
+    private final Map<Class<? extends BosEnum>, GraphQLEnumType> enumClassGraphQlEnumTypeMap = new HashMap<>();
     //所有的JPA Entity，Embeddable 对应的GraphQLType，包含GraphQLOutputObjectType和GraphQLInputObjectType两个类型，而且也也只有这两个类型
     private final Map<GraphQLType, ManagedType> graphQlTypeManagedTypeClassMap = new HashMap<>();
-    private final Map<Class,GraphQLInputType> dtoClassGraphQlInputTypeMap = new HashMap<>();
+    //要用到的常见用来输入的非实体类。
+    private final Map<Class, GraphQLInputType> dtoClassGraphQlInputTypeMap = new HashMap<>();
+    //mutation下的输入entity类型中，需要忽略以下字段
+    public static final Set<String> ENTITYPROP_SET_SHOULDBEIGNORED_IN_MUTATION_ARGUMENT = new HashSet<String>(Arrays.asList(new String[]{"parent", "createtime", "updatetime", "createactorid", "updateactorid"}));
 
     /**
      * Initialises the builder with the given {@link EntityManager} from which we immediately start to scan for
@@ -89,28 +97,28 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         Optional.ofNullable(customGraphQLScalarTypeMap).ifPresent(map -> this.classGraphQlScalarTypeMap.putAll(map));
 
         this.methodTargetMap.putAll(methodTargetMap);
-        this.enumClassGraphQlEnumTypeMap.put(QueryFilterCombinator.class,queryFilterCombinatorEnum);
-        this.enumClassGraphQlEnumTypeMap.put(QueryFilterOperator.class,queryFilterOperatorEnum);
-        this.enumClassGraphQlEnumTypeMap.put(OrderByDirection.class,orderByDirectionEnum);
+        this.enumClassGraphQlEnumTypeMap.put(QueryFilterCombinator.class, queryFilterCombinatorEnum);
+        this.enumClassGraphQlEnumTypeMap.put(QueryFilterOperator.class, queryFilterOperatorEnum);
+        this.enumClassGraphQlEnumTypeMap.put(OrderByDirection.class, orderByDirectionEnum);
+        this.enumClassGraphQlEnumTypeMap.put(FieldNullEnum.class, fieldNullEnum);
 
 
-
-        this.dtoClassGraphQlInputTypeMap.put(QueryFilter.class,getDtoInputType( QFILTER_REQUEST_PARAM_NAME,QueryFilter.class));
-        this.dtoClassGraphQlInputTypeMap.put(Paginator.class,getDtoInputType( PAGINATION_REQUEST_PARAM_NAME,Paginator.class));
+        this.dtoClassGraphQlInputTypeMap.put(QueryFilter.class, getDtoInputType(QFILTER_REQUEST_PARAM_NAME, QueryFilter.class));
+        this.dtoClassGraphQlInputTypeMap.put(Paginator.class, getDtoInputType(PAGINATION_REQUEST_PARAM_NAME, Paginator.class));
 
         this.prepareInputTypeStreamForMutation();
         super.query(getQueryType()).mutation(getMutationType());
     }
 
-    private GraphQLInputObjectType getDtoInputType(String graphQLInputObjectTypeName,Class clazz) {
-        return new GraphQLInputObjectType(graphQLInputObjectTypeName,AnnotationUtils.findAnnotation(clazz,SchemaDocumentation.class).value()
-                , Arrays.stream(clazz.getMethods()).filter(method->AnnotationUtils.findAnnotation(method,SchemaDocumentation.class)!=null)
-                .map(method->{
-                    Class propType=BeanUtils.findPropertyForMethod(method).getPropertyType();
-                    String propName=BeanUtils.findPropertyForMethod(method).getName();
-                    String propDoc=AnnotationUtils.findAnnotation(method,SchemaDocumentation.class).value();
+    private GraphQLInputObjectType getDtoInputType(String graphQLInputObjectTypeName, Class clazz) {
+        return new GraphQLInputObjectType(graphQLInputObjectTypeName, AnnotationUtils.findAnnotation(clazz, SchemaDocumentation.class).value()
+                , Arrays.stream(clazz.getMethods()).filter(method -> AnnotationUtils.findAnnotation(method, SchemaDocumentation.class) != null)
+                .map(method -> {
+                    Class propType = BeanUtils.findPropertyForMethod(method).getPropertyType();
+                    String propName = BeanUtils.findPropertyForMethod(method).getName();
+                    String propDoc = AnnotationUtils.findAnnotation(method, SchemaDocumentation.class).value();
                     return newInputObjectField().name(propName).description(propDoc).type(
-                            propType== clazz ?GraphQLTypeReference.typeRef(graphQLInputObjectTypeName):this.getGraphQLInputTypeFromClassType(propType)
+                            propType == clazz ? GraphQLTypeReference.typeRef(graphQLInputObjectTypeName) : this.getGraphQLInputTypeFromClassType(propType)
 
                     ).build();
                 }).collect(Collectors.toList()));
@@ -131,8 +139,8 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                             .name(type.getJavaType().getSimpleName() + MUTATION_INPUTTYPE_POSTFIX)
                             .description(getSchemaDocumentation(type.getJavaType()))
                             .fields(type.getAttributes().stream()
-                                    .filter(attribute -> !"parent".equals(attribute.getName()))//去掉parent属性
-                                    .filter(this::isNotIgnored)//去掉忽略属性
+                                    .filter(attribute -> !ENTRY_PARENT_PROPNAME.equals(attribute.getName()))//去掉parent属性
+                                    .filter(this::isNotIgnoredForEntityInput)//去掉忽略属性
                                     .map(this::getInputObjectField)//根据字段属性获取对应字段。GraphQLInputTypeObjectFiled
                                     .collect(Collectors.toList()))
                             .build();
@@ -204,7 +212,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                     .description(getSchemaDocumentation((AnnotatedElement) entry.getKey())))
                     .map(fieldDefinition -> {
                         if (isCollectionReturnValueForlamda) {
-                            fieldDefinition.type(new GraphQLTypeReference(entityType.getName() + "Connection"));
+                            fieldDefinition.type(new GraphQLTypeReference(entityType.getName() + ENTITY_LIST_NAME));
                         } else {
                             fieldDefinition.type(getGraphQLOutputType(entityType));
                         }
@@ -260,14 +268,21 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                 .description(getSchemaDocumentation(managedType.getJavaType())))
                 .map(fieldDefinition -> {
                     if (managedType instanceof EntityType) {
-                        fieldDefinition.type(getGraphQLOutputType(managedType)).dataFetcher(new JpaDataFetcher(entityManager, (EntityType) managedType,this));
-                    } else {
+                        fieldDefinition.type(getGraphQLOutputType(managedType)).dataFetcher(new JpaDataFetcher(entityManager, (EntityType) managedType, this));
+                    } else {//这里是什么？ TODO 非实体类型的能被查询到吗？内嵌类型么？
                         fieldDefinition.type(new GraphQLList(getGraphQLOutputType(managedType)))
-                                .dataFetcher(new CollectionJpaDataFetcher(entityManager, (EntityType) managedType,this));
+                                .dataFetcher(new CollectionJpaDataFetcher(entityManager, (EntityType) managedType, this));
                     }
                     return fieldDefinition;
                 }).get()
-                .argument(managedType.getAttributes().stream().filter(this::isValidInput).filter(this::isNotIgnored).flatMap(this::getArgument).collect(Collectors.toList()))
+                .argument(managedType.getAttributes().stream()
+                        //只有id和number才能被当作单个实体对象的查询输入参数
+                        .filter(attr -> new HashSet<String>(Arrays.asList(QUERY_OUTPUT_FILTER_PROPS)).contains(attr.getName()))
+                        //.filter(this::isValidInput).filter(this::isNotIgnored)
+                        .map(attr -> GraphQLArgument.newArgument()
+                                .name(attr.getName())
+                                .type(Scalars.GraphQLString)
+                                .build()).collect(Collectors.toList()))
                 .build();
     }
 
@@ -275,23 +290,33 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     //查询实体信息时可分页 TODO 应该添加过滤条件信息
     private GraphQLFieldDefinition getQueryFieldPageableDefinition(EntityType<?> entityType) {
         GraphQLObjectType pageType = newObject()
-                .name(entityType.getName() + "Connection")
-                .description("'Connection' response wrapper object for " + entityType.getName() + ".  When pagination or aggregation is requested, this object will be returned with metadata about the query.")
-                .field(newFieldDefinition().name("totalPages").description("Total number of pages calculated on the database for this pageSize.").type(Scalars.GraphQLLong).build())
-                .field(newFieldDefinition().name("totalElements").description("Total number of results on the database for this query.").type(Scalars.GraphQLLong).build())
-                .field(newFieldDefinition().name("content").description("The actual object results").type(new GraphQLList(getGraphQLOutputType(entityType))).build())
+                .name(entityType.getName() + ENTITY_LIST_NAME)
+                .description(entityType.getName() + ENTITY_LIST_NAME + " 负责包装一组" + entityType.getName() + "数据，你可以在查询中使用分页、排序、过滤等功能")
+                .field(newFieldDefinition().name("totalPages").description("根据paginator.size和数据库记录数得出的总页数").type(Scalars.GraphQLLong).build())
+                .field(newFieldDefinition().name("totalElements").description("总的记录数").type(Scalars.GraphQLLong).build())
+                .field(newFieldDefinition().name("content").description("实际返回的内容列表").type(new GraphQLList(getGraphQLOutputType(entityType))).build())
                 .build();
+
+       /* GraphQLInputObjectType filtertype = newInputObject()
+                .name(entityType.getAlias() + LISTQUERY_FILTER_POSTFIX)
+                .description(entityType.getAlias()+LISTQUERY_FILTER_POSTFIX+" 主要是用来负责在特定情况下制定过滤条件/排序规则的")
+                .field(newInputFieldDefinition().name("totalPages").description("根据paginator.size和数据库记录数得出的总页数").type(Scalars.GraphQLLong).build())
+                .field(newFieldDefinition().name("totalElements").description("总的记录数").type(Scalars.GraphQLLong).build())
+                .field(newFieldDefinition().name("content").description("实际返回的内容列表").type(new GraphQLList(getGraphQLOutputType(entityType))).build())
+                .build();*/
+
+
         return newFieldDefinition()
-                .name(entityType.getName() + "Connection")
-                .description("'Connection' request wrapper object for " + entityType.getName() + ".  Use this object in a query to request things like pagination or aggregation in an argument.  Use the 'content' field to request actual fields ")
+                .name(entityType.getName() + ENTITY_LIST_NAME)
+                .description(entityType.getName() + ENTITY_LIST_NAME + " 负责包装一组" + entityType.getName() + "数据，你可以在查询中使用分页、排序、过滤等功能,请使用content字段请求实际的字段 ")
                 .type(pageType)
                 //采用的是ExtendedJpaDataFetcher来处理
-                .dataFetcher(new CollectionJpaDataFetcher(entityManager, entityType,this))
+                .dataFetcher(new CollectionJpaDataFetcher(entityManager, entityType, this))
                 .argument(GraphQLArgument.newArgument()
-                                .name(PAGINATION_REQUEST_PARAM_NAME)
-                                .type(this.dtoClassGraphQlInputTypeMap.get(Paginator.class))
-                        )
-                .argument( GraphQLArgument.newArgument()
+                        .name(PAGINATION_REQUEST_PARAM_NAME)
+                        .type(this.dtoClassGraphQlInputTypeMap.get(Paginator.class))
+                )
+                .argument(GraphQLArgument.newArgument()
                         .name(QFILTER_REQUEST_PARAM_NAME)
                         .type(this.dtoClassGraphQlInputTypeMap.get(QueryFilter.class)))
                 .build();
@@ -319,9 +344,9 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         return Optional.ofNullable((GraphQLInputType) this.classGraphQlScalarTypeMap.get(typeClazz)).orElseGet(() ->
                 Optional.ofNullable((GraphQLInputType) this.enumClassGraphQlEnumTypeMap.get(typeClazz)).orElseGet(() ->
                         Optional.ofNullable((GraphQLInputType) this.dtoClassGraphQlInputTypeMap.get(typeClazz)).orElseGet(() ->
-                        (GraphQLInputType) this.graphQlTypeManagedTypeClassMap.entrySet().stream()
-                                .filter(entry -> entry.getValue().getJavaType().equals(typeClazz) && entry.getKey() instanceof GraphQLInputType)
-                                .map(entry -> (GraphQLInputType) entry.getKey()).findFirst().orElseThrow(() -> new RuntimeException("error getGraphQLInputTypeFromClassType!" + typeClazz.getCanonicalName())))));
+                                (GraphQLInputType) this.graphQlTypeManagedTypeClassMap.entrySet().stream()
+                                        .filter(entry -> entry.getValue().getJavaType().equals(typeClazz) && entry.getKey() instanceof GraphQLInputType)
+                                        .map(entry -> (GraphQLInputType) entry.getKey()).findFirst().orElseThrow(() -> new RuntimeException("error getGraphQLInputTypeFromClassType!" + typeClazz.getCanonicalName())))));
     }
 
     private GraphQLOutputType getGraphQLTypeFromClassType(Class typeClazz) {
@@ -377,23 +402,10 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                 .map(type -> {
                     List<GraphQLArgument> arguments = new ArrayList<>();
                     arguments.add(GraphQLArgument.newArgument().name("orderBy").type(orderByDirectionEnum).build());            // Always add the orderBy argument
-
                     // Get the fields that can be queried on (i.e. Simple Types, no Sub-Objects)
-                    if (attribute instanceof SingularAttribute
-                            && attribute.getPersistentAttributeType() != Attribute.PersistentAttributeType.BASIC) {
-                        ManagedType foreignType = (ManagedType) ((SingularAttribute) attribute).getType();
-
-                        Stream<Attribute> attributes = findBasicAttributes(foreignType.getAttributes());
-                        attributes.forEach(it -> {
-                            arguments.add(GraphQLArgument.newArgument()
-                                    .name(it.getName())
-                                    .type((GraphQLInputType) getAttributeType(it))
-                                    .build());
-                        });
-                    }
-
+                    Stream<GraphQLArgument> stream = getFilterQLArguments(attribute);
+                    stream.forEach(arg -> arguments.add(arg));
                     String name = attribute.getName();
-
                     return newFieldDefinition()
                             .name(name)
                             .description(getSchemaDocumentation(attribute.getJavaMember()))
@@ -403,28 +415,55 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                 });
     }
 
-    private Stream<Attribute> findBasicAttributes(Collection<Attribute> attributes) {
-        return attributes.stream().filter(this::isNotIgnored).filter(it -> it.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC);
+    private Stream<GraphQLArgument> getFilterQLArguments(Attribute attribute) {
+        List<GraphQLArgument> arguments = new ArrayList<>();
+
+    /*    Class clazz = attribute.getJavaType();
+        //if(String.class.isAssignableFrom(clazz)){
+        arguments.add(GraphQLArgument.newArgument()
+                .name("a")
+                .type(fieldNullEnum)
+                .build());
+        arguments.add(GraphQLArgument.newArgument()
+                .name("b")
+                //
+                .type(fieldNullEnum)
+                .build());
+        return arguments.stream();
+*/
+        //无操作数ISNUL,ISNOTNULL，1操作数EQ,LIKE，多操作数IN，计算序号order.
+     /*   }
+           // [eq,like],in, nil:[isnull,isnotnull]
+            GraphQLList x=GraphQLList((GraphQLInputType) getAttributeType(attribute));
+        }else if(Integer.class.isAssignableFrom(clazz)){
+            [eq, gt lt,nlt,nlt],is:[null,notnull],in
+        }else if(Boolean.class.isAssignableFrom(clazz)){
+            eq[eq,noteq],is:[null,notnull]
+
+    }else if(Float.class.isAssignableFrom(clazz)){
+            [eq, gt lt,nlt,nlt],nil:[isnull,isnotnull]
+        }else if(Float.class.isAssignableFrom(clazz)){
+            [eq, gt lt,nlt,nlt],nil:[isnull,isnotnull]
+
+        if (attribute instanceof SingularAttribute
+                && attribute.getPersistentAttributeType() != Attribute.PersistentAttributeType.BASIC) {
+            ManagedType foreignType = (ManagedType) ((SingularAttribute) attribute).getType();
+            Stream<Attribute> attributes = findBasicAttributes(foreignType.getAttributes());
+            attributes.forEach(it -> {
+                arguments.add(GraphQLArgument.newArgument()
+                        .name(it.getAlias())
+                        .type((GraphQLInputType) getAttributeType(it))
+                        .build());
+            });
+        }
+
+*/
+        return arguments.stream();
     }
 
 
-    private GraphQLInputType getBasicAttributeInputTypeAndAddEnumIfNecessary(Class javaType) {
-        return Optional.ofNullable((GraphQLInputType) this.classGraphQlScalarTypeMap.get(javaType))
-                .orElseGet(() -> Optional.ofNullable((GraphQLInputType) this.enumClassGraphQlEnumTypeMap.get(javaType)).orElseGet(() -> {
-                    if (javaType.isEnum()) {
-                        GraphQLEnumType.Builder enumBuilder = GraphQLEnumType.newEnum().name(javaType.getSimpleName());
-                        int ordinal = 0;
-                        for (Enum enumValue : ((Class<Enum>) javaType).getEnumConstants()) {
-                            enumBuilder.value(enumValue.name(), ordinal++);
-                        }
-                        GraphQLEnumType answer = enumBuilder.build();
-                        setIdentityCoercing(answer);
-                        this.enumClassGraphQlEnumTypeMap.put(javaType, answer);
-                        return answer;
-                    } else {
-                        return null;
-                    }
-                }));
+    private Stream<Attribute> findBasicAttributes(Collection<Attribute> attributes) {
+        return attributes.stream().filter(this::isNotIgnored).filter(it -> it.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC);
     }
 
     /**
@@ -435,26 +474,16 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
      */
     private GraphQLType getBasicAttributeTypeAndAddEnumIfNecessary(Class javaType) {
         return Optional.ofNullable((GraphQLType) this.classGraphQlScalarTypeMap.get(javaType))
-                .orElseGet(() -> Optional.ofNullable((GraphQLType) this.enumClassGraphQlEnumTypeMap.get(javaType)).orElseGet(() -> {
-                    if (javaType.isEnum()) {
-                        GraphQLEnumType.Builder enumBuilder = GraphQLEnumType.newEnum().name(javaType.getSimpleName());
-                        int ordinal = 0;
-                        for (Enum enumValue : ((Class<Enum>) javaType).getEnumConstants()) {
-                            enumBuilder.value(enumValue.name(), ordinal++);
-                        }
-                        GraphQLEnumType answer = enumBuilder.build();
-                        setIdentityCoercing(answer);
-                        this.enumClassGraphQlEnumTypeMap.put(javaType, answer);
-                        return answer;
-                    } else {
-                        return null;
-                    }
-                }));
+                .orElseGet(() -> Optional.ofNullable((GraphQLType) this.enumClassGraphQlEnumTypeMap.get(javaType))
+                        .orElseGet(() -> {
+                            return (javaType.isEnum() && (BosEnum.class.isAssignableFrom(javaType))) ?
+                                    this.enumClassGraphQlEnumTypeMap.put((Class<BosEnum>) javaType, getGraphQLEnumType(javaType)) : null;
+                        }));
     }
 
     private GraphQLInputType getAttributeInputType(Attribute attribute) {
         if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC) {
-            GraphQLInputType graphQLInputType = getBasicAttributeInputTypeAndAddEnumIfNecessary(attribute.getJavaType());
+            GraphQLInputType graphQLInputType = (GraphQLInputType)getBasicAttributeTypeAndAddEnumIfNecessary(attribute.getJavaType());
             if (graphQLInputType != null) {
                 return graphQLInputType;
             }
@@ -468,7 +497,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         } else if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ELEMENT_COLLECTION) {
             //TODO 应该不用了，因为我们的集合体现在manytoone中
             Type foreignType = ((PluralAttribute) attribute).getElementType();
-            return new GraphQLList(getBasicAttributeInputTypeAndAddEnumIfNecessary(foreignType.getJavaType()));
+            return new GraphQLList(getBasicAttributeTypeAndAddEnumIfNecessary(foreignType.getJavaType()));
         } else if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED) {
             EmbeddableType<?> embeddableType = (EmbeddableType<?>) ((SingularAttribute<?, ?>) attribute).getType();
             return new GraphQLTypeReference(embeddableType.getJavaType().getSimpleName() + MUTATION_INPUTTYPE_POSTFIX);
@@ -525,7 +554,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         return null;
     }
 
-    private String getSchemaDocumentation(AnnotatedElement annotatedElement) {
+    private static String getSchemaDocumentation(AnnotatedElement annotatedElement) {
         if (annotatedElement != null) {
             SchemaDocumentation schemaDocumentation = annotatedElement.getAnnotation(SchemaDocumentation.class);
             return schemaDocumentation != null ? schemaDocumentation.value() : null;
@@ -533,8 +562,12 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         return null;
     }
 
+    private boolean isNotIgnoredForEntityInput(Attribute attribute) {
+        return !ENTITYPROP_SET_SHOULDBEIGNORED_IN_MUTATION_ARGUMENT.contains(attribute.getName()) && (isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType()));
+    }
+
     private boolean isNotIgnored(Attribute attribute) {
-        boolean isEntryParent = ICoreObject.class.equals(attribute.getJavaType()) && "parent".equals(attribute.getName());
+        boolean isEntryParent = ICoreObject.class.equals(attribute.getJavaType()) && ENTRY_PARENT_PROPNAME.equals(attribute.getName());
         return !isEntryParent && (isNotIgnored(attribute.getJavaMember()) && isNotIgnored(attribute.getJavaType()));
     }
 
@@ -554,21 +587,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
         return false;
     }
 
-    /**
-     * A bit of a hack, since JPA will deserialize our Enum's for us...we don't want GraphQL doing it.
-     *
-     * @param type
-     */
-    private void setIdentityCoercing(GraphQLType type) {
-        try {
-            Field coercing = type.getClass().getDeclaredField("coercing");
-            coercing.setAccessible(true);
-            coercing.set(type, new IdentityCoercing());
-        } catch (Exception e) {
-            log.error("Unable to set coercing for " + type, e);
-        }
-    }
-
     private static final GraphQLArgument paginationArgument =
             GraphQLArgument.newArgument()
                     .name(PAGINATION_REQUEST_PARAM_NAME)
@@ -581,53 +599,46 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                     ).build();
 
 
-    private static final GraphQLEnumType orderByDirectionEnum =
-            new GraphQLEnumType("OrderByDirection","根据某个属性进行升降序的排列",Arrays.stream(OrderByDirection.values())
-                    .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(), qfo.getDescription(), qfo.getValue())).collect(Collectors.toList()));
+    private static final GraphQLEnumType fieldNullEnum = getGraphQLEnumType(FieldNullEnum.class);
 
-    private static final GraphQLEnumType queryFilterOperatorEnum = new GraphQLEnumType("QueryFilterOperator",
-            "查询过滤操作符", Arrays.stream(QueryFilterOperator.values())
-            .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(), qfo.getDescription(), qfo.getValue())).collect(Collectors.toList()));
+    private static GraphQLEnumType getGraphQLEnumType(Class<? extends BosEnum> bosEnumClass) {
+        return new GraphQLEnumType(bosEnumClass.getSimpleName(), getSchemaDocumentation(bosEnumClass), Arrays.stream(bosEnumClass.getEnumConstants())
+                .map(qfo -> new GraphQLEnumValueDefinition(((BosEnum) qfo).getValue(), ((BosEnum) qfo).getDescription(), ((BosEnum) qfo).getValue()))
+                .collect(Collectors.toList()));
+    }
 
-    private static final GraphQLEnumType queryFilterCombinatorEnum = new GraphQLEnumType("QueryFilterCombinator",
-            "查询表达式组合操作符", Arrays.stream(QueryFilterCombinator.values())
-            .map(qfo -> new GraphQLEnumValueDefinition(qfo.name(), qfo.getDescription(), qfo.getValue())).collect(Collectors.toList()));
+
+    private static final GraphQLEnumType orderByDirectionEnum = getGraphQLEnumType(OrderByDirection.class);
+
+    private static final GraphQLEnumType queryFilterOperatorEnum = getGraphQLEnumType(QueryFilterOperator.class);
+
+    private static final GraphQLEnumType queryFilterCombinatorEnum = getGraphQLEnumType(QueryFilterCombinator.class);
 
 
 }
 
-enum OrderByDirection {
 
-    ASC(0,"ASC","升序排列"),DESC(0,"DESC","降序排列");
+enum OrderByDirection implements BosEnum {
 
-    private OrderByDirection(int value,String name,String description){
-        this.value=value;
-        this.name=name;
-        this.description=description;
+    ASC("ASC","升序" , "升序排列"), DESC("DESC","降序", "降序排列");
+
+    private OrderByDirection(String value, String name, String description) {
+        this.ev = new BosEnum.EnumInnerValue(value, name, description);
     }
 
-    public int getValue() {
-        return value;
-    }
+    private BosEnum.EnumInnerValue ev = null;
 
-    public String getName() {
-        return name;
+    @Override
+    public BosEnum.EnumInnerValue getEnumInnerValue() {
+        return this.ev;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    private int value;
-    private String name;
-    private String description;
 
 }
 
 @SchemaDocumentation("分页器")
-    class Paginator{
-        private int page;
-        private int size;
+class Paginator {
+    private int page;
+    private int size;
 
     public Paginator() {
 
@@ -640,19 +651,21 @@ enum OrderByDirection {
 
 
     @SchemaDocumentation("当前页号（从1开始）")
-        public void setPage(int page) {
-            this.page = page;
-        }
+    public void setPage(int page) {
+        this.page = page;
+    }
 
     @SchemaDocumentation("每页大小")
-        public void setSize(int size) {
-            this.size = size;
-        }
-        public int getPage() {
-            return page;
-        }
-        public int getSize() {
-            return size;
-        }
-
+    public void setSize(int size) {
+        this.size = size;
     }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+}
