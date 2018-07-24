@@ -1,7 +1,9 @@
 package org.crygier.graphql;
 
+import graphql.Scalars;
 import graphql.language.*;
 import graphql.schema.*;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -9,6 +11,10 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,10 +22,13 @@ public class JpaDataFetcher implements DataFetcher {
 
     protected EntityManager entityManager;
     protected EntityType<?> entityType;
+    protected IGraphQlTypeMapper graphQlTypeMapper;
 
-    public JpaDataFetcher(EntityManager entityManager, EntityType<?> entityType) {
+
+    public JpaDataFetcher(EntityManager entityManager, EntityType<?> entityType,IGraphQlTypeMapper graphQlTypeMapper) {
         this.entityManager = entityManager;
         this.entityType = entityType;
+        this.graphQlTypeMapper=graphQlTypeMapper;
     }
 
 
@@ -146,9 +155,9 @@ public class JpaDataFetcher implements DataFetcher {
             return null;
         }
 
-        String k = queryFilter.getK(), v = queryFilter.getV();
-        QueryFilterOperator qfo = queryFilter.getO();
-        QueryFilterCombinator qfc = queryFilter.getAndor();
+        String k = queryFilter.getKey(), v = queryFilter.getValue();
+        QueryFilterOperator qfo = queryFilter.getOperator();
+        QueryFilterCombinator qfc = queryFilter.getCombinator();
 
 
         List<String> parts = Arrays.asList(k.split("\\."));
@@ -189,7 +198,7 @@ public class JpaDataFetcher implements DataFetcher {
             return result;
         }
 
-        switch (queryFilter.getAndor()) {
+        switch (queryFilter.getCombinator()) {
             case AND:
                 return result = cb.and(result, next);
             case OR:
@@ -257,6 +266,13 @@ public class JpaDataFetcher implements DataFetcher {
         }
     }
 
+    /**
+     *  * 还有枚举类型没有护理 TODO
+     * @param environment
+     * @param argument
+     * @param value
+     * @return
+     */
     protected Object convertValue(DataFetchingEnvironment environment, Argument argument, Value value) {
         if (value instanceof StringValue) {
             Object convertedValue = environment.getArgument(argument.getName());
@@ -313,8 +329,88 @@ public class JpaDataFetcher implements DataFetcher {
 
         if (outputType instanceof GraphQLObjectType)
             return (GraphQLObjectType) outputType;
-
         return null;
+    }
+
+    protected Object convertValue(DataFetchingEnvironment environment, GraphQLInputType graphQLInputType, Value value) {
+        try {
+            if (graphQLInputType instanceof GraphQLNonNull) {
+                graphQLInputType = (GraphQLInputType) (((GraphQLNonNull) graphQLInputType).getWrappedType());//TODO 强制转化可能会抛异常。
+                return convertValue(environment, graphQLInputType, value);
+            } else if (value == null) {//否则如果为空
+                return null;
+            } else if (value instanceof VariableReference) {
+                Object obj=environment.getExecutionContext().getVariables().get(((VariableReference) value).getName());
+                Value val = getValueFromVariable(environment,obj );
+                return convertValue(environment, graphQLInputType, (Value) val);
+            } else if (graphQLInputType instanceof GraphQLScalarType) {//如果为标量 //TODO 需要把这部分放到GraphQLSchemaBuilder中，因为具体有哪些标量类型他那里最清楚。
+                Object v = (value instanceof IntValue) ? ((IntValue) value).getValue().intValue() :
+                        (value instanceof BooleanValue) ? ((BooleanValue) value).isValue() :
+                                value instanceof FloatValue ? ((FloatValue) value).getValue().floatValue() :
+                                        value instanceof StringValue ? ((StringValue) value).getValue() : null;
+                return ((GraphQLScalarType) graphQLInputType).getCoercing().parseValue(v);
+
+            } else if (graphQLInputType instanceof GraphQLEnumType) {
+                Class enumType = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
+                //TODO enum统一处理
+                return Enum.valueOf(enumType, ((EnumValue) value).getName());
+
+            } else if (graphQLInputType instanceof GraphQLList) {//如果为列表
+                final GraphQLType wrapptype = ((GraphQLList) graphQLInputType).getWrappedType();
+                Set resultSet = new HashSet();
+                ArrayValue av = null;
+                if (value instanceof ArrayValue) {
+                    av = (ArrayValue) value;
+                } else {
+                    List<Value> vlist = new ArrayList<Value>();
+                    vlist.add(value);
+                    av = new ArrayValue(vlist);
+                }
+                List<Value> listvalue = av.getValues();
+                for (Value val : listvalue) {
+                    resultSet.add(convertValue(environment, ((GraphQLInputObjectType) wrapptype), val));
+                }
+                return resultSet;
+            } else if (graphQLInputType instanceof GraphQLInputObjectType) {
+                Class realclass = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
+                Object instance = realclass.newInstance();
+                List<ObjectField> fieldlist = ((ObjectValue) value).getObjectFields();
+                for (ObjectField objectField : fieldlist) {
+                    PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(realclass, objectField.getName());
+                    GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLInputType).getFieldDefinition(objectField.getName()).getType();
+                    Object propertyValue = convertValue(environment, subtype, objectField.getValue());
+                    propertyDescriptor.getWriteMethod().invoke(instance, propertyValue);
+                }
+                return instance;
+            } else {
+                throw new RuntimeException("MutationDataFetcher.composeRealArgument error!");
+
+        }
+    }catch(Exception e){
+        e.printStackTrace();
+        throw new RuntimeException("MutationDataFetcher.composeRealArgument error!");
+    }
+    }
+
+    private Value getValueFromVariable(DataFetchingEnvironment environment, Object val) {
+        if (val instanceof Map) {
+            List<ObjectField> ofList = ((Map<String, Object>) val).entrySet().stream().map((it) -> {
+                Object v=it.getValue();
+                        return new ObjectField(it.getKey(), (v instanceof Value)?(Value)v:getValueFromVariable(environment,v));
+                    }
+            ).collect(Collectors.toList());
+            return new ObjectValue(ofList);
+        } else {//基础类型
+            return (val instanceof Integer) ? new IntValue(BigInteger.valueOf(((Integer) val).longValue())) :
+                    (val instanceof BigInteger) ? new IntValue((BigInteger) val) :
+                            (val instanceof Boolean) ? (new BooleanValue((Boolean) val)) :
+                                    val instanceof String ? new StringValue((String) val) :
+                                            val instanceof String ? new StringValue((String) val) :
+                                                    val instanceof Float ? new FloatValue(BigDecimal.valueOf((Float) val)) :
+                                                            val instanceof Double ? new FloatValue(BigDecimal.valueOf((Double) val)) :
+                                                                    val instanceof BigDecimal ? new FloatValue((BigDecimal) val) :
+                                                                            null;
+        }
     }
 
 

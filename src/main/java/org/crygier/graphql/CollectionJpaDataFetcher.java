@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
-    public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType) {
-        super(entityManager, entityType);
+    public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType,IGraphQlTypeMapper graphQlTypeMapper) {
+        super(entityManager, entityType,graphQlTypeMapper);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Map<String, Object> result = new LinkedHashMap<>();
 
         QueryFilter qfilter=extractQfilterInformation(environment,field);
-        PageInformation pageInformation = extractPageInformation(environment, field);
+        Paginator pageInformation = extractPageInformation(environment, field);
 
         // See which fields we're requesting
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
@@ -38,7 +38,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
         if (contentSelection.isPresent())
-            result.put("content", getQueryForEntity(environment, qfilter, contentSelection.get(), false).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
+            result.put("content", getQueryForEntity(environment, qfilter, contentSelection.get(), false).setMaxResults(pageInformation.getSize()).setFirstResult((pageInformation.getPage() - 1) * pageInformation.getSize()).getResultList());
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
@@ -47,7 +47,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
                     .orElseGet(() -> getCountQuery(environment, new Field(),qfilter).getSingleResult());
 
             result.put("totalElements", totalElements);
-            result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.size)).longValue());
+            result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.getSize())).longValue());
         }
 
         return result;
@@ -77,70 +77,27 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         return field.getSelectionSet().getSelections().stream().filter(it -> it instanceof Field).map(it -> (Field) it).filter(it -> fieldName.equals(it.getName())).findFirst();
     }
 
-    private PageInformation extractPageInformation(DataFetchingEnvironment environment, Field field) {
+    private Paginator extractPageInformation(DataFetchingEnvironment environment, Field field) {
         Optional<Argument> paginationRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.PAGINATION_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         if (paginationRequest.isPresent()) {
             field.getArguments().remove(paginationRequest.get());
-
-            ObjectValue paginationValues = (ObjectValue) paginationRequest.get().getValue();
-            IntValue page = (IntValue) paginationValues.getObjectFields().stream().filter(it -> "page".equals(it.getName())).findFirst().get().getValue();
-            IntValue size = (IntValue) paginationValues.getObjectFields().stream().filter(it -> "size".equals(it.getName())).findFirst().get().getValue();
-
-            return new PageInformation(page.getValue().intValue(), size.getValue().intValue());
+            Value v=paginationRequest.get().getValue();
+            return (Paginator)this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(Paginator.class),v);
         }
-
-        return new PageInformation(1, Integer.MAX_VALUE);
-    }
-
-    private static final class PageInformation {
-        public Integer page;
-        public Integer size;
-
-        public PageInformation(Integer page, Integer size) {
-            this.page = page;
-            this.size = size;
-        }
+        return new Paginator(1, Integer.MAX_VALUE);
     }
 
 
-     static final String QFILTER_KEY="key";
-     static final String QFILTER_VALUE="value";
-     static final String QFILTER_OPERATE="operator";
-     static final String QFILTER_ANDOR="combinator";
-     static final String QFILTER_NEXT="next";
 
     private QueryFilter extractQfilterInformation(DataFetchingEnvironment environment, Field field) {
         Optional<Argument> qfilterRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.QFILTER_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         if (qfilterRequest.isPresent()) {
             field.getArguments().remove(qfilterRequest.get());
             ObjectValue qfilterValues = (ObjectValue) qfilterRequest.get().getValue();
-            return getQFilter(qfilterValues);
+            return (QueryFilter) this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(QueryFilter.class),qfilterValues);
         }else{
             return null;
         }
     }
-
-    private QueryFilter getQFilter(ObjectValue qfilterValues){
-        if(qfilterValues==null){
-            return null;
-        }
-        StringValue k = (StringValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_KEY.equals(it.getName())).findFirst().get().getValue();
-
-        EnumValue o = (EnumValue) qfilterValues.getObjectFields().stream().filter(it -> QFILTER_OPERATE.equals(it.getName())).findFirst().get().getValue();
-
-        Optional<ObjectField> vf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_VALUE.equals(it.getName())).findFirst();
-        String v=vf.isPresent()?((StringValue) vf.get().getValue()).getValue():null;
-
-        Optional<ObjectField> xf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_ANDOR.equals(it.getName())).findFirst();
-
-        QueryFilterCombinator x=xf.isPresent()?QueryFilterCombinator.valueOf(((EnumValue)xf.get().getValue()).getName()):null;
-
-        Optional<ObjectField> nf=qfilterValues.getObjectFields().stream().filter(it -> QFILTER_NEXT.equals(it.getName())).findFirst();
-        QueryFilter qf=nf.isPresent()?getQFilter((ObjectValue)nf.get().getValue()):null;
-        return new QueryFilter(k.getValue(),QueryFilterOperator.valueOf(o.getName()),v,x,qf);
-
-    }
-
-
 
 }

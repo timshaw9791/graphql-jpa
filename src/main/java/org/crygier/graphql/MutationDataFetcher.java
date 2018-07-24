@@ -24,76 +24,16 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
     protected Method controllerMethod;
     List<GraphQLArgument> gqalist = null;
     Object target = null;
-    IGraphQlTypeMapper graphQlTypeMapper = null;
 
     public MutationDataFetcher(EntityManager entityManager, EntityType entityType, Method controllerMethod, Object target, List<GraphQLArgument> gqalist, IGraphQlTypeMapper graphQlTypeMapper) {
-        super(entityManager, entityType);
+        super(entityManager, entityType,graphQlTypeMapper);
         this.controllerMethod = controllerMethod;
         this.gqalist = gqalist;
         this.target = target;
-        this.graphQlTypeMapper = graphQlTypeMapper;
         //TODO 考虑标量，和实体类型。
     }
 
-    /**
-     * 还有枚举类型和，变量引用类型没有处理 TODO
-     *
-     * @param graphQLType
-     * @param realArgValue
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     */
-    private Object composeRealArgument(GraphQLType graphQLType, Value realArgValue) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        //如果为非空类型
-        if (graphQLType instanceof GraphQLNonNull) {
-            graphQLType = ((GraphQLNonNull) graphQLType).getWrappedType();
-            return composeRealArgument(graphQLType, realArgValue);
-        } else if (realArgValue == null) {//否则如果为空
-            return null;
-        } else if (graphQLType instanceof GraphQLScalarType) {//如果为标量 //TODO 需要把这部分放到GraphQLSchemaBuilder中，因为具体有哪些标量类型他那里最清楚。
-            Object value = null;
-            if (realArgValue instanceof StringValue) {
-                value = ((StringValue) realArgValue).getValue();
-            } else if (realArgValue instanceof IntValue) {
-                value = ((IntValue) realArgValue).getValue();
-            }else if(realArgValue instanceof BooleanValue){
-                value = Boolean.valueOf(((BooleanValue) realArgValue).isValue());
-            }
 
-            return ((GraphQLScalarType) graphQLType).getCoercing().parseValue(value);
-        } else if (graphQLType instanceof GraphQLList) {//如果为列表
-            final GraphQLType wrapptype = ((GraphQLList) graphQLType).getWrappedType();
-            Set resultSet = new HashSet();
-            ArrayValue av = null;
-            if (realArgValue instanceof ArrayValue) {
-                av = (ArrayValue) realArgValue;
-            } else {
-                List<Value> vlist = new ArrayList<Value>();
-                vlist.add(realArgValue);
-                av = new ArrayValue(vlist);
-            }
-            List<Value> listvalue = av.getValues();
-            for (Value value : listvalue) {
-                resultSet.add(composeRealArgument(((GraphQLInputObjectType) wrapptype), value));
-            }
-            return resultSet;
-        } else if (graphQLType instanceof GraphQLInputObjectType) {
-            Class realclass = this.graphQlTypeMapper.getClazzByInputType(graphQLType);
-            Object instance = realclass.newInstance();
-            List<ObjectField> fieldlist = ((ObjectValue) realArgValue).getObjectFields();
-            for (ObjectField objectField : fieldlist) {
-                PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(realclass, objectField.getName());
-                GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLType).getFieldDefinition(objectField.getName()).getType();
-                Object propertyValue = composeRealArgument(subtype, objectField.getValue());
-                propertyDescriptor.getWriteMethod().invoke(instance, propertyValue);
-            }
-            return instance;
-        } else {
-            throw new RuntimeException("MutationDataFetcher.composeRealArgument error!");
-        }
-    }
 
     @Override
     public Object getResult(DataFetchingEnvironment environment) {
@@ -111,7 +51,7 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
                         if (gqalist.get(idx).getName().equals(realArg.getName())) {
                             GraphQLType graphQLType = this.gqalist.get(idx).getType();
                             try {
-                                realArguments[idx] = composeRealArgument(graphQLType, realArg.getValue());
+                                realArguments[idx] = convertValue(environment,(GraphQLInputType)graphQLType, realArg.getValue());
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 throw new RuntimeException("getArguments erroros!");
