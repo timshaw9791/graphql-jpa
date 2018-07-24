@@ -54,6 +54,11 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
 
+    testCompile 'com.aliyun:aliyun-java-sdk-core:3.5.0'
+    testCompile 'com.aliyun:aliyun-java-sdk-ecs:3.0.0'
+    testCompile 'com.aliyun.oss:aliyun-sdk-oss:2.8.3'
+
+
     testCompile 'cglib:cglib-nodep:3.1'
     testCompile 'org.objenesis:objenesis:2.1'
 

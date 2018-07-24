@@ -1,5 +1,6 @@
 package org.crygier.graphql
 
+import com.aliyun.ossdemo.AliyunSTSController
 import groovy.transform.CompileStatic
 import org.crygier.graphql.GraphQLExecutor
 import org.crygier.graphql.mlshop.controller.BusinessController
@@ -37,6 +38,11 @@ class TestApplication {
     @Bean("BusinessController")
     public BusinessController() {
         return new BusinessController();
+    }
+
+    @Bean("AliyunSTSController")
+    public AliyunSTSController() {
+        return new AliyunSTSController();
     }
 
 }
