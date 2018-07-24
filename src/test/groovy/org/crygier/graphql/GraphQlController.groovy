@@ -43,10 +43,17 @@ class GraphQlController {
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
     @RequestMapping(path = "/graphql")
     ExecutionResult graphQl(@RequestBody Map<String,Object> map) {
-        Map<String, Object> variables = null;
+        Map<String, Object> vsmap = null;
 
-        String va=map.get("variables");
-        Map<String, Object> vsmap =  va? objectMapper.readValue(va, Map) : null;
+        Object va=map.get("variables");
+        if(va==null){
+            vsmap=null;
+        }else if(va instanceof String){
+            vsmap =  va? objectMapper.readValue(va, Map) : null;
+        }else{//map
+            vsmap=(Map<String, Object>)va;
+        }
+
 
         GraphQLInputQuery query=null;
         ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
