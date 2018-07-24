@@ -103,7 +103,7 @@ public class AliyunSTSController
     }
 
 
-
+/*
     public static void main(String[] args) {
         try {
             uploadImage();
@@ -112,10 +112,7 @@ public class AliyunSTSController
         }
     }
 
-    /**
-     * 后端图片直传测试
-     * @throws FileNotFoundException
-     */
+     //后端图片直传测试
     public static void uploadImage() throws FileNotFoundException {
         // Endpoint以杭州为例，其它Region请按实际情况填写。
         String endpoint = "http://oss-cn-shanghai.aliyuncs.com";
@@ -130,4 +127,5 @@ public class AliyunSTSController
         // 关闭OSSClient。
         ossClient.shutdown();
     }
+    */
 }
