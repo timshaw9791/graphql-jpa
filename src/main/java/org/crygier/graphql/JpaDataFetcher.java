@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import cn.wzvtcsoft.x.bos.domain.Entry;
 import graphql.Scalars;
 import graphql.language.*;
 import graphql.schema.*;
@@ -11,6 +12,7 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
+import javax.swing.text.html.Option;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -379,7 +381,22 @@ public class JpaDataFetcher implements DataFetcher {
                     PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(realclass, objectField.getName());
                     GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLInputType).getFieldDefinition(objectField.getName()).getType();
                     Object propertyValue = convertValue(environment, subtype, objectField.getValue());
-                    propertyDescriptor.getWriteMethod().invoke(instance, propertyValue);
+                    java.lang.reflect.Field f = null;
+                    while (!realclass.equals(Object.class)) {
+                        Optional<java.lang.reflect.Field> opt = Arrays.stream(realclass.getDeclaredFields())
+                                .filter(field -> field.getName().equals(propertyDescriptor.getName())).findFirst();
+                        if (opt.isPresent() && (f = opt.get()) != null) {
+                            break;
+                        } else {
+                            realclass = realclass.getSuperclass();
+                        }
+                    }
+                    if (f == null) {
+                        throw new RuntimeException("找不到这个属性");
+                    } else {
+                        f.setAccessible(true);
+                        f.set(instance, propertyValue);
+                    }
                 }
                 return instance;
             } else {

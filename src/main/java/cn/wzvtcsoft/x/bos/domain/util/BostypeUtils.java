@@ -2,13 +2,14 @@ package cn.wzvtcsoft.x.bos.domain.util;
 
 import cn.wzvtcsoft.x.bos.domain.IBostype;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class BostypeUtils {
 
     /**
-     * 获取到的id只可能是[a-zA-Z0-9]另外还有-_这64个字符。
-     * TODO 看起来需要把-改为$,去掉首字母为数字的，这样就是一个普通的标识符了，也无需转义之后再做其他用途了
+     * 获取到的id只可能是[a-zA-Z0-9]另外还有-这63个字符。
      * @param bostypeenum
      * @return
      */
@@ -16,69 +17,11 @@ public class BostypeUtils {
         String miniuuid=getMiniuuid(null);
         return miniuuid+bostypeenum.toString();
     }
-    public static String getBostypeid(String uuid,IBostype bostypeenum){
-        String miniuuid=getMiniuuid(uuid);
-        return miniuuid+bostypeenum.toString();
-    }
 
-	/*
-	public static IBostype getBostypeEnum(String ownerid) {
-		String s=ownerid.substring(22);
-		return BostypeEnum.valueOf(s);
-	}
-	*/
+
 
     public static boolean isBostype(String id,IBostype be){
         return be.toString().equals(id.substring(22));
-    }
-
-    /**将ID编码成更友好的类似于变量标识符的ID，包括首字不能为数字。将字符串中的java转意
-     * @param id
-     * @return
-     */
-    public static String encodeId(String id){
-        if(id==null){
-            return null;
-        }
-        if((id==null || "".equals(id.trim()))|| (id.trim().length()!=25)){
-            throw new RuntimeException("already encoded or invalid id!");
-        }
-        id=id.replace("_", "__");
-        id=id.replace("-", "_A");
-        //if first c is a digit,
-        if((id.charAt(0)>=48) && (id.charAt(0)<58)){
-            id="_B"+id;
-        }
-        return id;
-    }
-
-    public static String decodeId(String id){
-        if(id==null){
-            return null;
-        }
-        StringBuilder sb=new StringBuilder();
-        int idx=-1;
-        if(id.startsWith("_B")){ //remove prefix for first digit.
-            id=id.substring(2);
-        }
-        while((idx=id.indexOf("_"))>=0){
-            sb.append(id.substring(0,idx));
-            if(id.length()<idx+2){
-                throw new RuntimeException("decoded id is invalid! !");
-            }
-            char c=id.charAt(idx+1);
-            if(c=='_'){
-                sb.append('_');
-            }else if(c=='A'){
-                sb.append("-");
-            }
-            id=id.substring(idx+2);
-        }
-        id=sb.append(id).toString();
-        if( id.trim().length()!=25){
-            throw new RuntimeException("decoded id is invalid! !");
-        }
-        return id;
     }
 
 
@@ -94,8 +37,25 @@ public class BostypeUtils {
      * 而且考虑到最后一个字符必须为数字，好与后面的bostype分隔开，所以采用的是0，1，2，3
      * @return
      */
-
+    //TODO 用缓存优化，先生成好100个，到40个的时候再去加到100个，
     public static String getMiniuuid(String uid) {
+        String id = null;
+        int i=0;
+        do {
+            i++;
+            id = getInternalMiniuuid(uid);
+        }
+        while (id.contains("-") || new HashSet(Arrays.asList(new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"})).contains(id.substring(0, 1)));
+        //System.out.println(i+":"+id);
+
+        return id;
+    }
+
+
+    public static void main(String[] args){
+        for(int i=0;i<100;i++){getMiniuuid(null);}
+    }
+    private static String getInternalMiniuuid(String uid) {
         if((uid==null || "".equals(uid.trim())) || (uid.trim().length()!=32)){
             uid = UUID.randomUUID().toString().replaceAll("-", "");
         }
@@ -124,7 +84,11 @@ public class BostypeUtils {
         int n = b & 0x03;
 
         sb.append(getlastchar(n));
+
+       // 将ID编码成更友好的类似于变量标识符的ID，包括首字不能为数字。将字符串中的java转意
         return sb.toString();
+
+
     }
 
     private static char getlastchar(int n) {

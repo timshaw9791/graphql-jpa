@@ -2,18 +2,18 @@
 
 
 -- User
-insert into user(id, first_name, last_name,CREATETIME,updatetime,number) values
-	('1000','Bob', 'Austin',0,0,'1000'),('1001','Tim', 'Shaw',0,0,'1001');
+insert into user(id, first_name, last_name,CREATETIME,updatetime,number,disabled) values
+	('1000','Bob', 'Austin',0,0,'1000',false),('1001','Tim', 'Shaw',0,0,'1001',false);
 
 
 
 	-- Privi
-insert into privi(id, name,createactorid, createtime, number, updateactorid, updatetime) values
-	('1000','删除用户功能',null,0,'1000',null,0 ),('1001','查看用户功能',null,0,'1001',null,0),('1002','修改用户功能',null,0,'1002',null,0);
+insert into privi(id, name,createactorid, createtime, number, updateactorid, updatetime,disabled) values
+	('1000','删除用户功能',null,0,'1000',null,0 ,false),('1001','查看用户功能',null,0,'1001',null,0,false),('1002','修改用户功能',null,0,'1002',null,0,false);
 
 	-- role
-insert into roles(id, name,createactorid, createtime, number, updateactorid, updatetime) values
-	('1000','管理员角色' ,null,0,'1000',null,0),('1001','guest角色',null,0,'1001',null,0),('1002','普通角色',null,0,'1002',null,0);
+insert into roles(id, name,createactorid, createtime, number, updateactorid, updatetime,disabled) values
+	('1000','管理员角色' ,null,0,'1000',null,0,false),('1001','guest角色',null,0,'1001',null,0,false),('1002','普通角色',null,0,'1002',null,0,false);
 
 -- RolePrevilegeItem
 insert into role_previlege_item(id, parent_id, privi_id) values

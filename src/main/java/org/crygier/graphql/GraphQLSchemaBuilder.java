@@ -473,11 +473,17 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
      * @return 如果没找到，则回返回null
      */
     private GraphQLType getBasicAttributeTypeAndAddEnumIfNecessary(Class javaType) {
+
         return Optional.ofNullable((GraphQLType) this.classGraphQlScalarTypeMap.get(javaType))
                 .orElseGet(() -> Optional.ofNullable((GraphQLType) this.enumClassGraphQlEnumTypeMap.get(javaType))
                         .orElseGet(() -> {
-                            return (javaType.isEnum() && (BosEnum.class.isAssignableFrom(javaType))) ?
-                                    this.enumClassGraphQlEnumTypeMap.put((Class<BosEnum>) javaType, getGraphQLEnumType(javaType)) : null;
+                            if (javaType.isEnum() && (BosEnum.class.isAssignableFrom(javaType))) {
+                                GraphQLEnumType gt = getGraphQLEnumType(javaType);
+                                this.enumClassGraphQlEnumTypeMap.put((Class<BosEnum>) javaType, gt);
+                                return gt;
+                            } else {
+                                return null;
+                            }
                         }));
     }
 

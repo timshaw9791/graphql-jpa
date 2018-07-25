@@ -30,7 +30,6 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
         this.controllerMethod = controllerMethod;
         this.gqalist = gqalist;
         this.target = target;
-        //TODO 考虑标量，和实体类型。
     }
 
 

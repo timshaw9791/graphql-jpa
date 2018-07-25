@@ -5,6 +5,7 @@ package cn.wzvtcsoft.x.bos.domain;
 
 import cn.wzvtcsoft.x.bos.domain.CoreObject;
 import cn.wzvtcsoft.x.bos.domain.util.StringUtils;
+import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -21,33 +22,36 @@ public abstract class BosEntity extends CoreObject implements IEntity {
     @Column(name="number",unique=true,nullable=false,length=25)
     private String number;
 
+    @SchemaDocumentation("创建人ID")
     @CreatedBy
     @Column(name="createactorid",length=25)
     private String createactorid;
 
+    @SchemaDocumentation("上次修改人ID")
     @LastModifiedBy
     @Column(name="updateactorid",length=25)
     private String updateactorid;
 
+    @SchemaDocumentation("上次修改时间，以毫秒为单位")
     @LastModifiedDate
     private long updatetime;
-
+    @SchemaDocumentation("创建时间，以毫秒为单位")
     @CreatedDate
     private long createtime;
 
-   /* @Column(name="objectstatus",length=25)
-    @Enumerated(EnumType.STRING)
-    private EntityStatus objectstatus;
+    //TODO 怎么设置普遍的查询时过滤掉禁用的？
+    @SchemaDocumentation("是否禁用，主要是用来做假删除")
+    private boolean disabled=false;
+    //TODO 乐观锁控制
 
-
-
-    public EntityStatus getObjectstatus() {
-        return objectstatus;
+    public boolean isDisabled() {
+        return disabled;
     }
-    public void setObjectstatus(EntityStatus objectstatus) {
-        this.objectstatus = objectstatus;
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
-*/
+
 
     public String getCreateactorid() {
         return createactorid;
