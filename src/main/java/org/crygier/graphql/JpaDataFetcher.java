@@ -1,5 +1,6 @@
 package org.crygier.graphql;
 
+import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.Entry;
 import graphql.Scalars;
 import graphql.language.*;
@@ -353,9 +354,12 @@ public class JpaDataFetcher implements DataFetcher {
                 return ((GraphQLScalarType) graphQLInputType).getCoercing().parseValue(v);
 
             } else if (graphQLInputType instanceof GraphQLEnumType) {
-                Class enumType = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
-                //TODO enum统一处理
-                return Enum.valueOf(enumType, ((EnumValue) value).getName());
+                Class<? extends BosEnum> enumType = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
+                return (value instanceof StringValue)?
+                    Arrays.stream(enumType.getEnumConstants()).filter(bosEnum -> bosEnum.getValue().equals( ((StringValue)value).getValue())).findFirst()
+                            .orElseThrow(()->new RuntimeException("枚举没找到！")):
+                    Arrays.stream(enumType.getEnumConstants()).filter(bosEnum -> bosEnum.getValue().equals( ((EnumValue)value).getName())).findFirst()
+                            .orElseThrow(()->new RuntimeException("枚举没找到！"));
 
             } else if (graphQLInputType instanceof GraphQLList) {//如果为列表
                 final GraphQLType wrapptype = ((GraphQLList) graphQLInputType).getWrappedType();
