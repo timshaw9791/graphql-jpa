@@ -386,13 +386,14 @@ public class JpaDataFetcher implements DataFetcher {
                     GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLInputType).getFieldDefinition(objectField.getName()).getType();
                     Object propertyValue = convertValue(environment, subtype, objectField.getValue());
                     java.lang.reflect.Field f = null;
-                    while (!realclass.equals(Object.class)) {
-                        Optional<java.lang.reflect.Field> opt = Arrays.stream(realclass.getDeclaredFields())
+                    Class tempclass=realclass;
+                    while (!tempclass.equals(Object.class)) {
+                        Optional<java.lang.reflect.Field> opt = Arrays.stream(tempclass.getDeclaredFields())
                                 .filter(field -> field.getName().equals(propertyDescriptor.getName())).findFirst();
                         if (opt.isPresent() && (f = opt.get()) != null) {
                             break;
                         } else {
-                            realclass = realclass.getSuperclass();
+                            tempclass = tempclass.getSuperclass();
                         }
                     }
                     if (f == null) {
