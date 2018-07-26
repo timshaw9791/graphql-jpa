@@ -111,3 +111,8 @@ eclipse {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.8.1'
 }
+
+//指定编译的编码
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+}
