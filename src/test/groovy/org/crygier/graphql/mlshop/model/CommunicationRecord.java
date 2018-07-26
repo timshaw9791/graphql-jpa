@@ -15,9 +15,9 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
-@SchemaDocumentation("买车沟通记录")
+@SchemaDocumentation("沟通记录详情")
 @CompileStatic
-public class CarCommunicationRecord extends Entry {
+public class CommunicationRecord extends Entry {
 
     @SchemaDocumentation("业务员")
     @ManyToOne

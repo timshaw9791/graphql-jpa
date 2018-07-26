@@ -8,7 +8,6 @@ import org.crygier.graphql.annotation.SchemaDocumentation;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
  * @author Curtain
@@ -16,11 +15,11 @@ import javax.persistence.OneToMany;
  */
 
 @Entity
-@SchemaDocumentation("买车沟通记录")
+@SchemaDocumentation("沟通记录")
 @CompileStatic
 @Bostype("B04")
-public class CarCommunicationItem extends Entry {
+public class CommunicationItem extends Entry {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    CarCommunicationRecord carCommunicationRecord;
+    CommunicationRecord communicationRecord;
 }

@@ -4,7 +4,6 @@ import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.SchemaDocumentation;
-import org.crygier.graphql.model.users.UserRoleItem;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -32,6 +31,6 @@ public class CarCommunication extends BosEntity {
     Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
-    Set<CarCommunicationItem> carCommunicationItems = new HashSet<>();
+    Set<CommunicationItem> communicationItems = new HashSet<>();
 
 }
