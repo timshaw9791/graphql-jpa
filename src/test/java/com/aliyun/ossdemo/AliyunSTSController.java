@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Curtain
@@ -30,10 +32,14 @@ import java.io.InputStream;
 public class AliyunSTSController
 {
     @RequestMapping("/sts")
-    public AssumeRoleResponse getStsToken() {
+    public Object getStsToken() {
         AssumeRoleResponse resp= getToken();
-        resp.setRequestId(BostypeUtils.getMiniuuid(null));
-        return resp;
+        Map<String,Object> result=new HashMap<>();
+        result.put("bucketName","mlshopimage");
+        result.put("endpoint","http://oss-cn-shanghai.aliyuncs.com/");
+        result.put("assumeRoleResponse",resp);
+        result.put("resourceId",BostypeUtils.getMiniuuid(null));
+        return result;
     }
 
     // 目前只有"cn-hangzhou"这个region可用, 不要使用填写其他region的值

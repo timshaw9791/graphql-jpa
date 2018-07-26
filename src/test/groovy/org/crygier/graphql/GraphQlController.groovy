@@ -58,7 +58,7 @@ class GraphQlController {
         GraphQLInputQuery query=null;
         ExecutionResult result= graphQLExecutor.execute(map.get("query").toString(), vsmap);
        // if(result.getErrors()!=null && result.getErrors().size()==0){
-            result=new ExecutionResultBos(result.getData(),null,result.getExtensions());
+            result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
         return result;
     }

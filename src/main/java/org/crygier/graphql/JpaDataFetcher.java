@@ -2,6 +2,7 @@ package org.crygier.graphql;
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.Entry;
+import cn.wzvtcsoft.x.bos.validate.InputErrorException;
 import graphql.Scalars;
 import graphql.language.*;
 import graphql.schema.*;
@@ -36,6 +37,14 @@ public class JpaDataFetcher implements DataFetcher {
 
 
     public final Object get(DataFetchingEnvironment environment) {
+     /*  if(true){
+           Map<String,String[]> map=new HashMap();
+           map.put("名字要有",new String[]{"a,a.b"});
+           map.put("身份证和电话号码二者必须要有一个",new String[]{"b,a.b.c"});
+
+           throw new InputErrorException(map);
+       }
+*/
         Object result=this.getResult(environment);
         //throw new CustomRuntimeException();
         //TODO 检查权限
@@ -386,13 +395,14 @@ public class JpaDataFetcher implements DataFetcher {
                     GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLInputType).getFieldDefinition(objectField.getName()).getType();
                     Object propertyValue = convertValue(environment, subtype, objectField.getValue());
                     java.lang.reflect.Field f = null;
-                    while (!realclass.equals(Object.class)) {
-                        Optional<java.lang.reflect.Field> opt = Arrays.stream(realclass.getDeclaredFields())
+                    Class tempclass=realclass;
+                    while (!tempclass.equals(Object.class)) {
+                        Optional<java.lang.reflect.Field> opt = Arrays.stream(tempclass.getDeclaredFields())
                                 .filter(field -> field.getName().equals(propertyDescriptor.getName())).findFirst();
                         if (opt.isPresent() && (f = opt.get()) != null) {
                             break;
                         } else {
-                            realclass = realclass.getSuperclass();
+                            tempclass = tempclass.getSuperclass();
                         }
                     }
                     if (f == null) {
