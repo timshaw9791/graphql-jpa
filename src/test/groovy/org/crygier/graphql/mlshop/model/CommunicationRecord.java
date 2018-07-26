@@ -37,7 +37,7 @@ public class CommunicationRecord extends Entry {
 
     /*客户信息中的客户等级  随着记录的变化而变化*/
     @SchemaDocumentation("客户级别：分为ABC三等")
-    CarSourceTypeEnum level;
+    CustomerLevelEnum level;
 
     @SchemaDocumentation("状态：分为待分配,待回访，已回访，已转换，战败五种")
     CarCommunicationStatusEnum status;
