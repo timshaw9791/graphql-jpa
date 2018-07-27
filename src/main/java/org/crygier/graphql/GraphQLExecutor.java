@@ -10,7 +10,12 @@ import org.crygier.graphql.annotation.GRestController;
 import org.springframework.beans.annotation.AnnotationBeanUtils;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +24,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.awt.*;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,21 +39,22 @@ import java.util.stream.Collectors;
  * If the executor is given a mutator function, it is feasible to manipulate the {@link GraphQLSchema}, introducing
  * the option to add mutations, subscriptions etc.
  */
-public class GraphQLExecutor {
+
+@Component
+public class GraphQLExecutor implements ApplicationListener {
 
     @Resource
     private EntityManager entityManager;
 
 
-    private ListableBeanFactory listableBeanFactory;
 
     private GraphQL graphQL;
     private GraphQLSchema graphQLSchema;
     private GraphQLSchema.Builder builder;
 
-    public GraphQLExecutor(ListableBeanFactory listableBeanFactory) {
-        this.listableBeanFactory=listableBeanFactory;
-        createGraphQL(null);
+    Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap=null;
+
+    public GraphQLExecutor() {
     }
 
     /**
@@ -58,39 +65,30 @@ public class GraphQLExecutor {
      */
     public GraphQLExecutor(EntityManager entityManager) {
         this.entityManager = entityManager;
-        createGraphQL(null);
     }
 
 
     public GraphQLExecutor(EntityManager entityManager, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.entityManager = entityManager;
-        createGraphQL(customGraphQLScalarTypeMap);
+        this.customGraphQLScalarTypeMap=customGraphQLScalarTypeMap;
+
     }
 
-    @PostConstruct
-    protected synchronized void createGraphQL() {
-        createGraphQL(null);
-    }
 
     //TODO 应该使用springApplication的生命周期时间来拿到这些bean
-    protected synchronized void createGraphQL(Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
+    private synchronized void createGraphQL(ApplicationContext listableBeanFactory) {
+
         Map<Method, Object> methodTargetMap = new HashMap<>();
         if(listableBeanFactory!=null) {
             Collection<Object> controllerObjects = listableBeanFactory.getBeansWithAnnotation(RestController.class)
-                    .values().stream().filter(obj ->
-                            Arrays.stream(obj.getClass().getAnnotations())
-                                    //包含GRestController注解的类跳出来
-                                    .filter(annotation -> GRestController.class.equals(annotation.annotationType())).findFirst().isPresent()
+                    .values().stream().filter(obj -> AnnotationUtils.findAnnotation(obj.getClass(),GRestController.class)!=null
                     ).collect(Collectors.toList());
-
 
             controllerObjects.stream()
                     .forEach(controllerObj -> {
                         Arrays.stream(controllerObj.getClass().getDeclaredMethods())
                                 .forEach(method -> {
-                                    if (Arrays.stream(method.getAnnotations()).filter(annotation ->
-                                            GRequestMapping.class.equals(annotation.annotationType()))
-                                            .findFirst().isPresent()) {
+                                    if(AnnotationUtils.findAnnotation(method,GRequestMapping.class)!=null) {
                                         methodTargetMap.put(method, controllerObj);
                                     }
                                 });
@@ -100,7 +98,7 @@ public class GraphQLExecutor {
 
 
         if (entityManager != null) {
-            if (builder == null && customGraphQLScalarTypeMap == null) {
+            if (builder == null && this.customGraphQLScalarTypeMap == null) {
                 this.builder = new GraphQLSchemaBuilder(entityManager,methodTargetMap);
             } else if (builder == null) {
                 this.builder = new GraphQLSchemaBuilder(entityManager, methodTargetMap, customGraphQLScalarTypeMap);
@@ -135,7 +133,7 @@ public class GraphQLExecutor {
             return graphQL.execute(query);
         return graphQL.execute(ExecutionInput.newExecutionInput().query(query).variables(arguments).build());
     }
-
+//------------以下似乎都是用来写测试的，可以去掉这些东西------------
     /**
      * Gets the builder that was used to create the Schema that this executor is basing its query executions on. The
      * builder can be used to update the executor with the {@link #updateSchema(GraphQLSchema.Builder)} method.
@@ -169,8 +167,15 @@ public class GraphQLExecutor {
 
     public GraphQLExecutor updateSchema(GraphQLSchema.Builder builder, Map<Class,GraphQLScalarType> customGraphQLScalarTypeMap) {
         this.builder = builder;
-        createGraphQL(customGraphQLScalarTypeMap);
+        this.customGraphQLScalarTypeMap=customGraphQLScalarTypeMap;
+        createGraphQL(null);
         return this;
     }
-
+    //------------以上似乎都是用来写测试的，可以去掉这些东西------------
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+        if(event instanceof ApplicationStartedEvent){
+            this.createGraphQL( ((ApplicationStartedEvent) event).getApplicationContext());
+        }
+    }
 }

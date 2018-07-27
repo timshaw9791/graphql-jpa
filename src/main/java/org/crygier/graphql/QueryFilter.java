@@ -3,7 +3,7 @@ package org.crygier.graphql;
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
-import groovy.transform.CompileStatic;
+
 import org.crygier.graphql.annotation.SchemaDocumentation;
 
 @SchemaDocumentation("过滤条件")

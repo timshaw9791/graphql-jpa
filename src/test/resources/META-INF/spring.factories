@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=cn.zzk.validator.config.ValidationAutoConfig
+org.springframework.context.ApplicationListener=org.crygier.graphql.GraphQLExecutor
