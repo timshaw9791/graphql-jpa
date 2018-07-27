@@ -1,5 +1,6 @@
-package org.crygier.graphql;
+package org.crygier.graphql
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
@@ -49,7 +50,7 @@ class GraphQlController {
         if(va==null){
             vsmap=null;
         }else if(va instanceof String){
-            vsmap =  va? objectMapper.readValue(va, Map) : null;
+            vsmap =  va? objectMapper.readValue(va as JsonParser, Map) : null;
         }else{//map
             vsmap=(Map<String, Object>)va;
         }

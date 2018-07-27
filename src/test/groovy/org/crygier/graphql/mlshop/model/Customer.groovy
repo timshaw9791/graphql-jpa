@@ -5,6 +5,7 @@ import cn.wzvtcsoft.x.bos.domain.Bostype
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.enums.CarSourceTypeEnum
+import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum
 
 import javax.persistence.Entity
 
@@ -32,7 +33,7 @@ public class Customer extends BosEntity {
 
 
     @SchemaDocumentation("客户级别：分为ABC三等")
-    CarSourceTypeEnum level;
+    CustomerLevelEnum level;
 
     @SchemaDocumentation("微信号")
     String weixinid;
