@@ -5,22 +5,17 @@ import graphql.schema.DataFetchingEnvironment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
-    public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType,IGraphQlTypeMapper graphQlTypeMapper) {
+    public static final String ENTITY_PROP_FOR_DISABLED = "disabled";
+
+    public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType, IGraphQlTypeMapper graphQlTypeMapper) {
         super(entityManager, entityType,graphQlTypeMapper);
     }
 
@@ -53,6 +48,8 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         return result;
     }
 
+
+
     /**
      *用来方便继承的
      * @param environment
@@ -62,6 +59,12 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
      * @return 如果仅仅查询数量则返回TypedQuery<Long>、如果查询的是Entity，则返回TypedQuery<EntityType>
      */
     protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount) {
+        if(qfilter!=null && qfilter.isDisabledEntityAllowed()){
+            qfilter=qfilter.getNext();
+        }else if(qfilter!=null && qfilter.isOnlyDisabledEntityAllowed()){
+        }else{
+            qfilter=new QueryFilter(ENTITY_PROP_FOR_DISABLED,QueryFilterOperator.EQUEAL,"false",QueryFilterCombinator.AND,qfilter);
+        }
         return super.getQuery(environment, field, qfilter, justforselectcount);
     }
     //用来方便继承的。

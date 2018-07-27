@@ -152,6 +152,8 @@ public class JpaDataFetcher implements DataFetcher {
         arguments.addAll(field.getArguments());
         final Root roottemp = root;
         predicates.addAll(arguments.stream().map(it -> getPredicate(cb, roottemp, environment, it)).collect(Collectors.toList()));
+
+
         query.where(predicates.toArray(new Predicate[predicates.size()]));
 
         if (!justforselectcount) {
@@ -163,15 +165,12 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, QueryFilter queryFilter) {
+        Predicate result = null;
         if (queryFilter == null) {
-            return null;
+            return result;
         }
 
-        String k = queryFilter.getKey(), v = queryFilter.getValue();
-        QueryFilterOperator qfo = queryFilter.getOperator();
-        QueryFilterCombinator qfc = queryFilter.getCombinator();
-
-
+        String k = queryFilter.getKey();
         List<String> parts = Arrays.asList(k.split("\\."));
         Path path = root;
         //TODO 这里要做报错处理，因为很可能数据导航写错了。
@@ -184,11 +183,17 @@ public class JpaDataFetcher implements DataFetcher {
                 path = temp;
             }
         }
-        Predicate result = null;
+
+        String v = queryFilter.getValue();
+        QueryFilterOperator qfo = queryFilter.getOperator();
+        QueryFilterCombinator qfc = queryFilter.getCombinator();
+        Object value=null;
+
         //TODO 需要进一步扩展
         switch (qfo) {
             case LIKE:
-                result = cb.like(path, v);
+                value=convertFilterValue(path.getJavaType(),v);
+                result = cb.like(path, (String)value);
                 break;
             case ISNULL:
                 result = cb.isNull(path);
@@ -196,7 +201,8 @@ public class JpaDataFetcher implements DataFetcher {
                 break;
             // case GREATTHAN:cb.greaterThan(path,)
             case EQUEAL:
-                result = cb.equal(path, v);
+                value=convertFilterValue(path.getJavaType(),v);
+                result = cb.equal(path, value);
                 ;
                 break;
         }
@@ -219,6 +225,12 @@ public class JpaDataFetcher implements DataFetcher {
         }
         return result;
 
+    }
+
+    private Object convertFilterValue(Class javaType, String v) {
+        return (javaType==boolean.class || javaType==Boolean.class)?Boolean.valueOf(v):
+                (javaType==int.class || javaType==Integer.class)?Integer.valueOf(v):
+                        (javaType==long.class || javaType==Long.class)?Long.valueOf(v):v;
     }
 
     /**
