@@ -92,6 +92,8 @@ model {
 
 bootRun{
     classpath = sourceSets.test.runtimeClasspath
+    jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"]
+
 }
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
