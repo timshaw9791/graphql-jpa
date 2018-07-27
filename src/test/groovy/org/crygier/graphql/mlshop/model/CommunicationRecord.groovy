@@ -1,15 +1,14 @@
 package org.crygier.graphql.mlshop.model
 
-import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import cn.wzvtcsoft.x.bos.domain.Entry;
 import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum
+import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
 
 /**
  * @author Curtain

@@ -3,11 +3,11 @@ package org.crygier.graphql.mlshop.model;
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationTypeEnum;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*
 
 /**
  * @author Curtain
@@ -25,6 +25,9 @@ public class CarCommunication extends BosEntity {
 
     @SchemaDocumentation("状态：分为待分配,待回访，已回访，已转换，战败五种")
     CarCommunicationStatusEnum status;
+
+    @SchemaDocumentation("类型：分为来访，回访两种")
+    CarCommunicationTypeEnum type;
 
     @SchemaDocumentation("客户信息")
     @ManyToOne

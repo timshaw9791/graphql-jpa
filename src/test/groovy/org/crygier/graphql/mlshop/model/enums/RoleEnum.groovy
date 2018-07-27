@@ -1,21 +1,18 @@
-package org.crygier.graphql.mlshop.model
+package org.crygier.graphql.mlshop.model.enums
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum
 import cn.wzvtcsoft.x.bos.domain.BosEnum.EnumInnerValue
 import org.crygier.graphql.BosEnumConverter
-import org.crygier.graphql.FieldNullEnum
 import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Converter
 
+@SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate")
+enum RoleEnum implements BosEnum {
+    SUPERADMIN("SUPERADMIN", "超级管理员", "权限最大的账号"),
+    ADMIN("ADMIN", "业务经理", "分配回访来访信息");
 
-@SchemaDocumentation("客户登记，被分为A/B/C")
-enum CustomerLevelEnum implements BosEnum {
-    A("A", "A级", "最高级别"),
-    B("B", "B级", "中等级别"),
-    C( "C", "C级", "最低级别" );
-
-    private CustomerLevelEnum(String value, String name, String description) {
+    private RoleEnum(String value, String name, String description) {
         this.ev = new EnumInnerValue(value, name, description);
     }
 
@@ -27,5 +24,5 @@ enum CustomerLevelEnum implements BosEnum {
     }
 
     @Converter(autoApply = true)
-    public static class CustomerLevelEnumConverter extends BosEnumConverter<CustomerLevelEnum> {}
+    public static class RoleEnumConverter extends BosEnumConverter<RoleEnum> {}
 }
