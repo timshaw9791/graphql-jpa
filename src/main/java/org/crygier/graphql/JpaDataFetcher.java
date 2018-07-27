@@ -446,6 +446,7 @@ public class JpaDataFetcher implements DataFetcher {
                                                     val instanceof Float ? new FloatValue(BigDecimal.valueOf((Float) val)) :
                                                             val instanceof Double ? new FloatValue(BigDecimal.valueOf((Double) val)) :
                                                                     val instanceof BigDecimal ? new FloatValue((BigDecimal) val) :
+                                                                            val instanceof Long?new IntValue(BigInteger.valueOf(((Long) val).longValue())) :
                                                                             null;
         }
     }

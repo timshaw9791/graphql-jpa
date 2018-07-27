@@ -8,12 +8,16 @@ import org.crygier.graphql.mlshop.model.Administ
 import org.crygier.graphql.mlshop.model.CarCommunication
 import org.crygier.graphql.mlshop.model.CarSource
 import org.crygier.graphql.mlshop.model.Customer
+import org.crygier.graphql.mlshop.model.Insurance
+import org.crygier.graphql.mlshop.model.InsuranceCommunication
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.AdministRepository
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
 import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
+import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
+import org.crygier.graphql.mlshop.repo.InsuranceRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,6 +49,12 @@ public class BusinessController {
 
     @Autowired
     CarCommunicationRepository carCommunicationRepository;
+
+    @Autowired
+    InsuranceRepository insuranceRepository;
+
+    @Autowired
+    InsuranceCommunicationRepository insuranceCommunicationRepository;
 
 
     @SchemaDocumentation("增加车辆来源")
@@ -234,10 +244,50 @@ public class BusinessController {
     @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
     void removecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
-        carCommunication.disabled = false;
         this.customerRepository.deleteById(carCommunication.getId());
     }
 
+    @SchemaDocumentation("增加保险信息")
+    @GRequestMapping(path = "/addinsurance", method = RequestMethod.POST)
+    Insurance addInsurance(
+            @RequestParam(name = "addinsurance", required = true) Insurance insurance) {
+        return this.insuranceRepository.save(insurance);
+    }
+
+    @SchemaDocumentation("修改保险信息")
+    @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
+    Insurance updateInsurance(
+            @RequestParam(name = "insurance", required = true) Insurance insurance) {
+        return this.insuranceRepository.save(insurance);
+    }
+
+    @SchemaDocumentation("删除保险信息")
+    @GRequestMapping(path = "/removeinsurance", method = RequestMethod.POST)
+    void removeInsurance(
+            @RequestParam(name = "insurance", required = true) Insurance insurance) {
+        this.insuranceRepository.deleteById(insurance.getId());
+    }
+
+    @SchemaDocumentation("增加保险回访记录")
+    @GRequestMapping(path = "/addinsurancecommunication", method = RequestMethod.POST)
+    InsuranceCommunication addInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        return this.insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @SchemaDocumentation("修改保险回访记录")
+    @GRequestMapping(path = "/updateinsurancecommunication", method = RequestMethod.POST)
+    InsuranceCommunication updateInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        return this.insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @SchemaDocumentation("删除保险回访记录")
+    @GRequestMapping(path = "/removeinsurancecommunication", method = RequestMethod.POST)
+    void removeInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        this.insuranceCommunicationRepository.deleteById(insuranceCommunication.getId());
+    }
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{name,tel}')")
