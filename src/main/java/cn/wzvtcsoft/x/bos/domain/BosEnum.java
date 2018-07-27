@@ -12,6 +12,12 @@ public interface BosEnum {
             this.description = description;
         }
 
+        public EnumInnerValue(String value, String alias) {
+            this.value = value;
+            this.alias = alias;
+            this.description = "";
+        }
+
         private String getValue() {
             return value;
         }

@@ -5,11 +5,13 @@ import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.Administ
+import org.crygier.graphql.mlshop.model.CarCommunication
 import org.crygier.graphql.mlshop.model.CarSource
 import org.crygier.graphql.mlshop.model.Customer
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.AdministRepository
+import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
 import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
@@ -40,6 +42,9 @@ public class BusinessController {
 
     @Autowired
     SalesmanRepository salesmanRepository;
+
+    @Autowired
+    CarCommunicationRepository carCommunicationRepository;
 
 
 
@@ -197,7 +202,22 @@ public class BusinessController {
         return this.customerRepository.deleteById(client.getId());
     }
 
-
+    @SchemaDocumentation("增加买车沟通信息")
+    @GRequestMapping(path = "/addcarcommunication", method = RequestMethod.POST)
+    CarCommunication addcarCommunication(@RequestParam(name="carcommunication",required = true)CarCommunication carCommunication) {
+        return this.carCommunicationRepository.save(carCommunication);
+    }
+    @SchemaDocumentation("修改买车沟通信息")
+    @GRequestMapping(path = "/updatecarcommunication", method = RequestMethod.POST)
+    CarCommunication updatecarCommunication(@RequestParam(name="carcommunication",required = true)CarCommunication carCommunication) {
+        return this.carCommunicationRepository.save(carCommunication);
+    }
+    @SchemaDocumentation("删除买车沟通信息")
+    @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
+    CarCommunication removecarCommunication(@RequestParam(name="carcommunication",required = true)CarCommunication carCommunication) {
+        carCommunication.disabled=false;
+        return this.customerRepository.deleteById(carCommunication.getId());
+    }
 
 
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
