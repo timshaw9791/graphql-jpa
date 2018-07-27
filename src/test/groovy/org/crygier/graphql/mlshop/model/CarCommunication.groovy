@@ -31,6 +31,6 @@ public class CarCommunication extends BosEntity {
     Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
-    Set<CommunicationItem> communicationItems = new HashSet<>();
+    Set<CommunicationRecord> communicationItems = new HashSet<>();
 
 }
