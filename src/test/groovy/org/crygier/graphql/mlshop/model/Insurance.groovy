@@ -47,8 +47,20 @@ public class Insurance extends BosEntity{
     @ManyToOne
     Salesman salesman;
 
-//    @SchemaDocumentation()
+    @SchemaDocumentation("合作单位")
+    String cooperativeUnit
 
+    @SchemaDocumentation("业务员提成")
+    String salesmanExtract
+
+    @SchemaDocumentation("提车人")
+    String carryCarPeople
+
+    @SchemaDocumentation("备注")
+    String remark;
+
+    @SchemaDocumentation("图片")
+    String images;
 
 
 }

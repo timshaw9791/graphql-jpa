@@ -1,4 +1,4 @@
-package org.crygier.graphql.mlshop.model
+package org.crygier.graphql.mlshop.model.enums
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum
 import cn.wzvtcsoft.x.bos.domain.BosEnum.EnumInnerValue
@@ -7,12 +7,12 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Converter
 
-@SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate")
-enum RoleEnum implements BosEnum {
-    SUPERADMIN("SUPERADMIN", "超级管理员", "权限最大的账号"),
-    ADMIN("ADMIN", "业务经理", "分配回访来访信息");
 
-    private RoleEnum(String value, String name, String description) {
+@SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate")
+enum CarSourceTypeEnum implements BosEnum {
+    OWN("OWN", "自营", "自己经营的"), COPORATE("COPORATE", "合作", "与人合作的");
+
+    private CarSourceTypeEnum(String value, String name, String description) {
         this.ev = new EnumInnerValue(value, name, description);
     }
 
@@ -24,5 +24,5 @@ enum RoleEnum implements BosEnum {
     }
 
     @Converter(autoApply = true)
-    public static class RoleEnumConverter extends BosEnumConverter<RoleEnum> {}
+    public static class CarSourceTypeEnumConverter extends BosEnumConverter<CarSourceTypeEnum> {}
 }

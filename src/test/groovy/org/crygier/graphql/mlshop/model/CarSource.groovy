@@ -4,7 +4,8 @@ package org.crygier.graphql.mlshop.model;
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.model.enums.CarSourceTypeEnum;
 
 import javax.persistence.Entity;
 

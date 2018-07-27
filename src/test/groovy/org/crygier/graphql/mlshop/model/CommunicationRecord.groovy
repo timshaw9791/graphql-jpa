@@ -1,13 +1,14 @@
-package org.crygier.graphql.mlshop.model;
+package org.crygier.graphql.mlshop.model
 
+import cn.wzvtcsoft.x.bos.domain.Bostype;
 import cn.wzvtcsoft.x.bos.domain.Entry;
 import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum
+import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
 
 /**
  * @author Curtain
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 @Entity
 @SchemaDocumentation("沟通记录详情")
 @CompileStatic
+@Bostype("A09")
 public class CommunicationRecord extends Entry {
 
     @SchemaDocumentation("业务员")
@@ -24,13 +26,13 @@ public class CommunicationRecord extends Entry {
     Salesman salesman;
 
     @SchemaDocumentation("沟通时间")
-    long communicateTime;
+    Long communicateTime;
 
     @SchemaDocumentation("关注车型")
     String carType;
 
     @SchemaDocumentation("分配时间")
-    long distributeTime;
+    Long distributeTime;
 
     @SchemaDocumentation("沟通记录")
     String record;

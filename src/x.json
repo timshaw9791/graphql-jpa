@@ -1,0 +1,31 @@
+{
+  "a": {
+    "number": "1235545",
+    "status": "A",
+    "carType": "1234",
+    "communicationItems":[] {
+
+      "distributeTime": 132466,
+      "carType": "1213",
+      "watchTime": "13223454",
+      "status": "B",
+      "record": "nininn",
+      "salesman": {
+        "id": "bEHfDzO4GleYoVHJwtq193A04"
+      },
+      "communicateTime": 132456541,
+      "director": "1321212",
+      "directorSuggestion": "454645665",
+      "level": "A"
+
+    },
+    "customer": {
+      "weixinid": "1231",
+      "weixinnick": "12345",
+      "name": "一个",
+      "level": "OWN",
+      "tel": "12346789"
+    },
+    "disabled": false
+  }
+}

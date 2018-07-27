@@ -424,14 +424,20 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     private Value getValueFromVariable(DataFetchingEnvironment environment, Object val) {
-        if (val instanceof Map) {
+        if(val instanceof Value){
+            return (Value)val;
+        }else if (val instanceof Map) {
             List<ObjectField> ofList = ((Map<String, Object>) val).entrySet().stream().map((it) -> {
                 Object v=it.getValue();
                         return new ObjectField(it.getKey(), (v instanceof Value)?(Value)v:getValueFromVariable(environment,v));
                     }
             ).collect(Collectors.toList());
             return new ObjectValue(ofList);
-        } else {//基础类型
+        }else if(val instanceof List){
+            return new ArrayValue((List<Value>) ((List)val).stream()
+                    .map(value->getValueFromVariable(environment,value))
+                    .collect(Collectors.toList()));
+        }else {//基础类型
             return (val instanceof Integer) ? new IntValue(BigInteger.valueOf(((Integer) val).longValue())) :
                     (val instanceof BigInteger) ? new IntValue((BigInteger) val) :
                             (val instanceof Boolean) ? (new BooleanValue((Boolean) val)) :
