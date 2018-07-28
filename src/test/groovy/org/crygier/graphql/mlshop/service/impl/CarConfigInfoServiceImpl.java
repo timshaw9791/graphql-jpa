@@ -19,11 +19,11 @@ public class CarConfigInfoServiceImpl implements CarConfigInfoService {
 
     @Override
     public CarConfigInfo save(CarConfigInfo carConfigInfo) {
-        CarConfigInfo result = carConfigInfoRepository.findByBrand(carConfigInfo.getBrand());
+        CarConfigInfo result = carConfigInfoRepository.findByModel(carConfigInfo.getModel());
         if (result!=null){
             result.setFilename(carConfigInfo.getFilename());
             result.setGuidePrice(carConfigInfo.getGuidePrice());
-            result.setModel(carConfigInfo.getModel());
+            result.setBrand(carConfigInfo.getBrand());
             return carConfigInfoRepository.save(result);
         }
         return carConfigInfoRepository.save(carConfigInfo);
