@@ -41,12 +41,12 @@ class TestApplication {
     public BusinessController() {
         return new BusinessController();
     }
-
+*/
     @Bean
     public AliyunSTSController() {
         return new AliyunSTSController();
     }
-    */
+
 
 }
 
