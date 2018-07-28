@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CarConfigInfoRepository extends JpaRepository<CarConfigInfo,String> {
+
+    CarConfigInfo findByBrand(String brand);
+
 }

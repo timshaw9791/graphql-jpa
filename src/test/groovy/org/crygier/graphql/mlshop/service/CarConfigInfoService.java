@@ -12,5 +12,5 @@ public interface CarConfigInfoService {
      * 核对导入的车辆配置是否已经存在   存在则更新
      * @param carConfigInfo
      */
-    void checkCarConfig(CarConfigInfo carConfigInfo);
+    CarConfigInfo save(CarConfigInfo carConfigInfo);
 }
