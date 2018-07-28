@@ -22,14 +22,9 @@ import javax.persistence.OneToMany
 @Bostype("A11")
 class CarInfo extends BosEntity {
 
-    @SchemaDocumentation("品牌")
-    String brand;
-
-    @SchemaDocumentation("型号")
-    String model;
-
-    @SchemaDocumentation("厂商指导价")
-    String guidePrice;
+    @SchemaDocumentation("汽车配置信息")
+    @ManyToOne(fetch = FetchType.LAZY)
+    CarConfigInfo carConfigInfo;
 
     @SchemaDocumentation("门店")
     @ManyToOne(fetch = FetchType.LAZY)

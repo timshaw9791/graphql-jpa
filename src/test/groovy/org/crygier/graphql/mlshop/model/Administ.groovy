@@ -15,6 +15,7 @@ import javax.persistence.Entity
 public class Administ extends BosEntity {
     @SchemaDocumentation("姓名")
     String name;
+
     @SchemaDocumentation("联系方式")
     String tel;
 

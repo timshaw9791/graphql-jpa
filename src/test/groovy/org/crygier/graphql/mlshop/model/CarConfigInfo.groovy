@@ -18,11 +18,16 @@ import javax.persistence.Entity
 @Bostype("A10")
 class CarConfigInfo extends BosEntity {
 
-    @SchemaDocumentation("用品牌作为key")
+    @SchemaDocumentation("品牌")
     String brand;
 
-    @SchemaDocumentation("车辆配置信息 每个字段以json格式 key value表示")
-    String info;
+    @SchemaDocumentation("型号")
+    String model;
 
+    @SchemaDocumentation("厂商指导价")
+    String guidePrice;
+
+    @SchemaDocumentation("阿里云服务器文件名")
+    String filename;
 
 }
