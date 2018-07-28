@@ -3,7 +3,7 @@
 
 -- User
 insert into user(id, first_name, last_name,CREATETIME,updatetime,number,disabled) values
-	('1000','Bob', 'Austin',0,0,'1000',false),('1001','Tim', 'Shaw',0,0,'1001',false);
+	('1000','Bob', 'Austin',0,0,'1000',false),('1001','Tim', 'Shaw',0,0,'1001',true);
 
 
 

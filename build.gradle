@@ -1,5 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.0.3.RELEASE'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
@@ -25,6 +26,11 @@ repositories {
     mavenCentral()
 }
 
+lombok {
+    version = '1.18.0'
+    sha256 = ""
+}
+
 
 configurations {
     provided
@@ -47,6 +53,8 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
 
 
+
+    provided group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
     provided 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 
     testCompile "org.springframework.boot:spring-boot-starter:2.0.3.RELEASE"
@@ -93,6 +101,7 @@ model {
 bootRun{
     classpath = sourceSets.test.runtimeClasspath
     jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"]
+    args '--debug'
 
 }
 task sourcesJar(type: Jar, dependsOn: classes) {

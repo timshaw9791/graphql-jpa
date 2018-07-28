@@ -7,27 +7,24 @@ import graphql.GraphQLError;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
-import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.crygier.graphql.model.users.Role;
 import org.crygier.graphql.model.users.User;
 import org.crygier.graphql.repo.UserRepository;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @GRestController("ABC")
 @RestController
-@CompileStatic
+@Validated
 class GraphQlController {
 
     @Autowired
@@ -42,21 +39,21 @@ class GraphQlController {
     UserRepository userRepository;
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
     @RequestMapping(path = "/graphql")
-    ExecutionResult graphQl(@RequestBody Map<String,Object> map) {
+    ExecutionResult graphQl(@RequestBody Map<String,Object> map) throws IOException {
         Map<String, Object> vsmap = null;
 
         Object va=map.get("variables");
         if(va==null){
             vsmap=null;
         }else if(va instanceof String){
-            vsmap =  va? objectMapper.readValue(va, Map) : null;
+            vsmap=StringUtils.hasText((String)va)? objectMapper.readValue((String)va, Map.class):null;
         }else{//map
             vsmap=(Map<String, Object>)va;
         }
 
 
         GraphQLInputQuery query=null;
-        ExecutionResult result= graphQLExecutor.execute(map.get("query").toString(), vsmap);
+        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
        // if(result.getErrors()!=null && result.getErrors().size()==0){
             result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
@@ -141,14 +138,15 @@ class GraphQlController {
         }
     }
 */
-
-
+/*
+这里有bug 似乎跟groovy没法设定某个参数的多个注解有关
     @GRequestMapping(path = "/updateuser", method = RequestMethod.POST)
-    List<User> createAcceptance(@RequestParam(name="userid",required = true)String userid) {
+    List<User> createAcceptance(@Length(min = 8, max = 10)  @RequestParam(name="userid",required = true) String userid) {
         List<User> userList=new ArrayList<>();
         userList.add(this.userRepository.findById(userid).orElse(null));
         return userList;
     }
+    */
 
 
     @GRequestMapping(path = "/createAcceptance", method = RequestMethod.POST)
@@ -157,8 +155,8 @@ class GraphQlController {
     }
 
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id} &&  id ')")
-    @GRequestMapping(path = "/abc", method = RequestMethod.POST)
-    User create(@RequestParam(name="role",required = true)Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
+    @RequestMapping(path = "/abc", method = RequestMethod.POST)
+    User create(  Role role, @RequestParam(name="id",required = false)String id, @RequestParam(name="count",required = true)int count) {
         return new User();
     }
 

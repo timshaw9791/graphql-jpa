@@ -1,6 +1,7 @@
 package org.crygier.graphql;
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
+
 import org.crygier.graphql.annotation.SchemaDocumentation;
 
 @SchemaDocumentation("过滤条件")
@@ -27,14 +28,16 @@ public class QueryFilter {
         this.next = next;
     }
 
+    /**
+     * 指的是与上一个的关系，类似于(（last) combinator this)
+     */
+    private QueryFilterCombinator combinator;
 
     private String key;
 
     private String value;
 
     private QueryFilterOperator operator;
-
-    private QueryFilterCombinator combinator;
 
     private QueryFilter next;
 
@@ -68,6 +71,17 @@ public class QueryFilter {
 
     public QueryFilter getNext() {
         return next;
+    }
+
+    public boolean isDisabledEntityAllowed() {
+        return CollectionJpaDataFetcher.ENTITY_PROP_FOR_DISABLED.equals(this.getKey())
+                && QueryFilterCombinator.OR.equals(this.getCombinator())
+                && Boolean.valueOf(this.getValue()).booleanValue();
+    }
+    public boolean isOnlyDisabledEntityAllowed() {
+        return CollectionJpaDataFetcher.ENTITY_PROP_FOR_DISABLED.equals(this.getKey())
+                && QueryFilterCombinator.AND.equals(this.getCombinator())
+                && Boolean.valueOf(this.getValue()).booleanValue();
     }
 
 }
