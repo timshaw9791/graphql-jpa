@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
  */
 
 @Entity
-@SchemaDocumentation("保险")
+@SchemaDocumentation("保险信息")
 @CompileStatic
 @Bostype("A09")
 public class Insurance extends BosEntity{

@@ -6,16 +6,26 @@ import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.Administ
 import org.crygier.graphql.mlshop.model.CarCommunication
+import org.crygier.graphql.mlshop.model.CarConfigInfo
+import org.crygier.graphql.mlshop.model.CarInfo
 import org.crygier.graphql.mlshop.model.CarSource
 import org.crygier.graphql.mlshop.model.Customer
+import org.crygier.graphql.mlshop.model.Insurance
+import org.crygier.graphql.mlshop.model.InsuranceCommunication
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.AdministRepository
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
+import org.crygier.graphql.mlshop.repo.CarConfigInfoRepository
+import org.crygier.graphql.mlshop.repo.CarInfoRepository
 import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
+import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
+import org.crygier.graphql.mlshop.repo.InsuranceRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
+import org.crygier.graphql.mlshop.service.CarCommunicationService
+import org.crygier.graphql.mlshop.service.CarConfigInfoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -45,6 +55,24 @@ public class BusinessController {
 
     @Autowired
     CarCommunicationRepository carCommunicationRepository;
+
+    @Autowired
+    InsuranceRepository insuranceRepository;
+
+    @Autowired
+    InsuranceCommunicationRepository insuranceCommunicationRepository;
+
+    @Autowired
+    CarConfigInfoRepository carConfigInfoRepository;
+
+    @Autowired
+    CarInfoRepository carInfoRepository;
+
+    @Autowired
+    CarCommunicationService carCommunicationServiceImpl;
+
+    @Autowired
+    CarConfigInfoService carConfigInfoService;
 
 
     @SchemaDocumentation("增加车辆来源")
@@ -220,6 +248,7 @@ public class BusinessController {
     @GRequestMapping(path = "/addcarcommunication", method = RequestMethod.POST)
     CarCommunication addcarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
+        carCommunicationServiceImpl.updateCustomer(carCommunication.getCustomer());
         return this.carCommunicationRepository.save(carCommunication);
     }
 
@@ -227,6 +256,7 @@ public class BusinessController {
     @GRequestMapping(path = "/updatecarcommunication", method = RequestMethod.POST)
     CarCommunication updatecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
+        carCommunicationServiceImpl.updateCustomer(carCommunication.getCustomer());
         return this.carCommunicationRepository.save(carCommunication);
     }
 
@@ -234,10 +264,86 @@ public class BusinessController {
     @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
     void removecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
-        carCommunication.disabled = false;
         this.customerRepository.deleteById(carCommunication.getId());
     }
 
+    @SchemaDocumentation("增加保险信息")
+    @GRequestMapping(path = "/addinsurance", method = RequestMethod.POST)
+    Insurance addInsurance(
+            @RequestParam(name = "addinsurance", required = true) Insurance insurance) {
+        return this.insuranceRepository.save(insurance);
+    }
+
+    @SchemaDocumentation("修改保险信息")
+    @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
+    Insurance updateInsurance(
+            @RequestParam(name = "insurance", required = true) Insurance insurance) {
+        return this.insuranceRepository.save(insurance);
+    }
+
+    @SchemaDocumentation("删除保险信息")
+    @GRequestMapping(path = "/removeinsurance", method = RequestMethod.POST)
+    void removeInsurance(
+            @RequestParam(name = "insurance", required = true) Insurance insurance) {
+        this.insuranceRepository.deleteById(insurance.getId());
+    }
+
+    @SchemaDocumentation("增加保险回访记录")
+    @GRequestMapping(path = "/addinsurancecommunication", method = RequestMethod.POST)
+    InsuranceCommunication addInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        return this.insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @SchemaDocumentation("修改保险回访记录")
+    @GRequestMapping(path = "/updateinsurancecommunication", method = RequestMethod.POST)
+    InsuranceCommunication updateInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        return this.insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @SchemaDocumentation("删除保险回访记录")
+    @GRequestMapping(path = "/removeinsurancecommunication", method = RequestMethod.POST)
+    void removeInsuranceCommunication(
+            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
+        this.insuranceCommunicationRepository.deleteById(insuranceCommunication.getId());
+    }
+
+    @SchemaDocumentation("添加车辆配置信息")
+    @GRequestMapping(path = "/addconfiginfo", method = RequestMethod.POST)
+    CarConfigInfo addCarConfigInfo( @RequestParam(name = "carconfiginfo", required = true) CarConfigInfo carConfigInfo) {
+        return this.carConfigInfoService.save(carConfigInfo);
+    }
+
+    @SchemaDocumentation("修改车辆配置信息")
+    @GRequestMapping(path = "/updateconfiginfo", method = RequestMethod.POST)
+    CarConfigInfo updateCarConfigInfo( @RequestParam(name = "carconfiginfo", required = true) CarConfigInfo carConfigInfo) {
+        return this.carConfigInfoService.save(carConfigInfo);
+    }
+
+    @SchemaDocumentation("删除车辆配置信息")
+    @GRequestMapping(path = "/removeconfiginfo", method = RequestMethod.POST)
+    void removeCarConfigInfo( @RequestParam(name = "carconfiginfo", required = true) CarConfigInfo carConfigInfo) {
+         this.carConfigInfoRepository.deleteById(carConfigInfo.getId());
+    }
+
+    @SchemaDocumentation("添加车辆信息")
+    @GRequestMapping(path = "/addinfo", method = RequestMethod.POST)
+    CarInfo addCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+        return this.carInfoRepository.save(carInfo);
+    }
+
+    @SchemaDocumentation("修改车辆信息")
+    @GRequestMapping(path = "/updateinfo", method = RequestMethod.POST)
+    CarInfo updateCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+        return this.carInfoRepository.save(carInfo);
+    }
+
+    @SchemaDocumentation("删除车辆信息")
+    @GRequestMapping(path = "/removeinfo", method = RequestMethod.POST)
+    void removeCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+        this.carInfoRepository.deleteById(carInfo.getId());
+    }
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{name,tel}')")
