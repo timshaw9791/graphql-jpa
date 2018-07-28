@@ -1,6 +1,9 @@
 package org.crygier.graphql.mlshop.service;
 
+import org.crygier.graphql.mlshop.model.CarCommunication;
+import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
+import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 
 /**
  * @author Curtain
@@ -9,9 +12,28 @@ import org.crygier.graphql.mlshop.model.Customer;
 public interface CarCommunicationService {
 
     /**
-     * 在用户更新
+     * 用户等级更新
+     *
      * @param customer
      */
     void updateCustomer(Customer customer);
+
+    /**
+     * 保存买车沟通信息
+     *
+     * @param carCommunication
+     * @return
+     */
+    CarCommunication save(CarCommunication carCommunication);
+
+    /**
+     * 添加买车沟通记录
+     *
+     * @param carCommunicationId
+     * @param communicationRecord
+     * @return
+     */
+    CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord);
+
 
 }

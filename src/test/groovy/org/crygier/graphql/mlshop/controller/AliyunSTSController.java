@@ -1,4 +1,4 @@
-package com.aliyun.ossdemo;
+package org.crygier.graphql.mlshop.controller;
 
 import cn.wzvtcsoft.x.bos.domain.util.BostypeUtils;
 import com.aliyun.oss.OSSClient;

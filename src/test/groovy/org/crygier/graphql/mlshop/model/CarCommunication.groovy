@@ -37,4 +37,5 @@ public class CarCommunication extends BosEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<CommunicationRecord> communicationItems = new HashSet<>();
 
+
 }
