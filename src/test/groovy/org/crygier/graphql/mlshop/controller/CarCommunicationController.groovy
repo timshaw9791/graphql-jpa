@@ -7,7 +7,6 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.CarCommunication
 import org.crygier.graphql.mlshop.model.CommunicationRecord
 import org.crygier.graphql.mlshop.service.CarCommunicationService
-import org.crygier.graphql.mlshop.util.StringConvertUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +30,6 @@ public class CarCommunicationController {
     CarCommunication updatecarCommunication(
             @RequestParam(name = "communicationrecord", required = true) CommunicationRecord communicationRecord,
             @RequestParam(name = "carcommunicationid", required = true) String carCommunicationId) {
-        return this.carCommunicationService.addRecord(StringConvertUtil.getId(carCommunicationId),communicationRecord);
+        return this.carCommunicationService.addRecord(carCommunicationId,communicationRecord);
     }
 }

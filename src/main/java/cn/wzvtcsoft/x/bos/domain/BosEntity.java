@@ -89,14 +89,7 @@ public abstract class BosEntity extends CoreObject implements IEntity {
     }
 */
 
-    @PrePersist
-    @PreUpdate
-    protected void prePersistOrUpdate() {
-        this.updatetime = System.currentTimeMillis();
-        if (!StringUtils.hasText(number)) {
-            this.number = ""+System.currentTimeMillis();
-        }
-    }
+
 
 
 }
