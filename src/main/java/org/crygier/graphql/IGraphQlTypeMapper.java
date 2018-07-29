@@ -1,9 +1,15 @@
 package org.crygier.graphql;
 
 import graphql.schema.GraphQLInputType;
+import graphql.schema.GraphQLObjectType;
+import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
 
- interface IGraphQlTypeMapper {
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.ManagedType;
+import java.lang.reflect.Type;
+
+interface IGraphQlTypeMapper {
     
     Class getClazzByInputType(GraphQLType graphQLType);
 
@@ -14,4 +20,8 @@ import graphql.schema.GraphQLType;
      */
     GraphQLInputType getGraphQLInputTypeFromClassType(Class typeClazz);
 
+
+     EntityType getEntityType(Class type);
+
+    GraphQLOutputType getGraphQLOutputType(ManagedType<?> managedType);
 }

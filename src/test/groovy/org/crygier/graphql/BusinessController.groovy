@@ -103,9 +103,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除车辆来源")
     @GRequestMapping(path = "/removecarsource", method = RequestMethod.POST)
-    void removecarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
+    CarSource removecarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
         client.disabled = false;
         this.carSourceRepository.deleteById(client.getId());
+        return client;
     }
 
 
@@ -137,9 +138,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除门店")
     @GRequestMapping(path = "/removeshop", method = RequestMethod.POST)
-    void removeshop(@RequestParam(name = "shop", required = true) Shop client) {
+    Shop removeshop(@RequestParam(name = "shop", required = true) Shop client) {
         client.disabled = false;
         this.shopRepository.deleteById(client.getId());
+        return client;
     }
 
 
@@ -171,9 +173,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除管理员")
     @GRequestMapping(path = "/removeadminist", method = RequestMethod.POST)
-    void removeadminist(@RequestParam(name = "administ", required = true) Administ client) {
+    Administ removeadminist(@RequestParam(name = "administ", required = true) Administ client) {
         client.disabled = false;
         this.administRepository.deleteById(client.getId());
+        return client;
     }
 
 
@@ -205,9 +208,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除业务员")
     @GRequestMapping(path = "/removesalesman", method = RequestMethod.POST)
-    void removesalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
+    Salesman removesalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
         client.disabled = false;
         this.salesmanRepository.deleteById(client.getId());
+        return client;
     }
 
 
@@ -239,9 +243,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除用户信息")
     @GRequestMapping(path = "/removecustomer", method = RequestMethod.POST)
-    void removecustomer(@RequestParam(name = "customer", required = true) Customer client) {
+    Customer removecustomer(@RequestParam(name = "customer", required = true) Customer client) {
         client.disabled = false;
         this.customerRepository.deleteById(client.getId());
+        return client;
     }
 
     @SchemaDocumentation("增加买车沟通信息")
@@ -262,9 +267,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除买车沟通信息")
     @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
-    void removecarCommunication(
+    CarCommunication removecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
         this.customerRepository.deleteById(carCommunication.getId());
+        return carCommunication;
     }
 
     @SchemaDocumentation("增加保险信息")
@@ -283,9 +289,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除保险信息")
     @GRequestMapping(path = "/removeinsurance", method = RequestMethod.POST)
-    void removeInsurance(
+    Insurance removeInsurance(
             @RequestParam(name = "insurance", required = true) Insurance insurance) {
         this.insuranceRepository.deleteById(insurance.getId());
+        return insurance;
     }
 
     @SchemaDocumentation("增加保险回访记录")
@@ -304,9 +311,10 @@ public class BusinessController {
 
     @SchemaDocumentation("删除保险回访记录")
     @GRequestMapping(path = "/removeinsurancecommunication", method = RequestMethod.POST)
-    void removeInsuranceCommunication(
+    InsuranceCommunication removeInsuranceCommunication(
             @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
         this.insuranceCommunicationRepository.deleteById(insuranceCommunication.getId());
+        return insuranceCommunication;
     }
 
     @SchemaDocumentation("添加车辆配置信息")
@@ -323,8 +331,9 @@ public class BusinessController {
 
     @SchemaDocumentation("删除车辆配置信息")
     @GRequestMapping(path = "/removeconfiginfo", method = RequestMethod.POST)
-    void removeCarConfigInfo( @RequestParam(name = "carconfiginfo", required = true) CarConfigInfo carConfigInfo) {
+    CarConfigInfo removeCarConfigInfo( @RequestParam(name = "carconfiginfo", required = true) CarConfigInfo carConfigInfo) {
          this.carConfigInfoRepository.deleteById(carConfigInfo.getId());
+        carConfigInfo;
     }
 
     @SchemaDocumentation("添加车辆信息")
@@ -341,8 +350,9 @@ public class BusinessController {
 
     @SchemaDocumentation("删除车辆信息")
     @GRequestMapping(path = "/removeinfo", method = RequestMethod.POST)
-    void removeCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+    CarInfo removeCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         this.carInfoRepository.deleteById(carInfo.getId());
+        return carInfo;
     }
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")

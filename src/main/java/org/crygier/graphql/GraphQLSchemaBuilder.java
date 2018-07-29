@@ -4,21 +4,16 @@ import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import graphql.Scalars;
 import graphql.schema.*;
-import org.crygier.graphql.annotation.GRequestMapping;
-import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.*;
 import javax.persistence.metamodel.Type;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -29,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
@@ -186,117 +180,21 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
 
     private GraphQLObjectType getMutationType() {
-
         GraphQLObjectType.Builder queryType = newObject().name("Mutation_SpringMVC").description("将所有的SpringMVC.Controller中的Requestmapping方法暴露出来了");
         queryType.fields(this.methodTargetMap.entrySet().stream().map(entry -> {
-            Method proxyMethodMayBe = entry.getKey();
-            //一定能找到
-            Class currentClass=proxyMethodMayBe.getDeclaringClass();
-            while(!Object.class.equals(currentClass) && AnnotationUtils.getAnnotation(currentClass,GRestController.class)==null){
-                currentClass=currentClass.getSuperclass();
-            }
-
-            String grc = AnnotationUtils.findAnnotation(currentClass,GRestController.class).value();
-            String grm = AnnotationUtils.findAnnotation(proxyMethodMayBe,GRequestMapping.class).path()[0];
-            String mutationFieldName = ("/" + grc + grm).replace("//", "/").replace("/", "_").substring(1);
-
-            Method properMethod = ReflectionUtils.findMethod(currentClass, proxyMethodMayBe.getName(), proxyMethodMayBe.getParameterTypes());
-            MutationMethodMetaInfo mutationMethodMetaInfo=getMutationMethodMetaInfo(properMethod,entry.getKey(), entry.getValue());
-            List<GraphQLArgument> gqalist =mutationMethodMetaInfo.getGraphQLArgumentList();
-
-            boolean isCollectionReturnValue = false;
-            java.lang.reflect.Type type = properMethod.getReturnType();
-            if (Collection.class.isAssignableFrom(properMethod.getReturnType()) && properMethod.getGenericReturnType() instanceof ParameterizedType) {
-                type = ((ParameterizedType) properMethod.getGenericReturnType()).getActualTypeArguments()[0];
-                isCollectionReturnValue = true;
-            }
-            final java.lang.reflect.Type typeforlamda = type;
-            final boolean isCollectionReturnValueForlamda = isCollectionReturnValue;
-
-            EntityType entityType = entityManager.getMetamodel().getEntities().stream()
-                    .filter(et -> et.getJavaType().equals(typeforlamda)).findFirst().orElse(null);
-            if (entityType == null) {
-                return null;
-            }
-
+            MutationMetaInfo mutationMetaInfo = new DefaultMutationMetaInfo(entry.getValue(), entry.getKey(), this, null);
             return Optional.of(newFieldDefinition()
-                    .name(mutationFieldName)
+                    .name(mutationMetaInfo.getMutationFieldName())
                     .description(getSchemaDocumentation((AnnotatedElement) entry.getKey())))
-                    .map(fieldDefinition -> {
-                        if (isCollectionReturnValueForlamda) {
-                            fieldDefinition.type(new GraphQLTypeReference(entityType.getName() + ENTITY_LIST_NAME));
-                        } else {
-                            fieldDefinition.type(getGraphQLOutputType(entityType));
-                        }
-                        return fieldDefinition;
-                    }).get()
-                    .dataFetcher(new MutationDataFetcher(entityManager, entityType,  mutationMethodMetaInfo, this))
-                    .argument(gqalist)
+
+                    .map(fieldDefinition -> fieldDefinition
+                            .type(mutationMetaInfo.getGraphQLOutputType())
+                    ).get()
+                    .dataFetcher(new MutationDataFetcher(entityManager, this, mutationMetaInfo))
+                    .argument(mutationMetaInfo.getGraphQLArgumentList())
                     .build();
         }).filter(gfd -> gfd != null).collect(Collectors.toList()));
         return queryType.build();
-    }
-
-    /**
-     * 根据原本的Method读取参数信息和相关注解，组织成参数元数据。
-     * @param properMethod - 这里的method必须是原本的controller类对应的method定义，而不是proxy之后的继承方法
-     * @return
-     */
-    private MutationMethodMetaInfo getMutationMethodMetaInfo( Method properMethod,Method proxyMethod, Object target) {
-
-        List<MutationMethodMetaInfo.AnnotatedGraphQLInputArgument> annotatedGraphQLInputArgumentList=new ArrayList<>();
-
-            Class clazz=properMethod.getDeclaringClass();
-            Annotation[][] annotationsArray=properMethod.getParameterAnnotations();
-
-            List<RequestParam> requestParamList= Arrays.stream(annotationsArray).map(
-                    anns->
-                        Arrays.stream(anns)
-                                .filter(annotation -> annotation.annotationType().equals(RequestParam.class))
-                                //如果不能取出来，会报错。因为所有的参数都需要暴露给graphql mutation
-                                .findFirst().get()
-                               // .orElseThrow(RuntimeException::new)
-                                )
-            .map(a->(RequestParam)a).collect(Collectors.toList());
-
-        Parameter[]  parameters=properMethod.getParameters();
-
-        Map<RequestParam, Parameter> map = IntStream.range(0, requestParamList.size())
-                .boxed()
-                .collect(Collectors.toMap(i -> requestParamList.get(i), i -> parameters[i]));
-
-
-        map.entrySet().stream().forEach(entry ->
-        {
-            RequestParam rp=entry.getKey();
-            Parameter parameter=entry.getValue();
-
-
-            String typeName = rp.name();//TODO rp.value() aliasFor怎么处理？
-            boolean required = rp.required();
-            String defaultValue = rp.defaultValue();//TODO
-            boolean isCollection = false;
-            Class typeClazz = parameter.getType();
-            if (parameter.isVarArgs()) {
-                isCollection = true;
-                typeClazz = parameter.getType();
-            } else if (typeClazz.isAssignableFrom(Collection.class)) {
-                isCollection = true;
-                typeClazz = parameter.getParameterizedType().getClass();//TODO 如果泛型没写好，那会抛异常吗？
-            }
-            GraphQLInputType graphQLObjectInputType = getGraphQLInputTypeFromClassType(typeClazz);
-            graphQLObjectInputType = isCollection ? new GraphQLList(graphQLObjectInputType) : graphQLObjectInputType;
-            graphQLObjectInputType = required ? GraphQLNonNull.nonNull(graphQLObjectInputType) : graphQLObjectInputType;
-            GraphQLArgument graphQLArgument = GraphQLArgument.newArgument()
-                    .name(typeName)
-                    .type(graphQLObjectInputType)
-                    .build();
-
-            annotatedGraphQLInputArgumentList.add(new MutationMethodMetaInfo.AnnotatedGraphQLInputArgument(typeName,graphQLArgument,Arrays.asList(parameter.getAnnotations())));
-
-        });
-        return new MutationMethodMetaInfo(  Arrays.asList(AnnotationUtils.getAnnotations(properMethod)),
-                annotatedGraphQLInputArgumentList, proxyMethod,  target,properMethod);
     }
 
 
@@ -387,6 +285,13 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                                         .map(entry -> (GraphQLInputType) entry.getKey()).findFirst().orElseThrow(() -> new RuntimeException("error getGraphQLInputTypeFromClassType!" + typeClazz.getCanonicalName())))));
     }
 
+    @Override
+    public EntityType getEntityType(Class type) {
+        return entityManager.getMetamodel().getEntities().stream()
+                .filter(et -> et.getJavaType().equals(type)).findFirst().orElse(null);
+    }
+
+
     private GraphQLOutputType getGraphQLTypeFromClassType(Class typeClazz) {
         return Optional.ofNullable((GraphQLOutputType) this.classGraphQlScalarTypeMap.get(typeClazz)).orElseGet(() ->
                 Optional.ofNullable((GraphQLOutputType) this.enumClassGraphQlEnumTypeMap.get(typeClazz)).orElseGet(() ->
@@ -410,7 +315,8 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     }
 
 
-    GraphQLOutputType getGraphQLOutputType(ManagedType<?> managedType) {
+    @Override
+    public GraphQLOutputType getGraphQLOutputType(ManagedType<?> managedType) {
         return this.graphQlTypeManagedTypeClassMap.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(managedType) && entry.getKey() instanceof GraphQLOutputType)
                 .map(entry -> (GraphQLOutputType) entry.getKey()).findFirst().orElseGet(() -> {
@@ -527,7 +433,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
     private GraphQLInputType getAttributeInputType(Attribute attribute) {
         if (attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.BASIC) {
-            GraphQLInputType graphQLInputType = (GraphQLInputType)getBasicAttributeTypeAndAddEnumIfNecessary(attribute.getJavaType());
+            GraphQLInputType graphQLInputType = (GraphQLInputType) getBasicAttributeTypeAndAddEnumIfNecessary(attribute.getJavaType());
             if (graphQLInputType != null) {
                 return graphQLInputType;
             }
@@ -664,7 +570,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
 enum OrderByDirection implements BosEnum {
 
-    ASC("ASC","升序" , "升序排列"), DESC("DESC","降序", "降序排列");
+    ASC("ASC", "升序", "升序排列"), DESC("DESC", "降序", "降序排列");
 
     private OrderByDirection(String value, String name, String description) {
         this.ev = new BosEnum.EnumInnerValue(value, name, description);
