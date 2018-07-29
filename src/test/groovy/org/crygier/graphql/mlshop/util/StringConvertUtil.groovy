@@ -12,8 +12,9 @@ class StringConvertUtil {
      * @return
      */
     public static String getId(String id){
-        id = id.replace("{","");
-        id = id.replace("}","");
-        return id.split("=")[1];
+        return id;
+       // id = id.replace("{","");
+       // id = id.replace("}","");
+       // return id.split("=")[1];
     }
 }

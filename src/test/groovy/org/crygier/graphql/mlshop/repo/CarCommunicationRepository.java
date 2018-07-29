@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @date 2018/7/26 9:34
  */
 @Repository
-public interface CarCommunicationRepository extends JpaRepository<CarCommunication,String>{
+public interface CarCommunicationRepository extends JpaRepository<CarCommunication, String> {
 }

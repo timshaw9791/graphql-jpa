@@ -3,7 +3,10 @@ package cn.wzvtcsoft.x.bos.domain;
 
 import cn.wzvtcsoft.x.bos.domain.Entry;
 import cn.wzvtcsoft.x.bos.domain.ICoreObject;
+import org.hibernate.HibernateException;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.event.spi.MergeEvent;
+import org.hibernate.event.spi.MergeEventListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -52,9 +55,7 @@ public class CoreObject implements ICoreObject, Serializable {
     }
 
 
-    @PrePersist
-    @PreUpdate
-    final protected void resetEntriesSeqAndParent() {
+    final public void resetEntriesSeqAndParent() {
 
         List<Field> fieldlist = new ArrayList<Field>();
         Class clz = this.getClass();
