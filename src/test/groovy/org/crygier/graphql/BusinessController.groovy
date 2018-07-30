@@ -25,7 +25,7 @@ import org.crygier.graphql.mlshop.repo.InsuranceRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
-import org.crygier.graphql.mlshop.service.CarConfigInfoService
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -63,17 +63,10 @@ public class BusinessController {
     InsuranceCommunicationRepository insuranceCommunicationRepository;
 
     @Autowired
-    CarConfigInfoRepository carConfigInfoRepository;
-
-    @Autowired
     CarInfoRepository carInfoRepository;
 
     @Autowired
     CarCommunicationService carCommunicationServiceImpl;
-
-    @Autowired
-    CarConfigInfoService carConfigInfoService;
-
 
     @SchemaDocumentation("增加车辆来源")
     @GRequestMapping(path = "/addcarsource", method = RequestMethod.POST)
