@@ -38,26 +38,34 @@ class GraphQlController {
     @Autowired
     UserRepository userRepository;
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
-    @RequestMapping(path = "/graphql")
-    ExecutionResult graphQl(@RequestBody Map<String,Object> map) throws IOException {
-        Map<String, Object> vsmap = null;
+//    @RequestMapping(path = "/graphql")
+//    ExecutionResult graphQl(@RequestBody Map<String,Object> map) throws IOException {
+//        Map<String, Object> vsmap = null;
+//
+//        Object va=map.get("variables");
+//        if(va==null){
+//            vsmap=null;
+//        }else if(va instanceof String){
+//            vsmap=StringUtils.hasText((String)va)? objectMapper.readValue((String)va, Map.class):null;
+//        }else{//map
+//            vsmap=(Map<String, Object>)va;
+//        }
+//
+//
+//        GraphQLInputQuery query=null;
+//        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
+//        // if(result.getErrors()!=null && result.getErrors().size()==0){
+//        result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
+//        //}
+//        return result;
+//    }
 
-        Object va=map.get("variables");
-        if(va==null){
-            vsmap=null;
-        }else if(va instanceof String){
-            vsmap=StringUtils.hasText((String)va)? objectMapper.readValue((String)va, Map.class):null;
-        }else{//map
-            vsmap=(Map<String, Object>)va;
-        }
 
+    @RequestMapping(path = '/graphql', method = RequestMethod.POST)
+    ExecutionResult graphQl(@RequestBody final GraphQLInputQuery query) {
+        Map<String, Object> variables = query.getVariables() ? objectMapper.readValue(query.getVariables(), Map) : null;
 
-        GraphQLInputQuery query=null;
-        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
-       // if(result.getErrors()!=null && result.getErrors().size()==0){
-            result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
-        //}
-        return result;
+        return graphQLExecutor.execute(query.getQuery(), variables);
     }
 
     /**
