@@ -27,6 +27,7 @@ import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -328,6 +329,8 @@ public class BusinessController {
         this.carInfoRepository.deleteById(carInfo.getId());
         return carInfo;
     }
+
+
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{name,tel}')")
