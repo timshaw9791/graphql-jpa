@@ -3,24 +3,16 @@ package org.crygier.graphql;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
-import graphql.GraphQLError;
-import groovy.transform.CompileStatic;
+import graphql.GraphQLError
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.model.users.Role;
 import org.crygier.graphql.model.users.User;
-import org.crygier.graphql.repo.UserRepository;
-import org.hibernate.validator.constraints.Length;
+import org.crygier.graphql.repo.UserRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*
 
 @GRestController("ABC")
 @RestController
@@ -40,21 +32,8 @@ class GraphQlController {
 
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
     @RequestMapping(path = "/graphql")
-    ExecutionResult graphQl(@RequestBody Map<String,Object> map) throws IOException {
-        Map<String, Object> vsmap = null;
-
-        Object va=map.get("variables");
-        if(va==null){
-            vsmap=null;
-        }else if(va instanceof String){
-            vsmap=StringUtils.hasText((String)va)? objectMapper.readValue((String)va, Map.class):null;
-        }else{//map
-            vsmap=(Map<String, Object>)va;
-        }
-
-
-        GraphQLInputQuery query=null;
-        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
+    ExecutionResult graphQl(@RequestBody GraphQLInputQuery graphQLInput) throws IOException {
+        ExecutionResult result=graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
         // if(result.getErrors()!=null && result.getErrors().size()==0){
         result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
@@ -94,25 +73,25 @@ class GraphQlController {
 
 
     }
+
+
     public static final class GraphQLInputQuery {
+
         public String getQuery() {
             return query;
         }
-
-        public void setQuery(String query) {
-            this.query = query;
+        Map<String, Object> getArguments() {
+            return arguments
         }
 
-        public String getVariables() {
-            return variables;
+        public GraphQLInputQuery(String query,Map<String,Object> arguments){
+            this.query=query;
+            this.arguments=arguments;
         }
 
-        public void setVariables(String variables) {
-            this.variables = variables;
-        }
+        private String query;
 
-        String query;
-        String variables;
+        private Map<String,Object> arguments;
     }
 
 
