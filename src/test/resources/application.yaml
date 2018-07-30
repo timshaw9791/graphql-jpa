@@ -5,5 +5,4 @@ logging:
 
 spring:
   profiles:
-    include: test
-
+    include: dev

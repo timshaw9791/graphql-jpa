@@ -1,7 +1,5 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import org.crygier.graphql.mlshop.model.CarConfigInfo;
-import org.crygier.graphql.mlshop.repo.CarConfigInfoRepository;
 import org.crygier.graphql.mlshop.service.CarConfigInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

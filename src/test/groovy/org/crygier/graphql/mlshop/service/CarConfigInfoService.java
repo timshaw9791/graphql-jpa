@@ -1,7 +1,5 @@
 package org.crygier.graphql.mlshop.service;
 
-import org.crygier.graphql.mlshop.model.CarConfigInfo;
-
 /**
  * @author Curtain
  * @date 2018/7/28 8:42
