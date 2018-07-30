@@ -7,8 +7,6 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 /**
