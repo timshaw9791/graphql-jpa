@@ -10,10 +10,11 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.http.ProtocolType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.crygier.graphql.mlshop.model.CarInfo;
+import org.crygier.graphql.mlshop.repo.CarInfoRepository;
+import org.crygier.graphql.mlshop.service.CarInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +32,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*",methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS},maxAge=1800L,allowedHeaders ="*")
 public class AliyunSTSController
 {
+    @Autowired
+    private CarInfoService service;
+
     @RequestMapping("/sts")
     public Object getStsToken() {
         AssumeRoleResponse resp= getToken();
@@ -40,6 +44,11 @@ public class AliyunSTSController
         result.put("assumeRoleResponse",resp);
         result.put("resourceId",BostypeUtils.getMiniuuid(null));
         return result;
+    }
+
+    @RequestMapping("/sss")
+    public Object carInfo(@RequestBody CarInfo carInfo){
+        return service.update(carInfo);
     }
 
     // 目前只有"cn-hangzhou"这个region可用, 不要使用填写其他region的值

@@ -1,6 +1,7 @@
 package org.crygier.graphql.mlshop.model.enums;
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
+import cn.wzvtcsoft.x.bos.domain.BosEnum.EnumInnerValue;
 import org.crygier.graphql.BosEnumConverter;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 

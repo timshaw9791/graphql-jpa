@@ -4,7 +4,6 @@ import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
-import org.crygier.graphql.mlshop.model.enums.CarSourceTypeEnum
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum
 
 import javax.persistence.Entity
@@ -27,6 +26,8 @@ public class Customer extends BosEntity {
     @SchemaDocumentation("身份证号")
     String idcard;
 
+    @SchemaDocumentation("是否审核  默认false")
+    Boolean audit = false;
 
     @SchemaDocumentation("身份证图片，可多张上传图片，请以分号隔开图片短url")
     String idcardpicurls;

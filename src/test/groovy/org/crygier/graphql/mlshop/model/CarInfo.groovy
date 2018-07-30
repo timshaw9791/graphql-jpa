@@ -7,8 +7,6 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 
 /**
@@ -22,13 +20,21 @@ import javax.persistence.OneToMany
 @Bostype("A11")
 class CarInfo extends BosEntity {
 
-    @SchemaDocumentation("汽车配置信息")
-    @ManyToOne(fetch = FetchType.LAZY)
-    CarConfigInfo carConfigInfo;
+    @SchemaDocumentation("品牌")
+    String brand;
 
-    @SchemaDocumentation("门店")
-    @ManyToOne(fetch = FetchType.LAZY)
-    Shop shop;
+    @SchemaDocumentation("型号")
+    String model;
+
+    @SchemaDocumentation("厂商指导价")
+    String guidePrice;
+
+    @SchemaDocumentation("阿里云服务器文件名")
+    String filename;
+
+//    @SchemaDocumentation("门店")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    Shop shop;
 
     @SchemaDocumentation("销售数量")
     String  salesVolume;
