@@ -37,5 +37,7 @@ public class CarCommunication extends BosEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<CommunicationRecord> communicationItems = new HashSet<>();
 
-
+    //todo: 多一个手机号保存方式
+    @SchemaDocumentation("认证手机号")
+    String phone;
 }

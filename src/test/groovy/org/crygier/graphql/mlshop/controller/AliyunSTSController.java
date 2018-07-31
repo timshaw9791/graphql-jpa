@@ -15,6 +15,7 @@ import org.crygier.graphql.mlshop.repo.CarInfoRepository;
 import org.crygier.graphql.mlshop.service.CarInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,9 +33,6 @@ import java.util.Map;
 @CrossOrigin(origins = "*",methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS},maxAge=1800L,allowedHeaders ="*")
 public class AliyunSTSController
 {
-    @Autowired
-    private CarInfoService service;
-
     @RequestMapping("/sts")
     public Object getStsToken() {
         AssumeRoleResponse resp= getToken();
@@ -44,11 +42,6 @@ public class AliyunSTSController
         result.put("assumeRoleResponse",resp);
         result.put("resourceId",BostypeUtils.getMiniuuid(null));
         return result;
-    }
-
-    @RequestMapping("/sss")
-    public Object carInfo(@RequestBody CarInfo carInfo){
-        return service.update(carInfo);
     }
 
     // 目前只有"cn-hangzhou"这个region可用, 不要使用填写其他region的值

@@ -61,6 +61,24 @@ class Mortgage extends BosEntity{
 
     Long accrual;
 
+    Long downPayments;
+
+    Long deposit;
+
+    String registrationCertificate;
+
+    String originalInsurance;
+
+    Long serviceCharge;
+
+    Long GPSCharge;
+
+    Long signBill;
+
+    Long signRePointBill;
+
+
+
 
 
 
