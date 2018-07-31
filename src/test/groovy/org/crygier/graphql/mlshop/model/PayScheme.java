@@ -11,10 +11,10 @@ import javax.persistence.Entity;
  * @author Curtain
  * @date 2018/7/30 10:48
  */
-//@Entity
-//@SchemaDocumentation("订单_支付方案")
-//@CompileStatic
-//@Bostype("A11")
+@Entity
+@SchemaDocumentation("订单_支付方案")
+@CompileStatic
+@Bostype("A11")
 public class PayScheme extends BosEntity{
 
     @SchemaDocumentation("进价 单位：分")

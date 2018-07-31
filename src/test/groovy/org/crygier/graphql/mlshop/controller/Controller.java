@@ -4,8 +4,10 @@ import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CarInfo;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
+import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.service.CarCommunicationService;
 import org.crygier.graphql.mlshop.service.CarInfoService;
+import org.crygier.graphql.mlshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +25,10 @@ public class Controller {
     @Autowired
     private CarCommunicationService carCommunicationService;
 
-    @RequestMapping("/updatecarinfo")
+    @Autowired
+    private OrderService orderService;
+
+    @RequestMapping(value = "/updatecarinfo")
     public Object updateCarInfo(@RequestBody CarInfo carInfo){
         return service.update(carInfo);
     }
@@ -36,5 +41,10 @@ public class Controller {
     @RequestMapping("/updatecarcommunication")
     public Object updateCarCommunication(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody CommunicationRecord communicationRecord){
         return this.carCommunicationService.addRecord(carCommunicationId,communicationRecord);
+    }
+
+    @RequestMapping("/order")
+    public Order order(@RequestBody Order order){
+        return orderService.save(order);
     }
 }

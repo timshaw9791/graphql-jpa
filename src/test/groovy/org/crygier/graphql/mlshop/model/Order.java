@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.model;
 
+import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.Bostype;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.SchemaDocumentation;
@@ -17,11 +18,11 @@ import java.util.Set;
  * @date 2018/7/30 9:55
  */
 
-//@Entity
-//@SchemaDocumentation("订单")
-//@CompileStatic
-//@Bostype("A10")
-public class Order {
+@Entity
+@SchemaDocumentation("订单")
+@CompileStatic
+@Bostype("A10")
+public class Order extends BosEntity {
     @SchemaDocumentation("订单状态")
     OrderStatusEnum orderStatusEnum;
 
@@ -61,4 +62,10 @@ public class Order {
     @SchemaDocumentation("装潢")
     @ManyToOne(fetch = FetchType.LAZY)
     Decor decor;
+
+    @SchemaDocumentation("合格证复印件")
+    String certificateImage;
+
+    @SchemaDocumentation("保险原件")
+    String originalInsurance;
 }

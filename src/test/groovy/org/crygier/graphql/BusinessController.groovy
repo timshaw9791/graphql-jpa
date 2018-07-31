@@ -12,6 +12,7 @@ import org.crygier.graphql.mlshop.model.CarSource
 import org.crygier.graphql.mlshop.model.Customer
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
+import org.crygier.graphql.mlshop.model.Order
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.AdministRepository
@@ -22,6 +23,7 @@ import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
 import org.crygier.graphql.mlshop.repo.InsuranceRepository
+import org.crygier.graphql.mlshop.repo.OrderRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
@@ -68,6 +70,9 @@ public class BusinessController {
 
     @Autowired
     CarCommunicationService carCommunicationServiceImpl;
+
+    @Autowired
+    OrderRepository orderRepository;
 
     @SchemaDocumentation("增加车辆来源")
     @GRequestMapping(path = "/addcarsource", method = RequestMethod.POST)
@@ -330,6 +335,17 @@ public class BusinessController {
         return carInfo;
     }
 
+    @SchemaDocumentation("添加订单")
+    @GRequestMapping(path = "/addorder",method = RequestMethod.POST)
+    Order addOrder(@RequestParam(name = "order",required = true) Order order){
+        return  this.orderRepository.save(order);
+    }
+
+    @SchemaDocumentation("修改订单")
+    @GRequestMapping(path = "/updateorder",method = RequestMethod.POST)
+    Order updateOrder(@RequestParam(name = "order",required = true) Order order){
+        return  this.orderRepository.save(order);
+    }
 
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")

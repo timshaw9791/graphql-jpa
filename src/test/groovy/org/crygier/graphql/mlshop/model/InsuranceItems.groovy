@@ -13,10 +13,10 @@ import javax.persistence.ManyToOne
  * @author Curtain
  * @date 2018/7/30 11:03
  */
-//@Entity
-//@SchemaDocumentation("订单保险信息集合")
-//@CompileStatic
-//@Bostype("A12")
+@Entity
+@SchemaDocumentation("订单保险信息集合")
+@CompileStatic
+@Bostype("A12")
 class InsuranceItems extends Entry{
 
     @ManyToOne(fetch =FetchType.LAZY)
