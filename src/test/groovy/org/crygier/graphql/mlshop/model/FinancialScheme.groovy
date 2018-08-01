@@ -42,9 +42,6 @@ public class FinancialScheme extends Entry {
     @SchemaDocumentation("个人名下/公司名下")
     String underName;
 
-    @SchemaDocumentation("方案扫描件（核算方案）")
-    String schemeScan;
-
     @SchemaDocumentation("方案更新时间")
     Long schemeTime;
 

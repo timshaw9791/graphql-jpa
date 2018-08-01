@@ -55,6 +55,9 @@ class CarInfo extends BosEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<FinancialScheme> financialSchemesItems = new HashSet<>();
 
+    @SchemaDocumentation("方案扫描件（核算方案）")
+    String schemeScan;
+
     public void setFinancialSchemesItems(Set<FinancialScheme> financialSchemes){
         this.financialSchemesItems =financialSchemes;
     }

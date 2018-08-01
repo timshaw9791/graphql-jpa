@@ -23,13 +23,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo update(CarInfo carInfo) {
-        CarInfo result = findOne(carInfo.getId());
-        Set<FinancialScheme> financialSchemesItems = carInfo.getFinancialSchemesItems();
-        Set<FinancialScheme> financialSchemesItems1 = result.getFinancialSchemesItems();
-        BeanUtils.copyProperties(financialSchemesItems,financialSchemesItems1,BeanCopyUtil.getNullPropertyNames(financialSchemesItems));
-        BeanUtils.copyProperties(carInfo, result, BeanCopyUtil.getNullPropertyNames(carInfo));
-        result.setFinancialSchemesItems(financialSchemesItems1);
-        return carInfoRepository.save(result);
+        return carInfoRepository.save(carInfo);
     }
 
     @Override
