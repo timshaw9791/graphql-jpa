@@ -20,7 +20,7 @@ public class Salesman extends BosEntity {
     String tel;
 
     @SchemaDocumentation("所属门店")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     Shop shop;
 
 }

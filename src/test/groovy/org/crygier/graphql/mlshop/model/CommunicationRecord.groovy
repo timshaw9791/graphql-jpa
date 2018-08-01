@@ -24,7 +24,6 @@ public class CommunicationRecord extends Entry {
 
     @SchemaDocumentation("业务员")
     @ManyToOne
-    @JsonIgnoreProperties(value=["hibernateLazyInitializer","handler","fieldHandler"])
     Salesman salesman;
 
     @SchemaDocumentation("沟通时间")
