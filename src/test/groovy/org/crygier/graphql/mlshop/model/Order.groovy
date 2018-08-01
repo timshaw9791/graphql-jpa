@@ -1,17 +1,14 @@
-package org.crygier.graphql.mlshop.model;
+package org.crygier.graphql.mlshop.model
 
-import cn.wzvtcsoft.x.bos.domain.BosEntity;
-import cn.wzvtcsoft.x.bos.domain.Bostype;
-import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
-import org.crygier.graphql.mlshop.model.enums.OrderAllocateStatusEnum;
-import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum;
-import org.crygier.graphql.mlshop.model.enums.OrderTypeEnum;
-import org.crygier.graphql.model.users.UserRoleItem;
+import cn.wzvtcsoft.x.bos.domain.BosEntity
+import cn.wzvtcsoft.x.bos.domain.Bostype
+import groovy.transform.CompileStatic
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.model.enums.OrderAllocateStatusEnum
+import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum
+import org.crygier.graphql.mlshop.model.enums.OrderTypeEnum
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*
 
 /**
  * @author Curtain
@@ -22,6 +19,7 @@ import java.util.Set;
 @SchemaDocumentation("订单")
 @CompileStatic
 @Bostype("A10")
+@Table(name = "T_order")
 public class Order extends BosEntity {
     @SchemaDocumentation("订单状态")
     OrderStatusEnum orderStatusEnum;
@@ -48,20 +46,20 @@ public class Order extends BosEntity {
     CarInfo carInfo;
 
     @SchemaDocumentation("方案")
-    @ManyToOne(fetch = FetchType.LAZY)
-    PayScheme payScheme;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+    Set<PayScheme> paySchemes=new HashSet<>();
 
     @SchemaDocumentation("保险订单集合")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<InsuranceItems> insuranceItems=new HashSet<>();
 
     @SchemaDocumentation("按揭")
-    @ManyToOne(fetch = FetchType.LAZY)
-    Mortgage mortgage;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+    Set<Mortgage> mortgages=new HashSet<>();
 
     @SchemaDocumentation("装潢")
-    @ManyToOne(fetch = FetchType.LAZY)
-    Decor decor;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+    Set<Decor> decors=new HashSet<>();
 
     @SchemaDocumentation("合格证复印件")
     String certificateImage;

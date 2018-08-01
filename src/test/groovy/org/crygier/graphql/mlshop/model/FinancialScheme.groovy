@@ -24,6 +24,9 @@ public class FinancialScheme extends Entry {
     @SchemaDocumentation("月供:单位分")
     Long monthly;
 
+    @SchemaDocumentation("首付百分比")
+    BigDecimal downPaymentRate;
+
     @SchemaDocumentation("期数/月")
     Long periods;
 

@@ -2,6 +2,7 @@ package org.crygier.graphql.mlshop.model
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype
+import cn.wzvtcsoft.x.bos.domain.Entry
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
@@ -17,7 +18,7 @@ import javax.persistence.ManyToOne
 @SchemaDocumentation("公司按揭")
 @CompileStatic
 @Bostype("A13")
-class Mortgage extends BosEntity{
+class Mortgage extends Entry{
 
     @SchemaDocumentation("4S店")
     String company;

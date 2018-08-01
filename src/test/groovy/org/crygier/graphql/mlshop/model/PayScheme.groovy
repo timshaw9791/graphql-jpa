@@ -1,7 +1,8 @@
 package org.crygier.graphql.mlshop.model;
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
-import cn.wzvtcsoft.x.bos.domain.Bostype;
+import cn.wzvtcsoft.x.bos.domain.Bostype
+import cn.wzvtcsoft.x.bos.domain.Entry;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 
@@ -15,7 +16,7 @@ import javax.persistence.Entity;
 @SchemaDocumentation("订单_支付方案")
 @CompileStatic
 @Bostype("A11")
-public class PayScheme extends BosEntity{
+public class PayScheme extends Entry{
 
     @SchemaDocumentation("进价 单位：分")
     Long purchasePrice;
