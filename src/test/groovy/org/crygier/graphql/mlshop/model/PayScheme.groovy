@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @Entity
 @SchemaDocumentation("订单_支付方案")
 @CompileStatic
-@Bostype("A11")
+@Bostype("A15")
 public class PayScheme extends Entry{
 
     @SchemaDocumentation("进价 单位：分")

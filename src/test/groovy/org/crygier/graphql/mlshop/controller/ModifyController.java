@@ -1,6 +1,5 @@
 package org.crygier.graphql.mlshop.controller;
 
-import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.mlshop.model.*;
 import org.crygier.graphql.mlshop.service.CarCommunicationService;
 import org.crygier.graphql.mlshop.service.CarInfoService;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, maxAge = 1800L, allowedHeaders = "*")
-public class Controller {
+public class ModifyController {
 
     @Autowired
     private CarInfoService carService;

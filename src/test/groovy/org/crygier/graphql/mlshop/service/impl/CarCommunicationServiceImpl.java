@@ -32,6 +32,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     public CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord) {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.getCommunicationItems().add(communicationRecord);
+        carCommunication.setStatus(communicationRecord.getStatus());
         return carCommunicationRepository.save(carCommunication);
     }
 

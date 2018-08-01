@@ -19,11 +19,11 @@ public class Administ extends BosEntity {
     @SchemaDocumentation("联系方式")
     String tel;
 
-    @SchemaDocumentation("性别")
+    @SchemaDocumentation("密码")
     String pwd;
 
     @SchemaDocumentation("出生年月")
-    String birthday
+    String birthday;
 
     @SchemaDocumentation("客户等级")
     CustomerLevelEnum level;

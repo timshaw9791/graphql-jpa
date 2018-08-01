@@ -9,7 +9,10 @@ import org.crygier.graphql.mlshop.model.CarCommunication
 
 import org.crygier.graphql.mlshop.model.CarInfo
 import org.crygier.graphql.mlshop.model.CarSource
+import org.crygier.graphql.mlshop.model.ConcernCar
+import org.crygier.graphql.mlshop.model.ConcernShop
 import org.crygier.graphql.mlshop.model.Customer
+import org.crygier.graphql.mlshop.model.Feedback
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
 import org.crygier.graphql.mlshop.model.Order
@@ -21,13 +24,15 @@ import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
 import org.crygier.graphql.mlshop.repo.CarInfoRepository
 import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
+import org.crygier.graphql.mlshop.repo.FeedbackRepository
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
 import org.crygier.graphql.mlshop.repo.InsuranceRepository
 import org.crygier.graphql.mlshop.repo.OrderRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
-
+import org.crygier.graphql.mlshop.service.ConcernCarService
+import org.crygier.graphql.mlshop.service.ConcernShopService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -73,6 +78,15 @@ public class BusinessController {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    ConcernShopService concernShopService;
+
+    @Autowired
+    ConcernCarService concernCarService;
+
+    @Autowired
+    FeedbackRepository feedbackRepository;
 
     @SchemaDocumentation("增加车辆来源")
     @GRequestMapping(path = "/addcarsource", method = RequestMethod.POST)
@@ -346,6 +360,33 @@ public class BusinessController {
     Order updateOrder(@RequestParam(name = "order",required = true) Order order){
         return  this.orderRepository.save(order);
     }
+
+    @SchemaDocumentation("关注车辆")
+    @GRequestMapping(path = "/concerncar",method = RequestMethod.POST)
+    ConcernCar concernCar(@RequestParam(name = "concerncar",required = true) ConcernCar concernCar){
+        return  this.concernCarService.concern(concernCar);
+    }
+
+    @SchemaDocumentation("取消关注车辆")
+    @GRequestMapping(path = "/cancelcar",method = RequestMethod.POST)
+    ConcernCar cancelCar(@RequestParam(name = "concerncar",required = true) ConcernCar concernCar){
+        concernCarService.cancel(concernCar.getId());
+        return  concernCar;
+    }
+
+    @SchemaDocumentation("关注门店")
+    @GRequestMapping(path = "/concernshop",method = RequestMethod.POST)
+    ConcernShop concernShop(@RequestParam(name = "concernshop",required = true) ConcernShop concernShop){
+        return  this.concernShopService.concern(concernShop);
+    }
+
+    @SchemaDocumentation("取消关注门店")
+    @GRequestMapping(path = "/cancelshop",method = RequestMethod.POST)
+    ConcernShop cancelShop(@RequestParam(name = "concernshop",required = true) ConcernShop concernShop){
+        concernShopService.cancel(concernShop.getId());
+        return  concernShop;
+    }
+
 
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")

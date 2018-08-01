@@ -46,6 +46,7 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     public InsuranceCommunication addRecord(String insuranceCommunicationId, CommunicationRecord communicationRecord) {
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
         insuranceCommunication.getCommunicationItems().add(communicationRecord);
+        insuranceCommunication.setStatus(communicationRecord.getStatus());
         return insuranceCommunicationRepository.save(insuranceCommunication);
     }
 }
