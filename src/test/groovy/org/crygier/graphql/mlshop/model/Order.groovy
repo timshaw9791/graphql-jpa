@@ -41,9 +41,30 @@ public class Order extends BosEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     Customer customer;
 
-    @SchemaDocumentation("车辆信息")
-    @ManyToOne(fetch = FetchType.LAZY)
-    CarInfo carInfo;
+    @SchemaDocumentation("品牌")
+    String brand;
+
+    @SchemaDocumentation("型号")
+    String model;
+
+    @SchemaDocumentation("车身颜色")
+    String carColor;
+
+    @SchemaDocumentation("数量")
+    Integer count;
+
+    @SchemaDocumentation("详细数据")
+    String carDescribe;
+
+    @SchemaDocumentation("定金：/分")
+    Long frontMoney;
+
+    @SchemaDocumentation("尾款：/分")
+    Long tailMoney;
+
+    @SchemaDocumentation("车辆来源")
+    @ManyToOne
+    CarSource carSource;
 
     @SchemaDocumentation("方案")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
