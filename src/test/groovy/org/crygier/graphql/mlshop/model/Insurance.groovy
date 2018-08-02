@@ -38,7 +38,7 @@ public class Insurance extends BosEntity{
     String customerTel;
 
     @SchemaDocumentation("返点")
-    Long rebate;
+    BigDecimal rebate;
 
     @SchemaDocumentation("返点时间")
     Long rebateTime;

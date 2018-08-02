@@ -56,7 +56,7 @@ public class ModifyController {
 
     @RequestMapping("/updateinsurancecommunication")
     public Object updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
-        return this.carCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
+        return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
     }
 
     @RequestMapping("/addorder")
