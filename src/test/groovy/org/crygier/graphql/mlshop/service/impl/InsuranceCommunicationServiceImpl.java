@@ -38,13 +38,15 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
 
     @Override
     public InsuranceCommunication save(InsuranceCommunication insuranceCommunication) {
-        updateCustomer(insuranceCommunication.getCustomer());
+//        updateCustomer(insuranceCommunication.getCustomer());
         return insuranceCommunicationRepository.save(insuranceCommunication);
     }
 
     @Override
     public InsuranceCommunication addRecord(String insuranceCommunicationId, CommunicationRecord communicationRecord) {
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
+        //设置默认客户等级
+        communicationRecord.setLevel(CustomerLevelEnum.A);
         insuranceCommunication.getCommunicationItems().add(communicationRecord);
         insuranceCommunication.setStatus(communicationRecord.getStatus());
         return insuranceCommunicationRepository.save(insuranceCommunication);

@@ -39,7 +39,7 @@ public class Customer extends BosEntity {
     String weixinid;
 
     @SchemaDocumentation("客户微信昵称")
-    String weixinnick
+    String weixinnick;
 
     public void setLevel(CustomerLevelEnum levelEnum){
         this.level = levelEnum;
