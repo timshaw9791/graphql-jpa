@@ -23,10 +23,10 @@ public class Insurance extends BosEntity{
     String carNumber;
 
     @SchemaDocumentation("保险公司")
-    String Company;
+    String company;
 
     @SchemaDocumentation("保险金额")
-    String Amount;
+    String amount;
 
     @SchemaDocumentation("保险时间")
     long time;
@@ -48,19 +48,17 @@ public class Insurance extends BosEntity{
     Salesman salesman;
 
     @SchemaDocumentation("合作单位")
-    String cooperativeUnit
+    String cooperativeUnit;
 
     @SchemaDocumentation("业务员提成")
-    String salesmanExtract
+    String salesmanExtract;
 
     @SchemaDocumentation("提车人")
-    String carryCarPeople
+    String carryCarPeople;
 
     @SchemaDocumentation("备注")
     String remark;
 
     @SchemaDocumentation("图片")
     String images;
-
-
 }
