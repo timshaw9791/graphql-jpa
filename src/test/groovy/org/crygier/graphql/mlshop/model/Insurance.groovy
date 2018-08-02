@@ -29,7 +29,7 @@ public class Insurance extends BosEntity{
     String amount;
 
     @SchemaDocumentation("保险时间")
-    long time;
+    Long time;
 
     @SchemaDocumentation("客户名字")
     String customerName;
@@ -38,10 +38,10 @@ public class Insurance extends BosEntity{
     String customerTel;
 
     @SchemaDocumentation("返点")
-    long rebate;
+    Long rebate;
 
     @SchemaDocumentation("返点时间")
-    long rebateTime;
+    Long rebateTime;
 
     @SchemaDocumentation("业务员")
     @ManyToOne
