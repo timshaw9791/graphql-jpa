@@ -59,6 +59,16 @@ public class ModifyController {
         return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
     }
 
+    @RequestMapping("/carcommunicationallocate")
+    public Object carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
+        return this.carCommunicationService.allocate(carCommunicationId,salesman);
+    }
+
+    @RequestMapping("/insurancecommunicationallocate")
+    public Object insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId,@RequestBody Salesman salesman){
+        return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
+    }
+
     @RequestMapping("/addorder")
     public Order order(@RequestBody Order order) {
         return orderService.save(order);

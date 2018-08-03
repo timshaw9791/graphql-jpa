@@ -37,6 +37,13 @@ class InsuranceCommunication extends BosEntity {
     @SchemaDocumentation("微信号")
     String weixinid;
 
+    @SchemaDocumentation("业务员")
+    @ManyToOne
+    Salesman salesman;
+
+    @SchemaDocumentation("分配时间")
+    Long distributeTime;
+
     @SchemaDocumentation("客户微信昵称")
     String weixinnick;
 

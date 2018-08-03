@@ -33,6 +33,13 @@ public class CarCommunication extends BosEntity {
     @ManyToOne
     Customer customer;
 
+    @SchemaDocumentation("业务员")
+    @ManyToOne
+    Salesman salesman;
+
+    @SchemaDocumentation("分配时间")
+    Long distributeTime;
+
     @SchemaDocumentation("详细沟通记录")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<CommunicationRecord> communicationItems = new HashSet<>();

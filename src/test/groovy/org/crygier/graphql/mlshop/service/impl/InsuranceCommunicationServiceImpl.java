@@ -1,9 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import org.crygier.graphql.mlshop.model.CarCommunication;
-import org.crygier.graphql.mlshop.model.CommunicationRecord;
-import org.crygier.graphql.mlshop.model.Customer;
-import org.crygier.graphql.mlshop.model.InsuranceCommunication;
+import org.crygier.graphql.mlshop.model.*;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository;
@@ -43,9 +40,17 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     }
 
     @Override
+    public InsuranceCommunication allocate(String insuranceCommunicationId, Salesman salesman) {
+        InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
+        insuranceCommunication.setSalesman(salesman);
+        insuranceCommunication.setDistributeTime(System.currentTimeMillis());
+        return insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @Override
     public InsuranceCommunication addRecord(String insuranceCommunicationId, CommunicationRecord communicationRecord) {
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
-        //设置默认客户等级
+        //设置默认客户等级  默认  因为不需要展示
         communicationRecord.setLevel(CustomerLevelEnum.A);
         insuranceCommunication.getCommunicationItems().add(communicationRecord);
         insuranceCommunication.setStatus(communicationRecord.getStatus());

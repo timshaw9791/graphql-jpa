@@ -1,9 +1,6 @@
 package org.crygier.graphql.mlshop.service;
 
-import org.crygier.graphql.mlshop.model.CarCommunication;
-import org.crygier.graphql.mlshop.model.CommunicationRecord;
-import org.crygier.graphql.mlshop.model.Customer;
-import org.crygier.graphql.mlshop.model.InsuranceCommunication;
+import org.crygier.graphql.mlshop.model.*;
 
 /**
  * @author Curtain
@@ -34,5 +31,13 @@ public interface InsuranceCommunicationService {
      * @return
      */
     InsuranceCommunication addRecord(String insuranceCommunicationId, CommunicationRecord communicationRecord);
+
+    /**
+     * 分配
+     * @param insuranceCommunicationId
+     * @param salesman
+     * @return
+     */
+    InsuranceCommunication allocate(String insuranceCommunicationId,Salesman salesman);
 
 }
