@@ -45,6 +45,10 @@ public class Order extends BosEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     Customer customer;
 
+    @SchemaDocumentation("保险")
+    @ManyToOne(fetch = FetchType.LAZY)
+    Insurance insurance;
+
     @SchemaDocumentation("品牌")
     String brand;
 
