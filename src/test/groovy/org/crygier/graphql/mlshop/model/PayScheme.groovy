@@ -50,4 +50,13 @@ public class PayScheme extends Entry{
 
     @SchemaDocumentation("购置税（客户） 单位：分")
     Long customerTax;
+
+    @SchemaDocumentation("GPS费")
+    Long GPSCharge;
+
+    @SchemaDocumentation("押金")
+    Long deposit;
+
+    @SchemaDocumentation("业务员提成")
+    String salesmanExtract;
 }
