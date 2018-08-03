@@ -95,4 +95,10 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("保险原件")
     String originalInsurance;
+
+    @SchemaDocumentation("登记证书")
+    String registrationCertificate;
+
+    @SchemaDocumentation("纸质表格")
+    String paperTable;
 }
