@@ -11,7 +11,7 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 
 @Entity
-@SchemaDocumentation("User who uses the application")
+@SchemaDocumentation("用户")
 @CompileStatic
 @Bostype("C03")
 //默认匿名用户可以访问/默认登陆用户可以访问，默认所有用户禁止访问

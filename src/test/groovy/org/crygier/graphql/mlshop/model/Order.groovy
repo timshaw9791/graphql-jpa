@@ -34,8 +34,9 @@ public class Order extends BosEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     Shop shop;
 
-    @SchemaDocumentation("经手人")
-    String operator;
+    @SchemaDocumentation("经手人(门店中的业务员)")
+    @ManyToOne(fetch = FetchType.LAZY)
+    Salesman salesman;
 
     @SchemaDocumentation("客户信息")
     @ManyToOne(fetch = FetchType.LAZY)
