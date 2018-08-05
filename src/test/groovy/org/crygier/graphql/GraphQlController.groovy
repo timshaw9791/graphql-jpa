@@ -39,8 +39,26 @@ class GraphQlController {
 
     @GRequestMapping(path = "hello", method = [RequestMethod.POST,RequestMethod.GET])
     String hello(@RequestParam(name="world",required = true)String world) {
-        return this.userRepository.save(world);
+        return "hello "+world;
     }
+
+
+    @GRequestMapping(path = "hellostrlist", method = [RequestMethod.POST,RequestMethod.GET])
+    List<String> hellostringlist(@RequestParam(name="world",required = true)String world) {
+        List<String> resultlist=new ArrayList();
+        resultlist.add("hello "+world);
+        resultlist.add("haha");
+        return resultlist;
+    }
+
+    @GRequestMapping(path = "helloEntryList", method = [RequestMethod.POST,RequestMethod.GET])
+    List<User> helloEntryList(@RequestParam(name="world",required = true)String world) {
+        List<String> resultlist=new ArrayList();
+        resultlist.add(new User());
+        resultlist.add(new User());
+        return resultlist;
+    }
+
 
     /**
      * 为了解决一个数据返回规范的问题，前端用graphql-cli/playground的时候，收到后端数据返回时如果发现有errors字段（不管是不是null，是不是为空数组）

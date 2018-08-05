@@ -66,7 +66,7 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
         }
         this.entityType = this.graphQlTypeMapper.getEntityType((Class) type);
         this.graphQLOutputType = !isCollectionReturnValue ?graphQlTypeMapper.getGraphQLOutputType(type):
-                entityType!=null?new GraphQLTypeReference(graphQlTypeMapper.getGraphQLTypeNameOfEntityList(this.entityType)): new GraphQLTypeReference(graphQlTypeMapper.getGraphQLOutputType(type).getName());
+                entityType!=null?new GraphQLTypeReference(graphQlTypeMapper.getGraphQLTypeNameOfEntityList(this.entityType)): new GraphQLList(graphQlTypeMapper.getGraphQLOutputType(type));
 
         this.argumentNames = Arrays.stream(properMethod.getParameters())
                 .map(parameter ->
