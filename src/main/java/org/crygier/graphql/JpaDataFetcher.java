@@ -1,12 +1,10 @@
 package org.crygier.graphql;
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
-import cn.wzvtcsoft.x.bos.domain.Entry;
-import cn.wzvtcsoft.x.bos.validate.InputErrorException;
-import graphql.Scalars;
 import graphql.language.*;
 import graphql.schema.*;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -14,13 +12,13 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
-import javax.swing.text.html.Option;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.util.ReflectionUtils.findField;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 public class JpaDataFetcher implements DataFetcher {
 
@@ -29,10 +27,10 @@ public class JpaDataFetcher implements DataFetcher {
     protected IGraphQlTypeMapper graphQlTypeMapper;
 
 
-    public JpaDataFetcher(EntityManager entityManager, EntityType<?> entityType,IGraphQlTypeMapper graphQlTypeMapper) {
+    public JpaDataFetcher(EntityManager entityManager, EntityType<?> entityType, IGraphQlTypeMapper graphQlTypeMapper) {
         this.entityManager = entityManager;
         this.entityType = entityType;
-        this.graphQlTypeMapper=graphQlTypeMapper;
+        this.graphQlTypeMapper = graphQlTypeMapper;
     }
 
 
@@ -45,7 +43,9 @@ public class JpaDataFetcher implements DataFetcher {
            throw new InputErrorException(map);
        }
 */
-        Object result=this.getResult(environment);
+        QueryFilter queryFilter=extractQueryFilter(environment,environment.getFields().iterator().next());
+
+        Object result = this.getResult(environment,queryFilter);
         //throw new CustomRuntimeException();
         //TODO 检查权限
         //checkPermission();
@@ -53,9 +53,13 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
 
-    public Object getResult(DataFetchingEnvironment environment) {
-        TypedQuery typedQuery=getQuery(environment, environment.getFields().iterator().next(), null, false);
-        Object result=typedQuery.getResultList().stream().findFirst().orElse(null);
+    protected QueryFilter extractQueryFilter(DataFetchingEnvironment environment, Field field) {
+        return null;
+    }
+
+    public Object getResult(DataFetchingEnvironment environment,QueryFilter filter) {
+        TypedQuery typedQuery = getQuery(environment, environment.getFields().iterator().next(), filter, false);
+        Object result = typedQuery.getResultList().stream().findFirst().orElse(null);
         return result;
     }
 
@@ -86,6 +90,7 @@ public class JpaDataFetcher implements DataFetcher {
                         // Process arguments clauses
                         arguments.addAll(selectedField.getArguments().stream()
                                 .filter(it -> !"orderBy".equals(it.getName()))
+                                . filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
                                 .map(it -> new Argument(selectedFieldName + "." + it.getName(), it.getValue()))
                                 .collect(Collectors.toList()));
 
@@ -151,7 +156,9 @@ public class JpaDataFetcher implements DataFetcher {
         //最终将所有的非orderby形式的argument转化成predicate，并转成where子句.
         arguments.addAll(field.getArguments());
         final Root roottemp = root;
-        predicates.addAll(arguments.stream().map(it -> getPredicate(cb, roottemp, environment, it)).collect(Collectors.toList()));
+        predicates.addAll(arguments.stream()
+                . filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
+                .map(it -> getPredicate(cb, roottemp, environment, it)).collect(Collectors.toList()));
 
 
         query.where(predicates.toArray(new Predicate[predicates.size()]));
@@ -187,13 +194,13 @@ public class JpaDataFetcher implements DataFetcher {
         String v = queryFilter.getValue();
         QueryFilterOperator qfo = queryFilter.getOperator();
         QueryFilterCombinator qfc = queryFilter.getCombinator();
-        Object value=null;
+        Object value = null;
 
         //TODO 需要进一步扩展
         switch (qfo) {
             case LIKE:
-                value=convertFilterValue(path.getJavaType(),v);
-                result = cb.like(path, (String)value);
+                value = convertFilterValue(path.getJavaType(), v);
+                result = cb.like(path, (String) value);
                 break;
             case ISNULL:
                 result = cb.isNull(path);
@@ -201,7 +208,7 @@ public class JpaDataFetcher implements DataFetcher {
                 break;
             // case GREATTHAN:cb.greaterThan(path,)
             case EQUEAL:
-                value=convertFilterValue(path.getJavaType(),v);
+                value = convertFilterValue(path.getJavaType(), v);
                 result = cb.equal(path, value);
                 ;
                 break;
@@ -228,9 +235,9 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     private Object convertFilterValue(Class javaType, String v) {
-        return (javaType==boolean.class || javaType==Boolean.class)?Boolean.valueOf(v):
-                (javaType==int.class || javaType==Integer.class)?Integer.valueOf(v):
-                        (javaType==long.class || javaType==Long.class)?Long.valueOf(v):v;
+        return (javaType == boolean.class || javaType == Boolean.class) ? Boolean.valueOf(v) :
+                (javaType == int.class || javaType == Integer.class) ? Integer.valueOf(v) :
+                        (javaType == long.class || javaType == Long.class) ? Long.valueOf(v) : v;
     }
 
     /**
@@ -291,7 +298,8 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     /**
-     *  * 还有枚举类型没有护理 TODO
+     * * 还有枚举类型没有护理 TODO
+     *
      * @param environment
      * @param argument
      * @param value
@@ -337,7 +345,6 @@ public class JpaDataFetcher implements DataFetcher {
     private Attribute getAttribute(DataFetchingEnvironment environment, Argument argument) {
         GraphQLObjectType objectType = getObjectType(environment, argument);
         EntityType entityType = getEntityType(objectType);
-
         return entityType.getAttribute(argument.getName());
     }
 
@@ -356,112 +363,66 @@ public class JpaDataFetcher implements DataFetcher {
         return null;
     }
 
-    protected Object convertValue(DataFetchingEnvironment environment, GraphQLInputType graphQLInputType, Value value) {
-        try {
-            if (graphQLInputType instanceof GraphQLNonNull) {
-                graphQLInputType = (GraphQLInputType) (((GraphQLNonNull) graphQLInputType).getWrappedType());//TODO 强制转化可能会抛异常。
-                return convertValue(environment, graphQLInputType, value);
-            } else if (value == null) {//否则如果为空
-                return null;
-            } else if (value instanceof VariableReference) {
-                Object obj=environment.getExecutionContext().getVariables().get(((VariableReference) value).getName());
-                Value val = getValueFromVariable(environment,obj );
-                return convertValue(environment, graphQLInputType, (Value) val);
-            } else if (graphQLInputType instanceof GraphQLScalarType) {//如果为标量 //TODO 需要把这部分放到GraphQLSchemaBuilder中，因为具体有哪些标量类型他那里最清楚。
-                Object v = (value instanceof IntValue) ? ((IntValue) value).getValue().intValue() :
-                        (value instanceof BooleanValue) ? ((BooleanValue) value).isValue() :
-                                value instanceof FloatValue ? ((FloatValue) value).getValue().floatValue() :
-                                        value instanceof StringValue ? ((StringValue) value).getValue() : null;
-                return ((GraphQLScalarType) graphQLInputType).getCoercing().parseValue(v);
+    /**
+     * @param environment
+     * @param graphQLInputType
+     * @param value
+     * @return
+     */
+    protected Object convertValue(DataFetchingEnvironment environment, final GraphQLInputType graphQLInputType, Object value) {
+        if (graphQLInputType instanceof GraphQLNonNull) {
+            return convertValue(environment, (GraphQLInputType) (((GraphQLNonNull) graphQLInputType).getWrappedType()), value);
+        } else if (value == null) {//否则如果为空
+            return null;
+        } else if (value instanceof VariableReference) {
+            value = environment.getExecutionContext().getVariables().get(((VariableReference) value).getName());
+            return convertValue(environment, graphQLInputType, value);
+        } else if (graphQLInputType instanceof GraphQLInputObjectType) {//many2one
+            Map map = (value instanceof Map) ? (Map) value : new HashMap();
+            if (value instanceof ObjectValue) {//还有可能是ObjectValue，内嵌Argument类型（相对于外部variable）的就是这种类型的。
+                ((ObjectValue) value).getObjectFields().forEach(field -> map.put(field.getName(), field.getValue()));
+            }
+            map.keySet().stream().forEach(key -> {
+                GraphQLInputType giotype = ((GraphQLInputObjectType) graphQLInputType).getField(key.toString()).getType();
+                map.put(key, convertValue(environment, giotype, map.get(key)));
+            });
+            Object result = null;
+            try {
+                result = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType).newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("convertValue.error!");
+            }
+            ConfigurablePropertyAccessor wrapper = PropertyAccessorFactory.forDirectFieldAccess(result);
+            // wrapper.setAutoGrowNestedPaths(true);
+            wrapper.setPropertyValues(map);
+            return result;
+        } else if (graphQLInputType instanceof GraphQLList && (value instanceof Collection)) {//many2one. graphql-java 中间用的是ArrayList，需要再转一次。
+            Set set = new HashSet();
+            ((Collection) value).stream().forEach(item -> {
+                GraphQLInputType gitype = ((GraphQLInputType) ((GraphQLList) graphQLInputType).getWrappedType());
+                set.add(convertValue(environment, gitype, item));
+            });
+            return set;
+        } else if (graphQLInputType instanceof GraphQLEnumType) {//enum
+            return (value instanceof BosEnum) ? value : this.graphQlTypeMapper.getBosEnumByValue((GraphQLEnumType) graphQLInputType, (value instanceof EnumValue) ? ((EnumValue) value).getName() : value.toString());
+        } else if (graphQLInputType instanceof GraphQLScalarType) {//scalar
+            if (!(value instanceof Value)) {//
+                value = (value instanceof Integer) ? new IntValue(BigInteger.valueOf(((Integer) value).longValue())) :
+                        (value instanceof BigInteger) ? new IntValue((BigInteger) value) :
+                                (value instanceof Boolean) ? (new BooleanValue((Boolean) value)) :
+                                        value instanceof String ? new StringValue((String) value) :
+                                                value instanceof Float ? new FloatValue(BigDecimal.valueOf((Float) value)) :
+                                                        value instanceof Double ? new FloatValue(BigDecimal.valueOf((Double) value)) :
+                                                                value instanceof BigDecimal ? new FloatValue((BigDecimal) value) :
+                                                                        value instanceof Long ? new IntValue(BigInteger.valueOf(((Long) value).longValue()))
+                                                                                : null;//throw new RuntimeException("convertValue scalar mismatch?" + graphQLInputType.getName() + ":" + value.getClass().getCanonicalName());
 
-            } else if (graphQLInputType instanceof GraphQLEnumType) {
-                Class<? extends BosEnum> enumType = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
-                return (value instanceof StringValue)?
-                    Arrays.stream(enumType.getEnumConstants()).filter(bosEnum -> bosEnum.getValue().equals( ((StringValue)value).getValue())).findFirst()
-                            .orElseThrow(()->new RuntimeException("枚举没找到！")):
-                    Arrays.stream(enumType.getEnumConstants()).filter(bosEnum -> bosEnum.getValue().equals( ((EnumValue)value).getName())).findFirst()
-                            .orElseThrow(()->new RuntimeException("枚举没找到！"));
-
-            } else if (graphQLInputType instanceof GraphQLList) {//如果为列表
-                final GraphQLType wrapptype = ((GraphQLList) graphQLInputType).getWrappedType();
-                Set resultSet = new HashSet();
-                ArrayValue av = null;
-                if (value instanceof ArrayValue) {
-                    av = (ArrayValue) value;
-                } else {
-                    List<Value> vlist = new ArrayList<Value>();
-                    vlist.add(value);
-                    av = new ArrayValue(vlist);
-                }
-                List<Value> listvalue = av.getValues();
-                for (Value val : listvalue) {
-                    resultSet.add(convertValue(environment, ((GraphQLInputObjectType) wrapptype), val));
-                }
-                return resultSet;
-            } else if (graphQLInputType instanceof GraphQLInputObjectType) {
-                Class realclass = this.graphQlTypeMapper.getClazzByInputType(graphQLInputType);
-                Object instance = realclass.newInstance();
-                List<ObjectField> fieldlist = ((ObjectValue) value).getObjectFields();
-                for (ObjectField objectField : fieldlist) {
-                    PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(realclass, objectField.getName());
-                    GraphQLInputType subtype = ((GraphQLInputObjectType) graphQLInputType).getFieldDefinition(objectField.getName()).getType();
-                    Object propertyValue = convertValue(environment, subtype, objectField.getValue());
-                    java.lang.reflect.Field f = null;
-                    Class tempclass=realclass;
-                    while (!tempclass.equals(Object.class)) {
-                        Optional<java.lang.reflect.Field> opt = Arrays.stream(tempclass.getDeclaredFields())
-                                .filter(field -> field.getName().equals(propertyDescriptor.getName())).findFirst();
-                        if (opt.isPresent() && (f = opt.get()) != null) {
-                            break;
-                        } else {
-                            tempclass = tempclass.getSuperclass();
-                        }
-                    }
-                    if (f == null) {
-                        throw new RuntimeException("找不到这个属性");
-                    } else {
-                        f.setAccessible(true);
-                        f.set(instance, propertyValue);
-                    }
-                }
-                return instance;
-            } else {
-                throw new RuntimeException("MutationDataFetcher.composeRealArgument error!");
-
+            }
+            if (value != null) {
+                return ((GraphQLScalarType) graphQLInputType).getCoercing().parseLiteral((Value) value);
+            }
         }
-    }catch(Exception e){
-        e.printStackTrace();
-        throw new RuntimeException("MutationDataFetcher.composeRealArgument error!");
+        throw new RuntimeException("convertValue scalar mismatch?" + graphQLInputType.getName() + ":" + value.getClass().getCanonicalName());
     }
-    }
-
-    private Value getValueFromVariable(DataFetchingEnvironment environment, Object val) {
-        if(val instanceof Value){
-            return (Value)val;
-        }else if (val instanceof Map) {
-            List<ObjectField> ofList = ((Map<String, Object>) val).entrySet().stream().map((it) -> {
-                Object v=it.getValue();
-                        return new ObjectField(it.getKey(), (v instanceof Value)?(Value)v:getValueFromVariable(environment,v));
-                    }
-            ).collect(Collectors.toList());
-            return new ObjectValue(ofList);
-        }else if(val instanceof List){
-            return new ArrayValue((List<Value>) ((List)val).stream()
-                    .map(value->getValueFromVariable(environment,value))
-                    .collect(Collectors.toList()));
-        }else {//基础类型
-            return (val instanceof Integer) ? new IntValue(BigInteger.valueOf(((Integer) val).longValue())) :
-                    (val instanceof BigInteger) ? new IntValue((BigInteger) val) :
-                            (val instanceof Boolean) ? (new BooleanValue((Boolean) val)) :
-                                    val instanceof String ? new StringValue((String) val) :
-                                            val instanceof String ? new StringValue((String) val) :
-                                                    val instanceof Float ? new FloatValue(BigDecimal.valueOf((Float) val)) :
-                                                            val instanceof Double ? new FloatValue(BigDecimal.valueOf((Double) val)) :
-                                                                    val instanceof BigDecimal ? new FloatValue((BigDecimal) val) :
-                                                                            val instanceof Long?new IntValue(BigInteger.valueOf(((Long) val).longValue())) :
-                                                                            null;
-        }
-    }
-
-
 }

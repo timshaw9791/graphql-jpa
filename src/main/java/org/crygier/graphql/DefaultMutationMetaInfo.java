@@ -20,8 +20,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.crygier.graphql.GraphQLSchemaBuilder.ENTITY_LIST_NAME;
-
 /**
  * mutation方法调用到controller下的那些方法的各种元数据的封装
  */
@@ -59,18 +57,17 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
         Method properMethod = ReflectionUtils.findMethod(currentClass, proxyMethod.getName(), proxyMethod.getParameterTypes());
         this.methodAnnotations = properMethod.getDeclaredAnnotations();
         boolean isCollectionReturnValue = false;
+
+
         Type type = properMethod.getReturnType();
-        this.entityType = this.graphQlTypeMapper.getEntityType((Class) type);
         if (Collection.class.isAssignableFrom(properMethod.getReturnType()) && properMethod.getGenericReturnType() instanceof ParameterizedType) {
             type = ((ParameterizedType) properMethod.getGenericReturnType()).getActualTypeArguments()[0];
             isCollectionReturnValue = true;
         }
+        this.entityType = this.graphQlTypeMapper.getEntityType((Class) type);
+        this.graphQLOutputType = !isCollectionReturnValue ?graphQlTypeMapper.getGraphQLOutputType(type):
+                entityType!=null?new GraphQLTypeReference(graphQlTypeMapper.getGraphQLTypeNameOfEntityList(this.entityType)): new GraphQLTypeReference(graphQlTypeMapper.getGraphQLOutputType(type).getName());
 
-        this.graphQLOutputType = isCollectionReturnValue ? new GraphQLTypeReference(this.entityType.getName() + ENTITY_LIST_NAME) :
-                graphQlTypeMapper.getGraphQLOutputType(this.entityType);
-
-
-        ;
         this.argumentNames = Arrays.stream(properMethod.getParameters())
                 .map(parameter ->
                         {
@@ -105,7 +102,7 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
                 isCollection = true;
                 typeClazz = parameter.getParameterizedType().getClass();
             }
-            GraphQLInputType graphQLObjectInputType = this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(typeClazz);
+            GraphQLInputType graphQLObjectInputType = this.graphQlTypeMapper.getGraphQLInputType(typeClazz);
             graphQLObjectInputType = isCollection ? new GraphQLList(graphQLObjectInputType) : graphQLObjectInputType;
             graphQLObjectInputType = required ? GraphQLNonNull.nonNull(graphQLObjectInputType) : graphQLObjectInputType;
             GraphQLArgument graphQLArgument = GraphQLArgument.newArgument()

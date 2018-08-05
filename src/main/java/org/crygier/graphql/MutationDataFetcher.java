@@ -18,7 +18,7 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
     }
 
     @Override
-    public Object getResult(DataFetchingEnvironment environment) {
+    public Object getResult(DataFetchingEnvironment environment,QueryFilter queryFilter) {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> nameArgMaps = field.getArguments().stream()
                 //过滤掉不需要的输入参数。
@@ -37,12 +37,11 @@ public class MutationDataFetcher extends CollectionJpaDataFetcher {
         } else {
             if (IEntity.class.isAssignableFrom(returnValue.getClass())) {//拿到主键
                 String id = ((IEntity) returnValue).getId();
-                environment.getField().getArguments().clear();
-                environment.getField().getArguments().add(new Argument("id", new StringValue(id)));
-                return super.getForEntity(environment);
+                queryFilter=new QueryFilter("id", QueryFilterOperator.EQUEAL, id, QueryFilterCombinator.AND, queryFilter);
+                return super.getForEntity(environment,queryFilter);
             } else if (Collection.class.isAssignableFrom(returnValue.getClass())) {
                 //设置分页和过滤条件
-                return super.getResult(environment);
+                return super.getResult(environment,null);
             } else {
                 //TODO 只能抛错
                 throw new RuntimeException("返回类型不对头，mutation中不允许出现该类型");

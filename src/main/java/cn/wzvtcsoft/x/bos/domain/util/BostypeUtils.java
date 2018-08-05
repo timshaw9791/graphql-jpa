@@ -38,7 +38,7 @@ public class BostypeUtils {
      * @return
      */
     //TODO 用缓存优化，先生成好100个，到40个的时候再去加到100个，
-    public static String getMiniuuid(String uid) {
+    static String getMiniuuid(String uid) {
         String id = null;
         int i=0;
         do {

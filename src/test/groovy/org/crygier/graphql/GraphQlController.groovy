@@ -9,23 +9,19 @@ import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.model.users.Role;
 import org.crygier.graphql.model.users.User;
 import org.crygier.graphql.repo.UserRepository
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*
 
-@GRestController("ABC")
+@GRestController("")
 @RestController
 @Validated
 class GraphQlController {
-
     @Autowired
     private GraphQLExecutor graphQLExecutor;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-
 
     @Autowired
     UserRepository userRepository;
@@ -33,20 +29,18 @@ class GraphQlController {
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
     @RequestMapping(path = "/graphql")
     ExecutionResult graphQl(@RequestBody GraphQLInputQuery graphQLInput) throws IOException {
-        ExecutionResult result=graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
+
+        ExecutionResult result = graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
         // if(result.getErrors()!=null && result.getErrors().size()==0){
         result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
         return result;
     }
 
-//    @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
-//    @RequestMapping(path = '/graphql', method = RequestMethod.POST)
-//    ExecutionResult graphQl(@RequestBody final GraphQLInputQuery query) {
-//        Map<String, Object> variables = query.getVariables() ? objectMapper.readValue(query.getVariables(), Map) : null;
-//
-//        return graphQLExecutor.execute(query.getQuery(), variables);
-//    }
+    @GRequestMapping(path = "hello", method = [RequestMethod.POST,RequestMethod.GET])
+    String hello(@RequestParam(name="world",required = true)String world) {
+        return this.userRepository.save(world);
+    }
 
     /**
      * 为了解决一个数据返回规范的问题，前端用graphql-cli/playground的时候，收到后端数据返回时如果发现有errors字段（不管是不是null，是不是为空数组）
@@ -55,13 +49,9 @@ class GraphQlController {
      * 这里先覆盖一个方法把问题先解决。
      */
     static final class ExecutionResultBos extends ExecutionResultImpl{
-
-
         public ExecutionResultBos(Object data, List<? extends GraphQLError> errors, Map<Object, Object> extensions) {
             super(data, errors, extensions);
-
         }
-
         @Override
         public List<GraphQLError> getErrors() {
             List<GraphQLError> errors=super.getErrors();
@@ -70,29 +60,10 @@ class GraphQlController {
             }
             return errors;
         }
-
-
     }
 
 
-    public static final class GraphQLInputQuery {
 
-        public String getQuery() {
-            return query;
-        }
-        Map<String, Object> getArguments() {
-            return arguments
-        }
-
-        public GraphQLInputQuery(String query,Map<String,Object> arguments){
-            this.query=query;
-            this.arguments=arguments;
-        }
-
-        private String query;
-
-        private Map<String,Object> arguments;
-    }
 
 
 

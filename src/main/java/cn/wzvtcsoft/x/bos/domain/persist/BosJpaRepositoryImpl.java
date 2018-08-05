@@ -3,7 +3,7 @@ package cn.wzvtcsoft.x.bos.domain.persist;
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.CoreObject;
 import cn.wzvtcsoft.x.bos.domain.Entry;
-import cn.wzvtcsoft.x.bos.domain.util.StringUtils;
+import cn.wzvtcsoft.x.bos.domain.util.BosUtils;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -92,7 +92,7 @@ public class BosJpaRepositoryImpl<T, ID extends Serializable>
     }
 
     private void autoCreateNumberIfNecessary(BosEntity entity) {
-        if (!StringUtils.hasText(entity.getNumber())) {
+        if (!BosUtils.hasText(entity.getNumber())) {
             entity.setNumber("" + System.currentTimeMillis());
         }
     }
