@@ -3,6 +3,7 @@ package org.crygier.graphql.mlshop.service;
 import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
+import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 
 /**
@@ -35,5 +36,12 @@ public interface CarCommunicationService {
      */
     CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord);
 
+    /**
+     * 分配
+     * @param carCommunicationId
+     * @param salesman
+     * @return
+     */
+    CarCommunication allocate(String carCommunicationId,Salesman salesman);
 
 }

@@ -4,6 +4,7 @@ import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
+import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
@@ -32,6 +33,15 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     public CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord) {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.getCommunicationItems().add(communicationRecord);
+        carCommunication.setStatus(communicationRecord.getStatus());
+        return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
+    public CarCommunication allocate(String carCommunicationId, Salesman salesman) {
+        CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
+        carCommunication.setSalesman(salesman);
+        carCommunication.setDistributeTime(System.currentTimeMillis());
         return carCommunicationRepository.save(carCommunication);
     }
 

@@ -1,7 +1,8 @@
 package org.crygier.graphql.mlshop.model;
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
-import cn.wzvtcsoft.x.bos.domain.Bostype;
+import cn.wzvtcsoft.x.bos.domain.Bostype
+import cn.wzvtcsoft.x.bos.domain.Entry;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 
@@ -11,11 +12,11 @@ import javax.persistence.Entity;
  * @author Curtain
  * @date 2018/7/30 10:48
  */
-//@Entity
-//@SchemaDocumentation("订单_支付方案")
-//@CompileStatic
-//@Bostype("A11")
-public class PayScheme extends BosEntity{
+@Entity
+@SchemaDocumentation("订单_支付方案")
+@CompileStatic
+@Bostype("A15")
+public class PayScheme extends Entry{
 
     @SchemaDocumentation("进价 单位：分")
     Long purchasePrice;
@@ -49,4 +50,13 @@ public class PayScheme extends BosEntity{
 
     @SchemaDocumentation("购置税（客户） 单位：分")
     Long customerTax;
+
+    @SchemaDocumentation("GPS费")
+    Long GPSCharge;
+
+    @SchemaDocumentation("押金")
+    Long deposit;
+
+    @SchemaDocumentation("业务员提成")
+    String salesmanExtract;
 }

@@ -5,27 +5,37 @@ import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.Administ
+import org.crygier.graphql.mlshop.model.Advertisement
 import org.crygier.graphql.mlshop.model.CarCommunication
 
 import org.crygier.graphql.mlshop.model.CarInfo
 import org.crygier.graphql.mlshop.model.CarSource
+import org.crygier.graphql.mlshop.model.ConcernCar
+import org.crygier.graphql.mlshop.model.ConcernShop
 import org.crygier.graphql.mlshop.model.Customer
+import org.crygier.graphql.mlshop.model.Feedback
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
+import org.crygier.graphql.mlshop.model.Order
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.AdministRepository
+import org.crygier.graphql.mlshop.repo.AdvertisementRepository
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
 
 import org.crygier.graphql.mlshop.repo.CarInfoRepository
 import org.crygier.graphql.mlshop.repo.CarSourceRepository
 import org.crygier.graphql.mlshop.repo.CustomerRepository
+import org.crygier.graphql.mlshop.repo.FeedbackRepository
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
 import org.crygier.graphql.mlshop.repo.InsuranceRepository
+import org.crygier.graphql.mlshop.repo.OrderRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
-
+import org.crygier.graphql.mlshop.service.ConcernCarService
+import org.crygier.graphql.mlshop.service.ConcernShopService
+import org.crygier.graphql.mlshop.service.InsuranceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -68,6 +78,24 @@ public class BusinessController {
 
     @Autowired
     CarCommunicationService carCommunicationServiceImpl;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    ConcernShopService concernShopService;
+
+    @Autowired
+    ConcernCarService concernCarService;
+
+    @Autowired
+    FeedbackRepository feedbackRepository;
+
+    @Autowired
+    InsuranceService insuranceService;
+
+    @Autowired
+    AdvertisementRepository advertisementRepository;
 
     @SchemaDocumentation("增加车辆来源")
     @GRequestMapping(path = "/addcarsource", method = RequestMethod.POST)
@@ -270,15 +298,15 @@ public class BusinessController {
     @SchemaDocumentation("增加保险信息")
     @GRequestMapping(path = "/addinsurance", method = RequestMethod.POST)
     Insurance addInsurance(
-            @RequestParam(name = "addinsurance", required = true) Insurance insurance) {
-        return this.insuranceRepository.save(insurance);
+            @RequestParam(name = "insurance", required = true) Insurance insurance) {
+        return this.insuranceService.save(insurance);
     }
 
     @SchemaDocumentation("修改保险信息")
     @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
     Insurance updateInsurance(
             @RequestParam(name = "insurance", required = true) Insurance insurance) {
-        return this.insuranceRepository.save(insurance);
+        return this.insuranceService.save(insurance);
     }
 
     @SchemaDocumentation("删除保险信息")
@@ -313,21 +341,91 @@ public class BusinessController {
 
     @SchemaDocumentation("添加车辆信息")
     @GRequestMapping(path = "/addcarinfo", method = RequestMethod.POST)
-    CarInfo addCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+    CarInfo addCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         return this.carInfoRepository.save(carInfo);
     }
 
     @SchemaDocumentation("修改车辆信息")
     @GRequestMapping(path = "/updatecarinfo", method = RequestMethod.POST)
-    CarInfo updateCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+    CarInfo updateCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         return this.carInfoRepository.save(carInfo);
     }
 
     @SchemaDocumentation("删除车辆信息")
     @GRequestMapping(path = "/removecarinfo", method = RequestMethod.POST)
-    CarInfo removeCarInfo( @RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+    CarInfo removeCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         this.carInfoRepository.deleteById(carInfo.getId());
         return carInfo;
+    }
+
+    @SchemaDocumentation("添加订单")
+    @GRequestMapping(path = "/addorder", method = RequestMethod.POST)
+    Order addOrder(@RequestParam(name = "order", required = true) Order order) {
+        return this.orderRepository.save(order);
+    }
+
+    @SchemaDocumentation("修改订单")
+    @GRequestMapping(path = "/updateorder", method = RequestMethod.POST)
+    Order updateOrder(@RequestParam(name = "order", required = true) Order order) {
+        return this.orderRepository.save(order);
+    }
+
+    @SchemaDocumentation("关注车辆")
+    @GRequestMapping(path = "/concerncar", method = RequestMethod.POST)
+    ConcernCar concernCar(@RequestParam(name = "concerncar", required = true) ConcernCar concernCar) {
+        return this.concernCarService.concern(concernCar);
+    }
+
+    @SchemaDocumentation("取消关注车辆")
+    @GRequestMapping(path = "/cancelcar", method = RequestMethod.POST)
+    ConcernCar cancelCar(@RequestParam(name = "concerncar", required = true) ConcernCar concernCar) {
+        concernCarService.cancel(concernCar.getId());
+        return concernCar;
+    }
+
+    @SchemaDocumentation("关注门店")
+    @GRequestMapping(path = "/concernshop", method = RequestMethod.POST)
+    ConcernShop concernShop(@RequestParam(name = "concernshop", required = true) ConcernShop concernShop) {
+        return this.concernShopService.concern(concernShop);
+    }
+
+    @SchemaDocumentation("取消关注门店")
+    @GRequestMapping(path = "/cancelshop", method = RequestMethod.POST)
+    ConcernShop cancelShop(@RequestParam(name = "concernshop", required = true) ConcernShop concernShop) {
+        concernShopService.cancel(concernShop.getId());
+        return concernShop;
+    }
+
+    @SchemaDocumentation("添加反馈")
+    @GRequestMapping(path = "/addfeedback", method = RequestMethod.POST)
+    Feedback addFeedback(@RequestParam(name = "feedback", required = true) Feedback feedback) {
+        return feedbackRepository.save(feedback);
+    }
+
+    @SchemaDocumentation("删除反馈")
+    @GRequestMapping(path = "/removefeedback", method = RequestMethod.POST)
+    Feedback removeFeedback(@RequestParam(name = "feedback", required = true) Feedback feedback) {
+        feedbackRepository.deleteById(feedback.getId());
+        return feedback;
+    }
+
+    @SchemaDocumentation("/添加广告")
+    @GRequestMapping(path = "/addadvertisement",method = RequestMethod.POST)
+    Advertisement addAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
+        return advertisementRepository.save(advertisement);
+    }
+
+    @SchemaDocumentation("/修改广告")
+    @GRequestMapping(path = "/updateadvertisement",method = RequestMethod.POST)
+    Advertisement updateAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
+        return advertisementRepository.save(advertisement);
+    }
+
+    @SchemaDocumentation("/删除广告")
+    @GRequestMapping(path = "/removeadvertisement",method = RequestMethod.POST)
+    Advertisement removeAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
+        advertisementRepository.deleteById(advertisement.getId());
+        return advertisement;
     }
 
 

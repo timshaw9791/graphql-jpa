@@ -16,6 +16,10 @@ enum OrderAllocateStatusEnum implements BosEnum{
     WAIT("WAIT", "未分配"),
     ALREADY("ALREADY", "已分配");
 
+    private OrderAllocateStatusEnum(String value, String name) {
+        this.ev = new BosEnum.EnumInnerValue(value, name);
+    }
+
     private BosEnum.EnumInnerValue ev = null;
 
     @Override

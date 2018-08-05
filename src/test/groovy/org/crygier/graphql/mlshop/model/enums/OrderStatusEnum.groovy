@@ -17,12 +17,17 @@ enum OrderStatusEnum implements BosEnum{
     FINISH("FINISH", "已完结"),
     REFUND("REFUND", "已退款");
 
+    private OrderStatusEnum(String value, String name) {
+        this.ev = new BosEnum.EnumInnerValue(value, name);
+    }
+
     private BosEnum.EnumInnerValue ev = null;
 
     @Override
     public BosEnum.EnumInnerValue getEnumInnerValue() {
         return this.ev;
     }
+
 
     @Converter(autoApply = true)
     public static class OrderStatusEnumConverter extends BosEnumConverter<OrderStatusEnum> {}

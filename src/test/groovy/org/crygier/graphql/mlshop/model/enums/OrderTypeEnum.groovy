@@ -18,6 +18,11 @@ enum OrderTypeEnum implements BosEnum{
 
     private BosEnum.EnumInnerValue ev = null;
 
+    private OrderTypeEnum(String value, String name) {
+        this.ev = new BosEnum.EnumInnerValue(value, name);
+    }
+
+
     @Override
     public BosEnum.EnumInnerValue getEnumInnerValue() {
         return this.ev;

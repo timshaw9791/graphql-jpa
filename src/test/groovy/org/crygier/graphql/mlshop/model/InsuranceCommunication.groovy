@@ -25,9 +25,27 @@ class InsuranceCommunication extends BosEntity {
     @SchemaDocumentation("状态：分为待分配,待回访，已回访，已转换，已结束五种")
     CarCommunicationStatusEnum status;
 
-    @SchemaDocumentation("客户信息")
+    @SchemaDocumentation("客户姓名")
+    String customerName;
+
+    @SchemaDocumentation("联系方式")
+    String tel;
+
+    @SchemaDocumentation("现住地址")
+    String addressNow;
+
+    @SchemaDocumentation("微信号")
+    String weixinid;
+
+    @SchemaDocumentation("业务员")
     @ManyToOne
-    Customer customer;
+    Salesman salesman;
+
+    @SchemaDocumentation("分配时间")
+    Long distributeTime;
+
+    @SchemaDocumentation("客户微信昵称")
+    String weixinnick;
 
     @SchemaDocumentation("保险信息")
     @ManyToOne

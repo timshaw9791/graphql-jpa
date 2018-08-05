@@ -6,21 +6,24 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.ManyToOne
 
+/**
+ * @author Curtain
+ * @date 2018/8/1 15:18
+ */
+
 @Entity
-@SchemaDocumentation("销售员")
+@SchemaDocumentation("车辆信息")
 @CompileStatic
-@Bostype("A04")
-public class Salesman extends BosEntity {
-    @SchemaDocumentation("姓名")
-    String name;
-    @SchemaDocumentation("联系方式")
-    String tel;
+@Bostype("A16")
+class ConcernCar extends BosEntity{
 
-    @SchemaDocumentation("所属门店")
+    @SchemaDocumentation("客户")
     @ManyToOne
-    Shop shop;
+    Customer customer;
 
+    @SchemaDocumentation("汽车信息")
+    @ManyToOne
+    CarInfo carInfo;
 }

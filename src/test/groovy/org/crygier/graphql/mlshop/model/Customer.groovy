@@ -32,7 +32,6 @@ public class Customer extends BosEntity {
     @SchemaDocumentation("身份证图片，可多张上传图片，请以分号隔开图片短url")
     String idcardpicurls;
 
-
     @SchemaDocumentation("客户级别：分为ABC三等")
     CustomerLevelEnum level;
 
@@ -40,7 +39,13 @@ public class Customer extends BosEntity {
     String weixinid;
 
     @SchemaDocumentation("客户微信昵称")
-    String weixinnick
+    String weixinnick;
+
+    @SchemaDocumentation("出生年月")
+    Long birthDate;
+
+    @SchemaDocumentation("性别")
+    String gender;
 
 
 

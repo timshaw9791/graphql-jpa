@@ -2,6 +2,7 @@ package org.crygier.graphql.mlshop.model
 
 import cn.wzvtcsoft.x.bos.domain.Bostype
 import cn.wzvtcsoft.x.bos.domain.Entry
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum
