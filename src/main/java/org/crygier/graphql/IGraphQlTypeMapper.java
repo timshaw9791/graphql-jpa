@@ -1,34 +1,27 @@
 package org.crygier.graphql;
 
-import cn.wzvtcsoft.x.bos.domain.BosEnum;
-import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLInputType;
+import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.metamodel.EntityType;
-import javax.validation.constraints.NotNull;
+import javax.persistence.metamodel.ManagedType;
 import java.lang.reflect.Type;
 
 interface IGraphQlTypeMapper {
-
-    @Nullable
+    
     Class getClazzByInputType(GraphQLType graphQLType);
 
-    @Nullable
-    EntityType getEntityType(@NotNull  Class type);
-
-    GraphQLOutputType getGraphQLOutputType(Type type);
-
-    GraphQLInputType getGraphQLInputType(Type type);
-
     /**
-     * 获取某个实体类对应list的输出类型
-     * @param entityType
+     * 根据类型得到inputType,可能是标量，也可以能是实体,枚举，嵌入型等所有类型
+     * @param typeClazz
      * @return
      */
-    String getGraphQLTypeNameOfEntityList(EntityType entityType);
-//TODO 似乎要抛异常！
-    BosEnum getBosEnumByValue(GraphQLEnumType bosEnumType, String enumValue);
+    GraphQLInputType getGraphQLInputTypeFromClassType(Class typeClazz);
+
+
+     EntityType getEntityType(Class type);
+
+    GraphQLOutputType getGraphQLOutputType(ManagedType<?> managedType);
 }

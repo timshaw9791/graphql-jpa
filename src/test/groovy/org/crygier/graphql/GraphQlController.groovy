@@ -3,62 +3,69 @@ package org.crygier.graphql;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
-import graphql.GraphQLError
+import graphql.GraphQLError;
+import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.model.users.Role;
 import org.crygier.graphql.model.users.User;
-import org.crygier.graphql.repo.UserRepository
-import org.springframework.beans.factory.annotation.Autowired
+import org.crygier.graphql.repo.UserRepository;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.*;
 
-@GRestController("")
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@GRestController("ABC")
 @RestController
 @Validated
 class GraphQlController {
+
     @Autowired
     private GraphQLExecutor graphQLExecutor;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+
+
     @Autowired
     UserRepository userRepository;
 
     @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
     @RequestMapping(path = "/graphql")
-    ExecutionResult graphQl(@RequestBody GraphQLInputQuery graphQLInput) throws IOException {
+    ExecutionResult graphQl(@RequestBody Map<String,Object> map) throws IOException {
+        Map<String, Object> vsmap = null;
 
-        ExecutionResult result = graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
+        Object va=map.get("variables");
+        if(va==null){
+            vsmap=null;
+        }else if(va instanceof String){
+            vsmap=StringUtils.hasText((String)va)? objectMapper.readValue((String)va, Map.class):null;
+        }else{//map
+            vsmap=(Map<String, Object>)va;
+        }
+        GraphQLInputQuery query=null;
+        ExecutionResult result=graphQLExecutor.execute(map.get("query").toString(),vsmap);
         // if(result.getErrors()!=null && result.getErrors().size()==0){
         result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
         return result;
     }
 
-    @GRequestMapping(path = "hello", method = [RequestMethod.POST,RequestMethod.GET])
-    String hello(@RequestParam(name="world",required = true)String world) {
-        return "hello "+world;
-    }
-
-
-    @GRequestMapping(path = "hellostrlist", method = [RequestMethod.POST,RequestMethod.GET])
-    List<String> hellostringlist(@RequestParam(name="world",required = true)String world) {
-        List<String> resultlist=new ArrayList();
-        resultlist.add("hello "+world);
-        resultlist.add("haha");
-        return resultlist;
-    }
-
-    @GRequestMapping(path = "helloEntryList", method = [RequestMethod.POST,RequestMethod.GET])
-    List<User> helloEntryList(@RequestParam(name="world",required = true)String world) {
-        List<String> resultlist=new ArrayList();
-        resultlist.add(new User());
-        resultlist.add(new User());
-        return resultlist;
-    }
-
+//    @CrossOrigin(origins = "*",methods = [RequestMethod.GET,RequestMethod.POST,RequestMethod.OPTIONS],maxAge=1800L,allowedHeaders ="*")
+//    @RequestMapping(path = '/graphql', method = RequestMethod.POST)
+//    ExecutionResult graphQl(@RequestBody final GraphQLInputQuery query) {
+//        Map<String, Object> variables = query.getVariables() ? objectMapper.readValue(query.getVariables(), Map) : null;
+//
+//        return graphQLExecutor.execute(query.getQuery(), variables);
+//    }
 
     /**
      * 为了解决一个数据返回规范的问题，前端用graphql-cli/playground的时候，收到后端数据返回时如果发现有errors字段（不管是不是null，是不是为空数组）
@@ -67,9 +74,13 @@ class GraphQlController {
      * 这里先覆盖一个方法把问题先解决。
      */
     static final class ExecutionResultBos extends ExecutionResultImpl{
+
+
         public ExecutionResultBos(Object data, List<? extends GraphQLError> errors, Map<Object, Object> extensions) {
             super(data, errors, extensions);
+
         }
+
         @Override
         public List<GraphQLError> getErrors() {
             List<GraphQLError> errors=super.getErrors();
@@ -78,10 +89,29 @@ class GraphQlController {
             }
             return errors;
         }
+
+
     }
+    public static final class GraphQLInputQuery {
+        public String getQuery() {
+            return query;
+        }
 
+        public void setQuery(String query) {
+            this.query = query;
+        }
 
+        public String getVariables() {
+            return variables;
+        }
 
+        public void setVariables(String variables) {
+            this.variables = variables;
+        }
+
+        String query;
+        String variables;
+    }
 
 
 

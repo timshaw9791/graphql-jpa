@@ -1,6 +1,7 @@
 package org.crygier.graphql.mlshop.controller;
 
-import cn.wzvtcsoft.x.bos.domain.util.BosUtils;
+import cn.wzvtcsoft.x.bos.domain.util.BostypeUtils;
+import com.aliyun.oss.OSSClient;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.auth.sts.AssumeRoleRequest;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
@@ -10,11 +11,15 @@ import com.aliyuncs.http.ProtocolType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import org.crygier.graphql.mlshop.model.CarInfo;
+import org.crygier.graphql.mlshop.repo.CarInfoRepository;
 import org.crygier.graphql.mlshop.service.CarInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +40,7 @@ public class AliyunSTSController
         result.put("bucketName","mlshopimage");
         result.put("endpoint","http://oss-cn-shanghai.aliyuncs.com/");
         result.put("assumeRoleResponse",resp);
-        result.put("resourceId",BosUtils.getZipUuid());
+        result.put("resourceId",BostypeUtils.getMiniuuid(null));
         return result;
     }
 

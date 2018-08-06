@@ -47,6 +47,8 @@ public class Customer extends BosEntity {
     @SchemaDocumentation("性别")
     String gender;
 
-
+    public void setLevel(CustomerLevelEnum levelEnum){
+        this.level = levelEnum;
+    }
 
 }

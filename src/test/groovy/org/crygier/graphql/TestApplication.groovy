@@ -21,7 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 class TestApplication {
 
     public static void main(String[] args) {
-        ApplicationContext ac =SpringApplication.run(TestApplication.class,args);
+         ApplicationContext ac =SpringApplication.run(TestApplication.class,args);
     }
 /*
     @Bean
