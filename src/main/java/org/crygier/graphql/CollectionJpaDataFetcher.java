@@ -16,7 +16,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     public static final String ENTITY_PROP_FOR_DISABLED = "disabled";
 
     public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType, IGraphQlTypeMapper graphQlTypeMapper) {
-        super(entityManager, entityType,graphQlTypeMapper);
+        super(entityManager, entityType, graphQlTypeMapper);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
 
-        QueryFilter qfilter=extractQfilterInformation(environment,field);
+        QueryFilter qfilter = extractQfilterInformation(environment, field);
         Paginator pageInformation = extractPageInformation(environment, field);
 
         // See which fields we're requesting
@@ -37,9 +37,9 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
-                    .map(contentField -> getCountQuery(environment, contentField,qfilter).getSingleResult())
+                    .map(contentField -> getCountQuery(environment, contentField, qfilter).getSingleResult())
                     // if no "content" was selected an empty Field can be used
-                    .orElseGet(() -> getCountQuery(environment, new Field(),qfilter).getSingleResult());
+                    .orElseGet(() -> getCountQuery(environment, new Field(), qfilter).getSingleResult());
 
             result.put("totalElements", totalElements);
             result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.getSize())).longValue());
@@ -49,30 +49,32 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     }
 
 
-
     /**
-     *用来方便继承的
+     * 用来方便继承的
+     *
      * @param environment
-     * @param qfilter - 过滤条件
-     * @param field -字段信息
+     * @param qfilter            - 过滤条件
+     * @param field              -字段信息
      * @param justforselectcount - 是否仅仅查询数量，
      * @return 如果仅仅查询数量则返回TypedQuery<Long>、如果查询的是Entity，则返回TypedQuery<EntityType>
      */
     protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount) {
-        if(qfilter!=null && qfilter.isDisabledEntityAllowed()){
-            qfilter=qfilter.getNext();
-        }else if(qfilter!=null && qfilter.isOnlyDisabledEntityAllowed()){
-        }else{
-            qfilter=new QueryFilter(ENTITY_PROP_FOR_DISABLED,QueryFilterOperator.EQUEAL,"false",QueryFilterCombinator.AND,qfilter);
+        if (qfilter != null && qfilter.isDisabledEntityAllowed()) {
+            qfilter = qfilter.getNext();
+        } else if (qfilter != null && qfilter.isOnlyDisabledEntityAllowed()) {
+
+        } else {
+            qfilter = new QueryFilter(ENTITY_PROP_FOR_DISABLED, QueryFilterOperator.EQUEAL, "false", QueryFilterCombinator.AND, qfilter);
         }
         return super.getQuery(environment, field, qfilter, justforselectcount);
     }
+
     //用来方便继承的。
     protected Object getForEntity(DataFetchingEnvironment environment) {
         return super.getResult(environment);
     }
 
-    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
+    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field, QueryFilter qfilter) {
         return getQueryForEntity(environment, qfilter, field, true);
     }
 
@@ -84,12 +86,11 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Argument> paginationRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.PAGINATION_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         if (paginationRequest.isPresent()) {
             field.getArguments().remove(paginationRequest.get());
-            Value v=paginationRequest.get().getValue();
-            return (Paginator)this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(Paginator.class),v);
+            Value v = paginationRequest.get().getValue();
+            return (Paginator) this.convertValue(environment, this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(Paginator.class), v);
         }
         return new Paginator(1, Integer.MAX_VALUE);
     }
-
 
 
     private QueryFilter extractQfilterInformation(DataFetchingEnvironment environment, Field field) {
@@ -97,8 +98,8 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         if (qfilterRequest.isPresent()) {
             field.getArguments().remove(qfilterRequest.get());
             ObjectValue qfilterValues = (ObjectValue) qfilterRequest.get().getValue();
-            return (QueryFilter) this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(QueryFilter.class),qfilterValues);
-        }else{
+            return (QueryFilter) this.convertValue(environment, this.graphQlTypeMapper.getGraphQLInputTypeFromClassType(QueryFilter.class), qfilterValues);
+        } else {
             return null;
         }
     }
