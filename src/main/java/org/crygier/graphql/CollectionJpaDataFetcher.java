@@ -23,17 +23,14 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     public Object getResult(DataFetchingEnvironment environment,QueryFilter queryFilter) {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
-
-
         Paginator pageInformation = extractPageInformation(environment, field);
-
         // See which fields we're requesting
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
         Optional<Field> totalElementsSelection = getSelectionField(field, "totalElements");
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
         if (contentSelection.isPresent())
-            result.put("content", getQueryForEntity(environment, queryFilter, contentSelection.get(), false).setMaxResults(pageInformation.getSize()).setFirstResult((pageInformation.getPage() - 1) * pageInformation.getSize()).getResultList());
+            result.put("content", getQueryForEntity(environment, queryFilter, contentSelection.get(), false,pageInformation).getResultList());
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
@@ -58,9 +55,9 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
      * @param justforselectcount - 是否仅仅查询数量，
      * @return 如果仅仅查询数量则返回TypedQuery<Long>、如果查询的是Entity，则返回TypedQuery<EntityType>
      */
-    protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount) {
+    protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount,Paginator paginator) {
 
-        return super.getQuery(environment, field, qfilter, justforselectcount);
+        return super.getQuery(environment, field, qfilter, justforselectcount,paginator);
     }
     //用来方便继承的。
     protected Object getForEntity(DataFetchingEnvironment environment,QueryFilter qfilter) {
@@ -68,7 +65,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     }
 
     private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
-        return getQueryForEntity(environment, qfilter, field, true);
+        return getQueryForEntity(environment, qfilter, field, true,null);
     }
 
     private Optional<Field> getSelectionField(Field field, String fieldName) {
@@ -78,7 +75,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     private Paginator extractPageInformation(DataFetchingEnvironment environment, Field field) {
         Optional<Argument> paginationRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.PAGINATION_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         if (paginationRequest.isPresent()) {
-            field.getArguments().remove(paginationRequest.get());
+            //field.getArguments().remove(paginationRequest.get());
             Value v=paginationRequest.get().getValue();
             return (Paginator)this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputType(Paginator.class),v);
         }
@@ -90,7 +87,7 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Argument> qfilterRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.QFILTER_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         QueryFilter qfilter = null;
         if (qfilterRequest.isPresent()) {
-            field.getArguments().remove(qfilterRequest.get());
+            //field.getArguments().remove(qfilterRequest.get());
             ObjectValue qfilterValues = (ObjectValue) qfilterRequest.get().getValue();
             qfilter = (QueryFilter) this.convertValue(environment, this.graphQlTypeMapper.getGraphQLInputType(QueryFilter.class), qfilterValues);
         }

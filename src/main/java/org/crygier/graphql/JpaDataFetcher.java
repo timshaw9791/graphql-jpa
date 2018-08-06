@@ -58,7 +58,7 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     public Object getResult(DataFetchingEnvironment environment,QueryFilter filter) {
-        TypedQuery typedQuery = getQuery(environment, environment.getFields().iterator().next(), filter, false);
+        TypedQuery typedQuery = getQuery(environment, environment.getFields().iterator().next(), filter, false,null);
         Object result = typedQuery.getResultList().stream().findFirst().orElse(null);
         return result;
     }
@@ -121,7 +121,7 @@ public class JpaDataFetcher implements DataFetcher {
      * @param justforselectcount - 是否仅仅为了查询符合条件的对象个数？
      * @return
      */
-    protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field, QueryFilter queryFilter, boolean justforselectcount) {
+    protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field, QueryFilter queryFilter, boolean justforselectcount,Paginator paginator) {
 
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -162,13 +162,17 @@ public class JpaDataFetcher implements DataFetcher {
 
 
         query.where(predicates.toArray(new Predicate[predicates.size()]));
-
+        TypedQuery result= entityManager.createQuery(query.distinct(true));
         if (!justforselectcount) {
+            if(paginator!=null){
+                result.setMaxResults(paginator.getSize());
+                result.setFirstResult((paginator.getPage()-1)*paginator.getSize());
+            }
             query.orderBy(orders);
         }
 
         //将entitygraph加入
-        return entityManager.createQuery(query.distinct(true)).setHint("javax.persistence.fetchgraph", graph);
+        return result.setHint("javax.persistence.fetchgraph", graph);
     }
 
     private Predicate getPredicate(CriteriaBuilder cb, Root root, DataFetchingEnvironment environment, QueryFilter queryFilter) {
