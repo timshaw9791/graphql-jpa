@@ -6,6 +6,7 @@ import graphql.language.SourceLocation;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,13 +16,12 @@ import java.util.stream.Collectors;
  */
 public class InputErrorException extends RuntimeException implements GraphQLError {
 
-    Map<String,Object> messageRelatePropsMap=null;
+    Map<String,Object> messageRelatePropsMap=new HashMap<>();
 
     public InputErrorException(Map<String, String[]> messageRelatePropsMap) {
         super("输入数据错误");
-        this.messageRelatePropsMap = messageRelatePropsMap.entrySet().stream().collect(Collectors.toMap((e) -> e.getKey()
-                , (e) -> StringUtils.collectionToCommaDelimitedString(Arrays.asList(e.getValue()))));
-
+        messageRelatePropsMap.entrySet().stream().forEach(e ->
+                this.messageRelatePropsMap.put(e.getKey(), StringUtils.collectionToCommaDelimitedString(Arrays.asList(e.getValue()))));
     }
 
 

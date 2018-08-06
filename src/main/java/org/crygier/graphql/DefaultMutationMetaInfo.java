@@ -77,11 +77,9 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
                 ).collect(Collectors.toList()).toArray(new String[]{});
 
 
-        Map<RequestParam, Parameter> map = Arrays.stream(properMethod.getParameters())
-                .map(
-                        parameter ->
-                                new AbstractMap.SimpleEntry<RequestParam, Parameter>(parameter.getAnnotation(RequestParam.class), parameter)
-                ).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+        Map<RequestParam, Parameter> map =new HashMap<>();
+        Arrays.stream(properMethod.getParameters())
+                .forEach(parameter ->map.put(parameter.getAnnotation(RequestParam.class), parameter));
         Annotation[][] annotations = properMethod.getParameterAnnotations();
         for (int i = 0; i < argumentNames.length; i++) {
             this.arguAnnotationsMap.put(argumentNames[i], annotations[i]);
@@ -192,13 +190,11 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
 
     {
 
-        Map<String, Object> messageRelatePropsMap = null;
+        Map<String, Object> messageRelatePropsMap = new HashMap<>();
 
         public ValidateErrorException(MutationValidator.MutationValidateException mve) {
             super("输入数据错误");
-            this.messageRelatePropsMap = mve.getMessageRelatePropsMap().entrySet().stream()
-                    .map(entry -> new AbstractMap.SimpleEntry<String, Object>(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.toMap(i -> i.getKey(), i -> i.getValue()));
+            this.messageRelatePropsMap.putAll(mve.getMessageRelatePropsMap());
         }
 
         @Override

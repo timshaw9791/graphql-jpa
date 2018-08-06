@@ -28,7 +28,9 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * 用来
+ */
 @Component("graphQLInputQueryConverter")
 public class GraphQLInputQueryConverter extends AbstractHttpMessageConverter<GraphQLInputQuery> {
     @Autowired
@@ -83,12 +85,13 @@ public class GraphQLInputQueryConverter extends AbstractHttpMessageConverter<Gra
 
             Map<String, Object> map = StringUtils.hasText(variables) ? objectMapper.readValue(variables, Map.class) : null;
             List<VariableDefinition> variableDefinitionList = graphQLExecutor.getOperationDefinition(query).getVariableDefinitions();
-            Map<String, Object> argmentsMap = variableDefinitionList.stream().map(variableDefinition -> {
+            Map<String, Object> argmentsMap = new HashMap<>();
+            variableDefinitionList.stream().forEach(variableDefinition -> {
                 GraphQLType graphQLType = graphQLExecutor.getGraphQLType(variableDefinition.getType());
                 Object value = map.get(variableDefinition.getName());
                 Object result = coerceValue(graphQLType, value);
-                return new AbstractMap.SimpleEntry<String, Object>(variableDefinition.getName(), result);
-            }).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+                argmentsMap.put(variableDefinition.getName(),result);
+            });
             return new GraphQLInputQuery(query, argmentsMap);
         }
 
@@ -134,6 +137,7 @@ public class GraphQLInputQueryConverter extends AbstractHttpMessageConverter<Gra
 
         /**
          * 去掉多余的左右引号,以及内部的转义符号，相当于把多一层引号包裹去掉。
+         *
          * @param str
          * @return
          */
@@ -148,6 +152,7 @@ public class GraphQLInputQueryConverter extends AbstractHttpMessageConverter<Gra
                 return null;
             }
         }
+
         final Set<Class> set = new HashSet(Arrays.asList(new Object[]{Integer.class, BigInteger.class, Boolean.class, String.class, Float.class, Double.class, BigDecimal.class, Long.class}));
     }
 }
