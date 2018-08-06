@@ -446,10 +446,10 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
 enum OrderByDirection implements BosEnum {
 
-    ASC("ASC", "升序", "升序排列"), DESC("DESC", "降序", "降序排列");
+    ASC("ASC", "升序"), DESC("DESC", "降序");
 
-    private OrderByDirection(String value, String name, String description) {
-        this.ev = new BosEnum.EnumInnerValue(value, name, description);
+    private OrderByDirection(String value, String name) {
+        this.ev = new BosEnum.EnumInnerValue(value, name);
     }
 
     private BosEnum.EnumInnerValue ev = null;

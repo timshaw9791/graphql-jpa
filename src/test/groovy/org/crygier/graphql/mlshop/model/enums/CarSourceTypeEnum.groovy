@@ -10,10 +10,10 @@ import javax.persistence.Converter
 
 @SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate")
 enum CarSourceTypeEnum implements BosEnum {
-    OWN("OWN", "自营", "自己经营的"), COPORATE("COPORATE", "合作", "与人合作的");
+    OWN("OWN", "自营"), COPORATE("COPORATE", "合作");
 
-    private CarSourceTypeEnum(String value, String name, String description) {
-        this.ev = new EnumInnerValue(value, name, description);
+    private CarSourceTypeEnum(String value, String name) {
+        this.ev = new EnumInnerValue(value, name);
     }
 
     private EnumInnerValue ev = null;

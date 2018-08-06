@@ -8,14 +8,14 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import javax.persistence.Converter
 
 
-@SchemaDocumentation("客户登记，被分为A/B/C")
+@SchemaDocumentation("客户登记，被分为A/B/C,A为最高级别，B为中等级别，C为最低级别")
 enum CustomerLevelEnum implements BosEnum {
-    A("A", "A级", "最高级别"),
-    B("B", "B级", "中等级别"),
-    C( "C", "C级", "最低级别" );
+    A("A", "A级"),
+    B("B", "B级"),
+    C("C", "C级");
 
-    private CustomerLevelEnum(String value, String name, String description) {
-        this.ev = new EnumInnerValue(value, name, description);
+    private CustomerLevelEnum(String value, String name) {
+        this.ev = new EnumInnerValue(value, name);
     }
 
     private EnumInnerValue ev = null;

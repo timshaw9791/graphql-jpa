@@ -8,10 +8,10 @@ import javax.persistence.Converter;
 @SchemaDocumentation("测试是否为空")
 public enum FieldNullEnum implements BosEnum {
 
-    ISNULL( "ISNULL", "为空","为null"), NOTNULL("NOTNULL","不为空", "不为null");
+    ISNULL( "ISNULL", "为空"), NOTNULL("NOTNULL","不为空");
 
-    private FieldNullEnum(String value, String name, String description) {
-        this.ev = new EnumInnerValue(value, name, description);
+    private FieldNullEnum(String value, String name) {
+        this.ev = new EnumInnerValue(value, name);
     }
 
     private EnumInnerValue ev = null;

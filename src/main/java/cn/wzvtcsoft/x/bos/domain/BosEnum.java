@@ -6,12 +6,6 @@ public interface BosEnum {
         private String alias;
         private String description;
 
-        public EnumInnerValue(String value, String alias, String description) {
-            this.value = value;
-            this.alias = alias;
-            this.description = description;
-        }
-
         public EnumInnerValue(String value, String alias) {
             this.value = value;
             this.alias = alias;
