@@ -80,6 +80,9 @@ class Mortgage extends Entry{
     @SchemaDocumentation("押金")
     Long deposit;
 
+    @SchemaDocumentation("登记证书")
+    String registrationCertificate;
+
     @SchemaDocumentation("手续费")
     Long serviceCharge;
 
