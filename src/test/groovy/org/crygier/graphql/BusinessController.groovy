@@ -308,7 +308,7 @@ public class BusinessController {
     @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
     Insurance updateInsurance(
             @RequestParam(name = "insurance", required = true) Insurance insurance) {
-        return this.insuranceService.save(insurance);
+        return this.insuranceService.update(insurance);
     }
 
     @SchemaDocumentation("删除保险信息")

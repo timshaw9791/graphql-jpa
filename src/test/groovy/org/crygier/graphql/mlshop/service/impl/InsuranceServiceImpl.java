@@ -25,6 +25,11 @@ public class InsuranceServiceImpl implements InsuranceService {
     private InsuranceCommunicationService insuranceCommunicationService;
 
     @Override
+    public Insurance update(Insurance insurance) {
+        return insuranceRepository.save(insurance);
+    }
+
+    @Override
     @Transactional
     public Insurance save(Insurance insurance) {
         InsuranceCommunication insuranceCommunication = new InsuranceCommunication();

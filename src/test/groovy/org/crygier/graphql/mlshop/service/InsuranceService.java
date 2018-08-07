@@ -14,4 +14,11 @@ public interface InsuranceService {
      * @return
      */
     Insurance save(Insurance insurance);
+
+    /**
+     * 保险信息更新
+     * @param insurance
+     * @return
+     */
+    Insurance update(Insurance insurance);
 }
