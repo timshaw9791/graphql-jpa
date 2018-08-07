@@ -24,7 +24,16 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo update(CarInfo carInfo) {
+        CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
+        if (model!=null){
+            deleteById(model.getId());
+        }
         return carInfoRepository.save(carInfo);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        carInfoRepository.deleteById(id);
     }
 
     @Override
@@ -34,6 +43,14 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo save(CarInfo carInfo) {
+        CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
+        if (model!=null){
+            model.setGuidePrice(carInfo.getGuidePrice());
+            model.setBrand(carInfo.getBrand());
+            model.setFilename(carInfo.getFilename());
+            return carInfoRepository.save(model);
+        }
+
         return carInfoRepository.save(carInfo);
     }
 }

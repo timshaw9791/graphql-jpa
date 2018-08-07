@@ -9,6 +9,7 @@ import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.PrePersist
+import javax.persistence.PreUpdate
 
 /**
  * @author Curtain
@@ -67,6 +68,15 @@ class CarInfo extends BosEntity {
     }
 
     @PrePersist
+    private void prePersist(){
+        price();
+    }
+
+    @PreUpdate
+    private void preUpdate(){
+        price();
+    }
+
     private void price(){
         this.price = BigDecimal.valueOf(Double.valueOf(this.getGuidePrice().replace("万","")));
     }
