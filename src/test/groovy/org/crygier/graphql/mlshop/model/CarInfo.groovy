@@ -68,6 +68,6 @@ class CarInfo extends BosEntity {
 
     @PrePersist
     private void price(){
-        this.price = BigDecimal.valueOf(Double.valueOf(this.getGuidePrice().replace("","万")));
+        this.price = BigDecimal.valueOf(Double.valueOf(this.getGuidePrice().replace("万","")));
     }
 }
