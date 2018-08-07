@@ -8,6 +8,7 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.OneToMany
+import javax.persistence.PrePersist
 
 /**
  * @author Curtain
@@ -28,6 +29,9 @@ class CarInfo extends BosEntity {
 
     @SchemaDocumentation("厂商指导价")
     String guidePrice;
+
+    @SchemaDocumentation("价格")
+    BigDecimal price;
 
     @SchemaDocumentation("阿里云服务器文件名")
     String filename;
@@ -62,4 +66,8 @@ class CarInfo extends BosEntity {
         this.financialSchemesItems =financialSchemes;
     }
 
+    @PrePersist
+    private void price(){
+        this.price = BigDecimal.valueOf(Double.valueOf(this.getGuidePrice().replace("","万")));
+    }
 }
