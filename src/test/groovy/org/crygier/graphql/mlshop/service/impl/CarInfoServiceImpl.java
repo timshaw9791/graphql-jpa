@@ -24,9 +24,9 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo update(CarInfo carInfo) {
-        CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
-        if (model != null) {
-            throw new RuntimeException("修改失败，型号已存在");
+//        CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
+//        if (model != null) {
+//            throw new RuntimeException("修改失败，型号已存在");
 //            if (carInfo.getFinancialSchemesItems() != null && carInfo.getFinancialSchemesItems().size()>0) {
 //                model.getFinancialSchemesItems().clear();
 //                model.getFinancialSchemesItems().addAll(carInfo.getFinancialSchemesItems());
@@ -35,7 +35,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 //            BeanUtils.copyProperties(carInfo, model, BeanCopyUtil.getNullPropertyNames(carInfo));
 //
 //            return carInfoRepository.save(model);
-        }
+//        }
         return carInfoRepository.save(carInfo);
     }
 
