@@ -91,12 +91,4 @@ class Mortgage extends Entry{
 
     @SchemaDocumentation("签单返点费")
     Long signRePointBill;
-
-
-
-
-
-
-
-
 }
