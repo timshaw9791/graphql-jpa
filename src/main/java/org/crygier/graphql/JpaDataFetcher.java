@@ -216,6 +216,24 @@ public class JpaDataFetcher implements DataFetcher {
                 result = cb.equal(path, value);
                 ;
                 break;
+            case LESSTHAN:
+                value = convertFilterValue(path.getJavaType(), v);
+                result = cb.lessThan(path, String.valueOf(value));
+                break;
+            case GREATTHAN:
+                value = convertFilterValue(path.getJavaType(), v);
+                result = cb.greaterThan(path, String.valueOf(value));
+                break;
+            case NOTLESSTHAN:
+                value = convertFilterValue(path.getJavaType(), v);
+                result = cb.greaterThanOrEqualTo(path, String.valueOf(value));
+                break;
+            case NOTGREATTHAN:
+                value = convertFilterValue(path.getJavaType(), v);
+                result = cb.lessThanOrEqualTo(path, String.valueOf(value));
+                break;
+            default:
+                break;
         }
         //操作符没有，则直接返回
         if (qfc == null) {
@@ -232,6 +250,7 @@ public class JpaDataFetcher implements DataFetcher {
                 return result = cb.and(result, next);
             case OR:
                 return result = cb.or(result, next);
+            default:break;
             // case NOT:
         }
         return result;

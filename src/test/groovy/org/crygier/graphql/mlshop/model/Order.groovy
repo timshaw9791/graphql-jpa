@@ -31,22 +31,22 @@ public class Order extends BosEntity {
     OrderTypeEnum orderTypeEnum;
 
     @SchemaDocumentation("门店")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     Shop shop;
 
     @SchemaDocumentation("经手人(门店中的业务员)")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     Salesman salesman;
 
     @SchemaDocumentation("备注")
     String remark;
 
     @SchemaDocumentation("客户信息")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     Customer customer;
 
     @SchemaDocumentation("保险")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     Insurance insurance;
 
     @SchemaDocumentation("品牌")
