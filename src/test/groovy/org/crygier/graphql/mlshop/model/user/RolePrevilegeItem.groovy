@@ -1,4 +1,4 @@
-package org.crygier.graphql.model.users
+package org.crygier.graphql.mlshop.model.user
 
 import cn.wzvtcsoft.x.bos.domain.Entry
 import groovy.transform.CompileStatic

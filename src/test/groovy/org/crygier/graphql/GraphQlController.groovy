@@ -3,24 +3,16 @@ package org.crygier.graphql;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
-import graphql.GraphQLError;
-import groovy.transform.CompileStatic;
+import graphql.GraphQLError
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
-import org.crygier.graphql.model.users.Role;
-import org.crygier.graphql.model.users.User;
-import org.crygier.graphql.repo.UserRepository;
-import org.hibernate.validator.constraints.Length;
+import org.crygier.graphql.mlshop.model.user.Role;
+import org.crygier.graphql.mlshop.model.user.User;
+import org.crygier.graphql.mlshop.repo.UserRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*
 
 @GRestController("ABC")
 @RestController

@@ -1,6 +1,6 @@
-package org.crygier.graphql.repo;
+package org.crygier.graphql.mlshop.repo;
 
-import org.crygier.graphql.model.users.User;
+import org.crygier.graphql.mlshop.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
