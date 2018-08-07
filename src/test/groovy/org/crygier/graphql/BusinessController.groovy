@@ -33,6 +33,7 @@ import org.crygier.graphql.mlshop.repo.OrderRepository
 import org.crygier.graphql.mlshop.repo.SalesmanRepository
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.crygier.graphql.mlshop.service.CarCommunicationService
+import org.crygier.graphql.mlshop.service.CarInfoService
 import org.crygier.graphql.mlshop.service.ConcernCarService
 import org.crygier.graphql.mlshop.service.ConcernShopService
 import org.crygier.graphql.mlshop.service.InsuranceService
@@ -73,8 +74,9 @@ public class BusinessController {
     @Autowired
     InsuranceCommunicationRepository insuranceCommunicationRepository;
 
+
     @Autowired
-    CarInfoRepository carInfoRepository;
+    CarInfoService carInfoService;
 
     @Autowired
     CarCommunicationService carCommunicationServiceImpl;
@@ -342,19 +344,19 @@ public class BusinessController {
     @SchemaDocumentation("添加车辆信息")
     @GRequestMapping(path = "/addcarinfo", method = RequestMethod.POST)
     CarInfo addCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        return this.carInfoRepository.save(carInfo);
+        return this.carInfoService.save(carInfo);
     }
 
     @SchemaDocumentation("修改车辆信息")
     @GRequestMapping(path = "/updatecarinfo", method = RequestMethod.POST)
     CarInfo updateCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        return this.carInfoRepository.save(carInfo);
+        return this.carInfoService.update(carInfo);
     }
 
     @SchemaDocumentation("删除车辆信息")
     @GRequestMapping(path = "/removecarinfo", method = RequestMethod.POST)
     CarInfo removeCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        this.carInfoRepository.deleteById(carInfo.getId());
+        this.carInfoService.deleteById(carInfo.getId());
         return carInfo;
     }
 

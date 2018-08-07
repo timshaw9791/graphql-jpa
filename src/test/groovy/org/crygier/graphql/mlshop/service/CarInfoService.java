@@ -30,4 +30,6 @@ public interface CarInfoService {
      */
     CarInfo findOne(String id);
 
+    void deleteById(String id);
+
 }
