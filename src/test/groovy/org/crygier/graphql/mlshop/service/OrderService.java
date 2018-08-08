@@ -23,7 +23,7 @@ public interface OrderService {
     Order update(Order order);
 
     /**
-     * 保存订单
+     * 查找订单
      * @param id
      * @return
      */

@@ -40,4 +40,17 @@ public interface InsuranceCommunicationService {
      */
     InsuranceCommunication allocate(String insuranceCommunicationId,Salesman salesman);
 
+    /**
+     * 修改记录
+     * @param insuranceCommunication
+     * @return
+     */
+    InsuranceCommunication update(InsuranceCommunication insuranceCommunication);
+
+    /**
+     * 删除
+     * @param insuranceCommunication
+     */
+    void deleteById(InsuranceCommunication insuranceCommunication);
+
 }

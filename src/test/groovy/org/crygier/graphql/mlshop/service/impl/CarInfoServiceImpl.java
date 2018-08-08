@@ -28,7 +28,7 @@ public class CarInfoServiceImpl implements CarInfoService {
         if (!(carInfo.getModel().equals(result.getModel()))) {
             CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
             if (model != null) {
-                throw new RuntimeException("修改失败，型号已存在");
+                throw new RuntimeException("The modification failed, the model already existed");
 //
 //            if (carInfo.getFinancialSchemesItems() != null && carInfo.getFinancialSchemesItems().size()>0) {
 //                model.getFinancialSchemesItems().clear();
@@ -46,7 +46,10 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public void deleteById(String id) {
-        carInfoRepository.deleteById(id);
+        CarInfo carInfo = findOne(id);
+        carInfo.setDisabled(true);
+        carInfoRepository.save(carInfo);
+
     }
 
     @Override

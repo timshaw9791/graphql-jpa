@@ -101,4 +101,8 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("纸质表格")
     String paperTable;
+
+    @SchemaDocumentation("车辆信息")
+    @ManyToOne
+    CarInfo carInfo;
 }

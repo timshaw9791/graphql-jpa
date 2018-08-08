@@ -84,11 +84,6 @@ public class BusinessController {
     @Autowired
     OrderRepository orderRepository;
 
-    @Autowired
-    ConcernShopService concernShopService;
-
-    @Autowired
-    ConcernCarService concernCarService;
 
     @Autowired
     FeedbackRepository feedbackRepository;
@@ -297,68 +292,7 @@ public class BusinessController {
         return carCommunication;
     }
 
-    @SchemaDocumentation("增加保险信息")
-    @GRequestMapping(path = "/addinsurance", method = RequestMethod.POST)
-    Insurance addInsurance(
-            @RequestParam(name = "insurance", required = true) Insurance insurance) {
-        return this.insuranceService.save(insurance);
-    }
 
-    @SchemaDocumentation("修改保险信息")
-    @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
-    Insurance updateInsurance(
-            @RequestParam(name = "insurance", required = true) Insurance insurance) {
-        return this.insuranceService.update(insurance);
-    }
-
-    @SchemaDocumentation("删除保险信息")
-    @GRequestMapping(path = "/removeinsurance", method = RequestMethod.POST)
-    Insurance removeInsurance(
-            @RequestParam(name = "insurance", required = true) Insurance insurance) {
-        this.insuranceRepository.deleteById(insurance.getId());
-        return insurance;
-    }
-
-    @SchemaDocumentation("增加保险回访记录")
-    @GRequestMapping(path = "/addinsurancecommunication", method = RequestMethod.POST)
-    InsuranceCommunication addInsuranceCommunication(
-            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
-        return this.insuranceCommunicationRepository.save(insuranceCommunication);
-    }
-
-    @SchemaDocumentation("修改保险回访记录")
-    @GRequestMapping(path = "/updateinsurancecommunication", method = RequestMethod.POST)
-    InsuranceCommunication updateInsuranceCommunication(
-            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
-        return this.insuranceCommunicationRepository.save(insuranceCommunication);
-    }
-
-    @SchemaDocumentation("删除保险回访记录")
-    @GRequestMapping(path = "/removeinsurancecommunication", method = RequestMethod.POST)
-    InsuranceCommunication removeInsuranceCommunication(
-            @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
-        this.insuranceCommunicationRepository.deleteById(insuranceCommunication.getId());
-        return insuranceCommunication;
-    }
-
-    @SchemaDocumentation("添加车辆信息")
-    @GRequestMapping(path = "/addcarinfo", method = RequestMethod.POST)
-    CarInfo addCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        return this.carInfoService.save(carInfo);
-    }
-
-    @SchemaDocumentation("修改车辆信息")
-    @GRequestMapping(path = "/updatecarinfo", method = RequestMethod.POST)
-    CarInfo updateCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        return this.carInfoService.update(carInfo);
-    }
-
-    @SchemaDocumentation("删除车辆信息")
-    @GRequestMapping(path = "/removecarinfo", method = RequestMethod.POST)
-    CarInfo removeCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
-        this.carInfoService.deleteById(carInfo.getId());
-        return carInfo;
-    }
 
     @SchemaDocumentation("添加订单")
     @GRequestMapping(path = "/addorder", method = RequestMethod.POST)
@@ -370,32 +304,6 @@ public class BusinessController {
     @GRequestMapping(path = "/updateorder", method = RequestMethod.POST)
     Order updateOrder(@RequestParam(name = "order", required = true) Order order) {
         return this.orderRepository.save(order);
-    }
-
-    @SchemaDocumentation("关注车辆")
-    @GRequestMapping(path = "/concerncar", method = RequestMethod.POST)
-    ConcernCar concernCar(@RequestParam(name = "concerncar", required = true) ConcernCar concernCar) {
-        return this.concernCarService.concern(concernCar);
-    }
-
-    @SchemaDocumentation("取消关注车辆")
-    @GRequestMapping(path = "/cancelcar", method = RequestMethod.POST)
-    ConcernCar cancelCar(@RequestParam(name = "concerncar", required = true) ConcernCar concernCar) {
-        concernCarService.cancel(concernCar.getId());
-        return concernCar;
-    }
-
-    @SchemaDocumentation("关注门店")
-    @GRequestMapping(path = "/concernshop", method = RequestMethod.POST)
-    ConcernShop concernShop(@RequestParam(name = "concernshop", required = true) ConcernShop concernShop) {
-        return this.concernShopService.concern(concernShop);
-    }
-
-    @SchemaDocumentation("取消关注门店")
-    @GRequestMapping(path = "/cancelshop", method = RequestMethod.POST)
-    ConcernShop cancelShop(@RequestParam(name = "concernshop", required = true) ConcernShop concernShop) {
-        concernShopService.cancel(concernShop.getId());
-        return concernShop;
     }
 
     @SchemaDocumentation("添加反馈")

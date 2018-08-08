@@ -25,6 +25,17 @@ public class InsuranceServiceImpl implements InsuranceService {
     private InsuranceCommunicationService insuranceCommunicationService;
 
     @Override
+    public Insurance findOne(String id) {
+        return insuranceRepository.findById(id).get();
+    }
+
+    @Override
+    public void deleteById(Insurance insurance) {
+        insurance.setDisabled(true);
+        insuranceRepository.save(insurance);
+    }
+
+    @Override
     public Insurance update(Insurance insurance) {
         return insuranceRepository.save(insurance);
     }
@@ -34,7 +45,7 @@ public class InsuranceServiceImpl implements InsuranceService {
     public Insurance save(Insurance insurance) {
         InsuranceCommunication insuranceCommunication = new InsuranceCommunication();
         insuranceCommunication.setCustomerName(insurance.getCustomerName());
-        insuranceCommunication.setStatus(CarCommunicationStatusEnum.A);
+        insuranceCommunication.setStatus(CarCommunicationStatusEnum.D);
         insuranceCommunication.setTel(insurance.getCustomerTel());
         insuranceCommunication.setInsurance(insurance);
         insuranceCommunicationService.save(insuranceCommunication);

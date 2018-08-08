@@ -1,6 +1,7 @@
 package org.crygier.graphql.mlshop.service.impl;
 
 import org.crygier.graphql.mlshop.model.*;
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository;
@@ -36,6 +37,17 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     @Override
     public InsuranceCommunication save(InsuranceCommunication insuranceCommunication) {
 //        updateCustomer(insuranceCommunication.getCustomer());
+        return insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @Override
+    public void deleteById(InsuranceCommunication insuranceCommunication) {
+        insuranceCommunication.setDisabled(true);
+        insuranceCommunicationRepository.save(insuranceCommunication);
+    }
+
+    @Override
+    public InsuranceCommunication update(InsuranceCommunication insuranceCommunication) {
         return insuranceCommunicationRepository.save(insuranceCommunication);
     }
 

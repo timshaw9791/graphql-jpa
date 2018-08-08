@@ -20,9 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order update(Order order) {
-        Order result = findOne(order.getId());
-        BeanUtils.copyProperties(order, result, BeanCopyUtil.getNullPropertyNames(order));
-        return orderRepository.save(result);
+        return orderRepository.save(order);
     }
 
     @Override

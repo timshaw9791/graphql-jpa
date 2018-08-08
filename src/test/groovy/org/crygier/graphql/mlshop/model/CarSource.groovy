@@ -19,6 +19,6 @@ public class CarSource extends BosEntity {
     String tel;
     @SchemaDocumentation("地址")
     String address;
-    @SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate,是否禁用")
+    @SchemaDocumentation("类型,当前类型分为自营/合作，对应回传信息为own/coporate")
     CarSourceTypeEnum type;
 }
