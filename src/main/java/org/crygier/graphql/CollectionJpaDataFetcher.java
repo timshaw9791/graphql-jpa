@@ -2,13 +2,12 @@ package org.crygier.graphql;
 
 import graphql.language.*;
 import graphql.schema.DataFetchingEnvironment;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.metamodel.EntityType;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import javax.persistence.metamodel.*;
+import java.util.*;
 
 
 public class CollectionJpaDataFetcher extends JpaDataFetcher {
@@ -16,11 +15,11 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
     public static final String ENTITY_PROP_FOR_DISABLED = "disabled";
 
     public CollectionJpaDataFetcher(EntityManager entityManager, EntityType<?> entityType, IGraphQlTypeMapper graphQlTypeMapper) {
-        super(entityManager, entityType,graphQlTypeMapper);
+        super(entityManager, entityType, graphQlTypeMapper);
     }
 
     @Override
-    public Object getResult(DataFetchingEnvironment environment,QueryFilter queryFilter) {
+    public Object getResult(DataFetchingEnvironment environment, QueryFilter queryFilter) {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
         Paginator pageInformation = extractPageInformation(environment, field);
@@ -29,43 +28,80 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> totalElementsSelection = getSelectionField(field, "totalElements");
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
-        if (contentSelection.isPresent())
-            result.put("content", getQueryForEntity(environment, queryFilter, contentSelection.get(), false,pageInformation).getResultList());
-
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
-                    .map(contentField -> getCountQuery(environment, contentField,queryFilter).getSingleResult())
+                    .map(contentField -> getCountQuery(environment, contentField, queryFilter).getSingleResult())
                     // if no "content" was selected an empty Field can be used
-                    .orElseGet(() -> getCountQuery(environment, new Field(),queryFilter).getSingleResult());
+                    .orElseGet(() -> getCountQuery(environment, new Field(), queryFilter).getSingleResult());
 
             result.put("totalElements", totalElements);
             result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.getSize())).longValue());
         }
 
+        if (contentSelection.isPresent()) {
+            List queryResult = null;
+
+            //TODO判断是否需要分步查询
+            if (isIncludeCollection(entityType,contentSelection.get().getSelectionSet())) {
+                //找出ids
+                List<String> ids = getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.JUSTFORIDSINTHEPAGE, pageInformation).getResultList();
+                if (ids != null && ids.size() > 0) {
+                    QueryFilter qf = new QueryFilter("id", QueryFilterOperator.IN, StringUtils.collectionToDelimitedString(ids, ",", "'", "'"), QueryFilterCombinator.AND, queryFilter);
+                    //组成新的查询条件ids in，并去掉paginator, 查询结果
+                    queryResult = getQueryForEntity(environment, qf, contentSelection.get(), QueryForWhatEnum.NORMAL, null).getResultList();
+                }
+            } else {
+                queryResult = getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.NORMAL, pageInformation).getResultList();
+            }
+
+            //给定ids并执行各查询，
+            // 返回结果并组合到queryResult中
+
+            result.put("content", queryResult);
+        }
+
         return result;
     }
 
+    private boolean isIncludeCollection(ManagedType entityType, SelectionSet fields) {
+        if (fields == null || entityType == null) {
+            return false;
+        }
+        for (Selection select : fields.getSelections()) {
+            Attribute selectedFieldAttribute = entityType.getAttribute(((Field) select).getName());
+            if (selectedFieldAttribute instanceof PluralAttribute &&
+                    ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY) {
+                return true;
+            } else if (selectedFieldAttribute instanceof SingularAttribute
+                    && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE) {
+                return isIncludeCollection(selectedFieldAttribute.getDeclaringType(), ((Field) select).getSelectionSet());
+            }
 
+        }
+        return false;
+    }
 
     /**
-     *用来方便继承的
+     * 用来方便继承的
+     *
      * @param environment
-     * @param qfilter - 过滤条件
-     * @param field -字段信息
-     * @param justforselectcount - 是否仅仅查询数量，
+     * @param qfilter          - 过滤条件
+     * @param field            -字段信息
+     * @param queryForWhatEnum - 是否仅仅查询数量，
      * @return 如果仅仅查询数量则返回TypedQuery<Long>、如果查询的是Entity，则返回TypedQuery<EntityType>
      */
-    protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, boolean justforselectcount,Paginator paginator) {
+    protected TypedQuery getQueryForEntity(DataFetchingEnvironment environment, QueryFilter qfilter, Field field, QueryForWhatEnum queryForWhatEnum, Paginator paginator) {
 
-        return super.getQuery(environment, field, qfilter, justforselectcount,paginator);
+        return super.getQuery(environment, field, qfilter, queryForWhatEnum, paginator);
     }
+
     //用来方便继承的。
-    protected Object getForEntity(DataFetchingEnvironment environment,QueryFilter qfilter) {
-        return super.getResult(environment,qfilter);
+    protected Object getForEntity(DataFetchingEnvironment environment, QueryFilter qfilter) {
+        return super.getResult(environment, qfilter);
     }
 
-    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field,QueryFilter qfilter) {
-        return getQueryForEntity(environment, qfilter, field, true,null);
+    private TypedQuery<Long> getCountQuery(DataFetchingEnvironment environment, Field field, QueryFilter qfilter) {
+        return getQueryForEntity(environment, qfilter, field, QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID, null);
     }
 
     private Optional<Field> getSelectionField(Field field, String fieldName) {
@@ -76,8 +112,8 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Argument> paginationRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.PAGINATION_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
         if (paginationRequest.isPresent()) {
             //field.getArguments().remove(paginationRequest.get());
-            Value v=paginationRequest.get().getValue();
-            return (Paginator)this.convertValue(environment,this.graphQlTypeMapper.getGraphQLInputType(Paginator.class),v);
+            Value v = paginationRequest.get().getValue();
+            return (Paginator) this.convertValue(environment, this.graphQlTypeMapper.getGraphQLInputType(Paginator.class), v);
         }
         return new Paginator(1, Integer.MAX_VALUE);
     }
