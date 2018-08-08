@@ -28,8 +28,9 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> totalElementsSelection = getSelectionField(field, "totalElements");
         Optional<Field> contentSelection = getSelectionField(field, "content");
 
+        Long totalElements=0L;
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
-            final Long totalElements = contentSelection
+                totalElements = contentSelection
                     .map(contentField -> getCountQuery(environment, contentField, queryFilter).getSingleResult())
                     // if no "content" was selected an empty Field can be used
                     .orElseGet(() -> getCountQuery(environment, new Field(), queryFilter).getSingleResult());
@@ -40,23 +41,21 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
         if (contentSelection.isPresent()) {
             List queryResult = null;
-
-            //TODO判断是否需要分步查询
-            if (isIncludeCollection(entityType,contentSelection.get().getSelectionSet())) {
-                //找出ids
+            if(totalElements==0){
+              //什么都不做
+            }else if (isIncludeCollection(entityType,contentSelection.get().getSelectionSet())) {//如果查询比较复杂，含有collection，需要分步查询的话。
+                //1.找出ids
                 List<String> ids = getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.JUSTFORIDSINTHEPAGE, pageInformation).getResultList();
                 if (ids != null && ids.size() > 0) {
                     QueryFilter qf = new QueryFilter("id", QueryFilterOperator.IN, StringUtils.collectionToDelimitedString(ids, ",", "'", "'"), QueryFilterCombinator.AND, queryFilter);
-                    //组成新的查询条件ids in，并去掉paginator, 查询结果
+                    //2.组成新的查询条件ids in，并去掉paginator, 查询结果
                     queryResult = getQueryForEntity(environment, qf, contentSelection.get(), QueryForWhatEnum.NORMAL, null).getResultList();
                 }
             } else {
                 queryResult = getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.NORMAL, pageInformation).getResultList();
             }
-
             //给定ids并执行各查询，
             // 返回结果并组合到queryResult中
-
             result.put("content", queryResult);
         }
 

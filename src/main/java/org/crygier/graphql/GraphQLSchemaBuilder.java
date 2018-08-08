@@ -311,14 +311,20 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
             GraphQLObjectType graphQLObjectType = newObject().name(entityType.getJavaType().getSimpleName())
                     .fields((List<GraphQLFieldDefinition>) entityType.getAttributes().stream()
                             .filter(attr -> this.isNotIgnored((Attribute) attr))
-                            .map(attribute ->
-                                    newFieldDefinition()
-                                            .description(getSchemaDocumentation(((Attribute) attribute).getJavaMember()))
-                                            .name(((Attribute) attribute).getName())
-                                            .type((GraphQLOutputType) this.getAttributeGrahQLType((Attribute) attribute, false)
-                                            ).build()
-
-                            ).collect(Collectors.toList())).build();
+                            .map(attribute -> {
+                                GraphQLOutputType outputType=(GraphQLOutputType) this.getAttributeGrahQLType((Attribute) attribute, false);
+                                GraphQLFieldDefinition.Builder builder=newFieldDefinition()
+                                        .description(getSchemaDocumentation(((Attribute) attribute).getJavaMember()))
+                                        .name(((Attribute) attribute).getName())
+                                        .type(outputType);
+                                 if(outputType instanceof  GraphQLScalarType){
+                                     builder.argument(GraphQLArgument.newArgument()
+                                             .name("OrderBy")
+                                             .type(orderByDirectionEnum)
+                                     );
+                                 }
+                                 return builder.build();
+                            }).collect(Collectors.toList())).build();
             this.graphQlTypeManagedTypeClassMap.put(graphQLObjectType, entityType);
             return graphQLObjectType;
         });
