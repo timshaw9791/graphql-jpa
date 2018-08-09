@@ -106,7 +106,7 @@ public class PaginatorFactory {
                         }
                         int descidx = str.toUpperCase().indexOf("DESC");
                         if (descidx > 0) {
-                            return str.toUpperCase().indexOf("DESC");
+                            return str.substring(0,descidx);
                         }
                         return str;
                     }
