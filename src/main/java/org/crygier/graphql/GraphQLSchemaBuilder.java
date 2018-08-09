@@ -4,8 +4,6 @@ import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import cn.wzvtcsoft.x.bos.domain.util.BosUtils;
 import graphql.Scalars;
-import graphql.language.EnumValue;
-import graphql.language.StringValue;
 import graphql.schema.*;
 import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
@@ -311,14 +309,20 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
             GraphQLObjectType graphQLObjectType = newObject().name(entityType.getJavaType().getSimpleName())
                     .fields((List<GraphQLFieldDefinition>) entityType.getAttributes().stream()
                             .filter(attr -> this.isNotIgnored((Attribute) attr))
-                            .map(attribute ->
-                                    newFieldDefinition()
-                                            .description(getSchemaDocumentation(((Attribute) attribute).getJavaMember()))
-                                            .name(((Attribute) attribute).getName())
-                                            .type((GraphQLOutputType) this.getAttributeGrahQLType((Attribute) attribute, false)
-                                            ).build()
-
-                            ).collect(Collectors.toList())).build();
+                            .map(attribute -> {
+                                GraphQLOutputType outputType=(GraphQLOutputType) this.getAttributeGrahQLType((Attribute) attribute, false);
+                                GraphQLFieldDefinition.Builder builder=newFieldDefinition()
+                                        .description(getSchemaDocumentation(((Attribute) attribute).getJavaMember()))
+                                        .name(((Attribute) attribute).getName())
+                                        .type(outputType);
+                                 if(outputType instanceof  GraphQLScalarType){
+                                     builder.argument(GraphQLArgument.newArgument()
+                                             .name(OrderByDirection.ORDER_BY)
+                                             .type(orderByDirectionEnum)
+                                     );
+                                 }
+                                 return builder.build();
+                            }).collect(Collectors.toList())).build();
             this.graphQlTypeManagedTypeClassMap.put(graphQLObjectType, entityType);
             return graphQLObjectType;
         });
@@ -443,23 +447,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     }
 }
 
-
-enum OrderByDirection implements BosEnum {
-
-    ASC("ASC", "升序"), DESC("DESC", "降序");
-
-    private OrderByDirection(String value, String name) {
-        this.ev = new BosEnum.EnumInnerValue(value, name);
-    }
-
-    private BosEnum.EnumInnerValue ev = null;
-
-    @Override
-    public BosEnum.EnumInnerValue getEnumInnerValue() {
-        return this.ev;
-    }
-
-}
 
 @SchemaDocumentation("分页器")
 class Paginator {
