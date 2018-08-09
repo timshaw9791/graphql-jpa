@@ -1,10 +1,8 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import cn.wzvtcsoft.x.bos.domain.util.BeanCopyUtil;
 import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.repo.OrderRepository;
 import org.crygier.graphql.mlshop.service.OrderService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -7,6 +7,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'org.springframework.boot'
 
 
 
@@ -53,7 +54,14 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
     compile 'com.github.ben-manes.caffeine:caffeine:2.6.2'
 
+    //redis
+    compile "org.springframework.boot:spring-boot-starter-data-redis:2.0.1.RELEASE"
+    compile "org.springframework.data:spring-data-redis:2.0.7.RELEASE"
+    compile "redis.clients:jedis:2.7.3"
 
+    //aliyun message
+    compile "com.aliyun:aliyun-java-sdk-core:3.7.1"
+    compile "com.aliyun:aliyun-java-sdk-dysmsapi:1.1.0"
 
     provided group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
     provided 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
@@ -64,6 +72,7 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
 
+    //aliyun oos
     testCompile 'com.aliyun:aliyun-java-sdk-core:3.5.0'
     testCompile 'com.aliyun:aliyun-java-sdk-ecs:3.0.0'
     testCompile 'com.aliyun.oss:aliyun-sdk-oss:2.8.3'

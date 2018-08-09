@@ -1,4 +1,4 @@
-package cn.wzvtcsoft.x.bos.domain.util;
+package org.crygier.graphql.mlshop.util;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;

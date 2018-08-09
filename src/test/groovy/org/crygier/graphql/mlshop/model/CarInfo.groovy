@@ -63,9 +63,12 @@ class CarInfo extends BosEntity {
     @SchemaDocumentation("方案扫描件（核算方案）")
     String schemeScan;
 
-    public void setFinancialSchemesItems(Set<FinancialScheme> financialSchemes){
-        this.financialSchemesItems =financialSchemes;
-    }
+    @SchemaDocumentation("车身颜色")
+    String color;
+
+//    public void setFinancialSchemesItems(Set<FinancialScheme> financialSchemes){
+//        this.financialSchemesItems =financialSchemes;
+//    }
 
     @PrePersist
     private void prePersist(){
