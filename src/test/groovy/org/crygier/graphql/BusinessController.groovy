@@ -354,8 +354,8 @@ public class BusinessController {
 
 
 
-        updatePassword(String id, String pwd){
-            findByid(id).set(pwd);
+        updatePassword(String id, String password){
+            findByid(id).set(password);
         }
 
         @Assert("exist('client(id,number)')")

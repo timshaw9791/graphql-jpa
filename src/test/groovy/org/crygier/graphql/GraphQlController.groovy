@@ -30,7 +30,11 @@ class GraphQlController {
     @RequestMapping(path = "/graphql")
     ExecutionResult graphQl(@RequestBody GraphQLInputQuery graphQLInput) throws IOException {
 
-        ExecutionResult result = graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
+        String query = graphQLInput.getQuery();
+        println (query.contains("__typename"));
+        query = query.replace("__typename","");
+        println (query);
+        ExecutionResult result = graphQLExecutor.execute(query,graphQLInput.getArguments());
         // if(result.getErrors()!=null && result.getErrors().size()==0){
         result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
@@ -102,8 +106,8 @@ class GraphQlController {
 
 
 
-        updatePassword(String id, String pwd){
-            findByid(id).set(pwd);
+        updatePassword(String id, String password){
+            findByid(id).set(password);
         }
 
         @Assert("exist('client(id,number)')")
