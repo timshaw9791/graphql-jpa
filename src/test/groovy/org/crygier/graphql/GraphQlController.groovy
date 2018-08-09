@@ -30,11 +30,11 @@ class GraphQlController {
     @RequestMapping(path = "/graphql")
     ExecutionResult graphQl(@RequestBody GraphQLInputQuery graphQLInput) throws IOException {
 
-        String query = graphQLInput.getQuery();
-        println (query.contains("__typename"));
-        query = query.replace("__typename","");
-        println (query);
-        ExecutionResult result = graphQLExecutor.execute(query,graphQLInput.getArguments());
+//        String query = graphQLInput.getQuery();
+//        println (query.contains("__typename"));
+//        query = query.replace("__typename","");
+//        println (query);
+        ExecutionResult result = graphQLExecutor.execute(graphQLInput.getQuery(),graphQLInput.getArguments());
         // if(result.getErrors()!=null && result.getErrors().size()==0){
         result=new ExecutionResultBos(result.getData(),result.getErrors(),result.getExtensions());
         //}
