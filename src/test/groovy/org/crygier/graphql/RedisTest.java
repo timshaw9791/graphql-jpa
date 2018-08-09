@@ -67,6 +67,7 @@ public class RedisTest {
 
     @Test
     public void sendmessage() throws ClientException {
-        verificationService.getCode("15395778303");
+//        verificationService.getCode("15395778303");
+        verificationService.getCode("18157726283");
     }
 }

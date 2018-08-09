@@ -67,6 +67,7 @@ public class AliyunSTSController
         return client.getAcsResponse(request);
     }
 
+
     public static AssumeRoleResponse getToken() {
         // 只有 子账号才能调用 AssumeRole接口
         // 阿里云主账号的AccessKeys不能用于发起AssumeRole请求
