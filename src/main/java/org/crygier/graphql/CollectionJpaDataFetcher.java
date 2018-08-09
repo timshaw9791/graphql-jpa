@@ -23,6 +23,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.*;
 import java.sql.PreparedStatement;
+import java.text.AttributedCharacterIterator;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -83,21 +84,26 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
         return result;
     }
-
+//本次查询中有没有包含collection元素，
     private boolean isIncludeCollection(ManagedType entityType, SelectionSet fields) {
         if (fields == null || entityType == null) {
             return false;
         }
         for (Selection select : fields.getSelections()) {
-            Attribute selectedFieldAttribute = entityType.getAttribute(((Field) select).getName());
-            if (selectedFieldAttribute instanceof PluralAttribute &&
-                    ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY) {
-                return true;
-            } else if (selectedFieldAttribute instanceof SingularAttribute
-                    && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE) {
-                return isIncludeCollection(selectedFieldAttribute.getDeclaringType(), ((Field) select).getSelectionSet());
+            Optional<Attribute> selectedFieldAttributeOptional= entityType.getAttributes().stream().filter(attr->((Attribute)attr).getName().equals(((Field) select).getName()))
+                    .findFirst();
+            if(selectedFieldAttributeOptional.isPresent()) {
+                Attribute selectedFieldAttribute = selectedFieldAttributeOptional.get();
+                if (selectedFieldAttribute == null) {//有时候的确没有，如__typename
+                    return false;
+                } else if (selectedFieldAttribute instanceof PluralAttribute &&
+                        ((PluralAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.ONE_TO_MANY) {
+                    return true;
+                } else if (selectedFieldAttribute instanceof SingularAttribute
+                        && ((SingularAttribute) selectedFieldAttribute).getPersistentAttributeType() == Attribute.PersistentAttributeType.MANY_TO_ONE) {
+                    return isIncludeCollection(selectedFieldAttribute.getDeclaringType(), ((Field) select).getSelectionSet());
+                }
             }
-
         }
         return false;
     }
