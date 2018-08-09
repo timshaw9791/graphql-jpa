@@ -4,8 +4,6 @@ import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import cn.wzvtcsoft.x.bos.domain.util.BosUtils;
 import graphql.Scalars;
-import graphql.language.EnumValue;
-import graphql.language.StringValue;
 import graphql.schema.*;
 import org.crygier.graphql.annotation.GraphQLIgnore;
 import org.crygier.graphql.annotation.SchemaDocumentation;
@@ -319,7 +317,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
                                         .type(outputType);
                                  if(outputType instanceof  GraphQLScalarType){
                                      builder.argument(GraphQLArgument.newArgument()
-                                             .name("OrderBy")
+                                             .name(OrderByDirection.ORDER_BY)
                                              .type(orderByDirectionEnum)
                                      );
                                  }
@@ -449,23 +447,6 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
     }
 }
 
-
-enum OrderByDirection implements BosEnum {
-
-    ASC("ASC", "升序"), DESC("DESC", "降序");
-
-    private OrderByDirection(String value, String name) {
-        this.ev = new BosEnum.EnumInnerValue(value, name);
-    }
-
-    private BosEnum.EnumInnerValue ev = null;
-
-    @Override
-    public BosEnum.EnumInnerValue getEnumInnerValue() {
-        return this.ev;
-    }
-
-}
 
 @SchemaDocumentation("分页器")
 class Paginator {

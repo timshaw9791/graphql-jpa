@@ -24,6 +24,7 @@ import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 public class JpaDataFetcher implements DataFetcher {
 
+    public static final String DESC = "DESC";
     protected EntityManager entityManager;
     protected EntityType<?> entityType;
     protected IGraphQlTypeMapper graphQlTypeMapper;
@@ -90,9 +91,9 @@ public class JpaDataFetcher implements DataFetcher {
                         // TODO 排序如果出现在第二层会有一些问题，似乎没法影响到，似乎在指明one2many下分录的排序规则时，会碰到问题，可能跟entry以set形式出现有关系。many2one应该不会。
 
                         if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID!=queryForWhat) {
-                            Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> "orderBy".equals(it.getName())).findFirst();
+                            Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> OrderByDirection.ORDER_BY.equals(it.getName())).findFirst();
                             if (orderByArgument.isPresent()) {
-                                if ("DESC".equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
+                                if (OrderByDirection.DESC.getValue().equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
                                     orders.add(cb.desc(fieldPath));
                                 } else {
                                     orders.add(cb.asc(fieldPath));
@@ -102,7 +103,7 @@ public class JpaDataFetcher implements DataFetcher {
 
                         // Process arguments clauses
                         arguments.addAll(selectedField.getArguments().stream()
-                                .filter(it -> !"orderBy".equals(it.getName()))
+                                .filter(it -> !OrderByDirection.ORDER_BY.equals(it.getName()))
                                 . filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
                                 .map(it -> new Argument(selectedFieldName + "." + it.getName(), it.getValue()))
                                 .collect(Collectors.toList()));
@@ -139,7 +140,7 @@ public class JpaDataFetcher implements DataFetcher {
 
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery query = (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID == queryforWhat) ? cb.createQuery(Long.class) : (QueryForWhatEnum.JUSTFORIDSINTHEPAGE == queryforWhat) ? cb.createQuery(String.class): cb.createQuery((Class) entityType.getJavaType());
+        CriteriaQuery query = (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID == queryforWhat) ? cb.createQuery(Long.class) : (QueryForWhatEnum.JUSTFORIDSINTHEPAGE == queryforWhat) ? cb.createQuery(): cb.createQuery((Class) entityType.getJavaType());
         Root root = query.from(entityType);
 
         SelectionSet selectionSet = field.getSelectionSet();
@@ -169,16 +170,18 @@ public class JpaDataFetcher implements DataFetcher {
             query.select(cb.countDistinct(root.get(idAttribute.getName())));
         }else if(QueryForWhatEnum.JUSTFORIDSINTHEPAGE==queryforWhat){
            // SingularAttribute idAttribute = entityType.getId(Object.class);
-           query.select(root.get("id"));//pathSet.stream().map(path->root.get(path)).collect(Collectors.toList()));
+           query.select(root.get("id").alias("id"));//pathSet.stream().map(path->root.get(path)).collect(Collectors.toList()));
         }
         query.where(predicates.toArray(new Predicate[predicates.size()]));
-        TypedQuery result= entityManager.createQuery(query.distinct(true));
         if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID!=queryforWhat) {
+            query.orderBy(orders);
+        }
+        TypedQuery result= entityManager.createQuery(query.distinct(true));
+        if (QueryForWhatEnum.NORMAL==queryforWhat) {
             if(paginator!=null){
                 result.setMaxResults(paginator.getSize());
                 result.setFirstResult((paginator.getPage()-1)*paginator.getSize());
             }
-            query.orderBy(orders);
         }
         //将entitygraph加入
         return result.setHint("javax.persistence.fetchgraph", graph);

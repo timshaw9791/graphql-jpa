@@ -2,12 +2,30 @@ package org.crygier.graphql;
 
 import graphql.language.*;
 import graphql.schema.DataFetchingEnvironment;
+import org.hibernate.Session;
+import org.hibernate.dialect.pagination.LimitHandler;
+import org.hibernate.engine.jdbc.spi.JdbcServices;
+import org.hibernate.engine.spi.RowSelection;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory;
+import org.hibernate.hql.spi.ParameterTranslations;
+import org.hibernate.hql.spi.QueryTranslator;
+import org.hibernate.hql.spi.QueryTranslatorFactory;
+import org.hibernate.param.ParameterSpecification;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.*;
+import java.sql.PreparedStatement;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class CollectionJpaDataFetcher extends JpaDataFetcher {
@@ -41,14 +59,18 @@ public class CollectionJpaDataFetcher extends JpaDataFetcher {
 
         if (contentSelection.isPresent()) {
             List queryResult = null;
-            if(totalElements==0){
+
+            //if(totalElements==0){
               //什么都不做
-            }else if (isIncludeCollection(entityType,contentSelection.get().getSelectionSet())) {//如果查询比较复杂，含有collection，需要分步查询的话。
+            //}else
+                if (isIncludeCollection(entityType,contentSelection.get().getSelectionSet())) {//如果查询比较复杂，含有collection，需要分步查询的话。
                 //1.找出ids
-                List<String> ids = getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.JUSTFORIDSINTHEPAGE, pageInformation).getResultList();
+                TypedQuery typedQuery=getQueryForEntity(environment, queryFilter, contentSelection.get(), QueryForWhatEnum.JUSTFORIDSINTHEPAGE, null);
+                List<String> ids=new PaginatorFactory(this.entityManager,this.entityType).getPaginator(typedQuery,pageInformation);
+                //2.准备nativesql，设置参数，设定返回值，执行。
                 if (ids != null && ids.size() > 0) {
-                    QueryFilter qf = new QueryFilter("id", QueryFilterOperator.IN, StringUtils.collectionToDelimitedString(ids, ",", "'", "'"), QueryFilterCombinator.AND, queryFilter);
-                    //2.组成新的查询条件ids in，并去掉paginator, 查询结果
+                    QueryFilter qf = new QueryFilter("id", QueryFilterOperator.IN, StringUtils.collectionToDelimitedString(ids, ",", "'", "'"), QueryFilterCombinator.AND,null);
+                    //3.去掉任何查询条件，只使用 ids in，并去掉paginator, 查询结果
                     queryResult = getQueryForEntity(environment, qf, contentSelection.get(), QueryForWhatEnum.NORMAL, null).getResultList();
                 }
             } else {
