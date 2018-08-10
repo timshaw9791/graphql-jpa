@@ -38,6 +38,12 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     }
 
     @Override
+    public CarCommunication deleteById(CarCommunication carCommunication) {
+        carCommunication.setDisabled(true);
+        return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
     public CarCommunication allocate(String carCommunicationId, Salesman salesman) {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.setSalesman(salesman);

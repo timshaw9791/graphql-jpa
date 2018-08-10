@@ -44,4 +44,11 @@ public interface CarCommunicationService {
      */
     CarCommunication allocate(String carCommunicationId,Salesman salesman);
 
+    /**
+     * 删除（禁用  不显示）
+     * @param carCommunication
+     * @return
+     */
+    CarCommunication deleteById(CarCommunication carCommunication);
+
 }

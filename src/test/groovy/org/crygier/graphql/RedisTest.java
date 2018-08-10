@@ -59,8 +59,16 @@ public class RedisTest {
         objects.add("2");
 
 //        redisTemplate.opsForHash().putAll("keymap",map);
+        redisTemplate.opsForHash().put("carinfo","model","info");
+        redisTemplate.opsForHash().put("carinfo","model2","info2");
 
-        objects = redisTemplate.opsForHash().multiGet("keymap", objects);
+
+        Object o = redisTemplate.opsForHash().get("carinfo", "model");
+        System.out.println(o);
+      o = redisTemplate.opsForHash().get("carinfo", "model2");
+        System.out.println(o);
+
+//        objects = redisTemplate.opsForHash().multiGet("keymap", objects);
         System.out.println(objects);
 
     }

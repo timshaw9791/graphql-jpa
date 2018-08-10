@@ -30,4 +30,27 @@ public class AdministServiceImpl implements AdministService {
         }
         return optional.get();
     }
+
+    @Override
+    public Administ save(Administ administ) {
+        //todo  密码加密
+        return administRepository.save(administ);
+    }
+
+    @Override
+    public Administ update(Administ administ) {
+        Administ result = administRepository.findById(administ.getId()).get();
+        if (result.getPassword()==null){
+            administ.setPassword(null);
+        }else {
+            administ.setPassword(result.getPassword());
+        }
+        return administRepository.save(administ);
+    }
+
+    @Override
+    public Administ modifyPassword(Administ administ, String password) {
+        administ.setPassword(password);
+        return administRepository.save(administ);
+    }
 }

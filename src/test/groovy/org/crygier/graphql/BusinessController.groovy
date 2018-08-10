@@ -128,77 +128,6 @@ public class BusinessController {
         return client;
     }
 
-
-    @SchemaDocumentation("增加门店")
-    @GRequestMapping(path = "/addshop", method = RequestMethod.POST)
-    Shop addshop(@RequestParam(name = "shop", required = true) Shop client) {
-        return this.shopRepository.save(client);
-    }
-
-    @SchemaDocumentation("修改门店")
-    @GRequestMapping(path = "/updateshop", method = RequestMethod.POST)
-    Shop updateshop(@RequestParam(name = "shop", required = true) Shop client) {
-        return this.shopRepository.save(client);
-    }
-
-    @SchemaDocumentation("禁用门店")
-    @GRequestMapping(path = "/disableshop", method = RequestMethod.POST)
-    Shop disableshop(@RequestParam(name = "shop", required = true) Shop client) {
-        client.disabled = true;
-        return this.shopRepository.save(client);
-    }
-
-    @SchemaDocumentation("启用门店")
-    @GRequestMapping(path = "/enablshop", method = RequestMethod.POST)
-    Shop enablshop(@RequestParam(name = "shop", required = true) Shop client) {
-        client.disabled = false;
-        return this.shopRepository.save(client);
-    }
-
-    @SchemaDocumentation("删除门店")
-    @GRequestMapping(path = "/removeshop", method = RequestMethod.POST)
-    Shop removeshop(@RequestParam(name = "shop", required = true) Shop client) {
-        client.disabled = false;
-        this.shopRepository.deleteById(client.getId());
-        return client;
-    }
-
-
-    @SchemaDocumentation("增加管理员")
-    @GRequestMapping(path = "/addadminist", method = RequestMethod.POST)
-    Administ addadminist(@RequestParam(name = "administ", required = true) Administ client) {
-        return this.administRepository.save(client);
-    }
-
-    @SchemaDocumentation("修改管理员")
-    @GRequestMapping(path = "/updateadminist", method = RequestMethod.POST)
-    Administ updateadminist(@RequestParam(name = "administ", required = true) Administ client) {
-        return this.administRepository.save(client);
-    }
-
-    @SchemaDocumentation("禁用管理员")
-    @GRequestMapping(path = "/disableadminist", method = RequestMethod.POST)
-    Administ disableadminist(@RequestParam(name = "administ", required = true) Administ client) {
-        client.disabled = true;
-        return this.administRepository.save(client);
-    }
-
-    @SchemaDocumentation("启用管理员")
-    @GRequestMapping(path = "/enabladminist", method = RequestMethod.POST)
-    Administ enabladminist(@RequestParam(name = "administ", required = true) Administ client) {
-        client.disabled = false;
-        return this.administRepository.save(client);
-    }
-
-    @SchemaDocumentation("删除管理员")
-    @GRequestMapping(path = "/removeadminist", method = RequestMethod.POST)
-    Administ removeadminist(@RequestParam(name = "administ", required = true) Administ client) {
-        client.disabled = false;
-        this.administRepository.deleteById(client.getId());
-        return client;
-    }
-
-
     @SchemaDocumentation("增加业务员")
     @GRequestMapping(path = "/addsalesman", method = RequestMethod.POST)
     Salesman addsalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
@@ -266,30 +195,6 @@ public class BusinessController {
         client.disabled = false;
         this.customerRepository.deleteById(client.getId());
         return client;
-    }
-
-    @SchemaDocumentation("增加买车沟通信息")
-    @GRequestMapping(path = "/addcarcommunication", method = RequestMethod.POST)
-    CarCommunication addcarCommunication(
-            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
-        carCommunicationServiceImpl.updateCustomer(carCommunication.getCustomer());
-        return this.carCommunicationRepository.save(carCommunication);
-    }
-
-    @SchemaDocumentation("修改买车沟通信息")
-    @GRequestMapping(path = "/updatecarcommunication", method = RequestMethod.POST)
-    CarCommunication updatecarCommunication(
-            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
-        carCommunicationServiceImpl.updateCustomer(carCommunication.getCustomer());
-        return this.carCommunicationRepository.save(carCommunication);
-    }
-
-    @SchemaDocumentation("删除买车沟通信息")
-    @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
-    CarCommunication removecarCommunication(
-            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
-        this.customerRepository.deleteById(carCommunication.getId());
-        return carCommunication;
     }
 
 

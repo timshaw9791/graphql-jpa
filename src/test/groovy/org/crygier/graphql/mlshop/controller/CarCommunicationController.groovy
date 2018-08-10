@@ -32,4 +32,27 @@ public class CarCommunicationController {
             @RequestParam(name = "carcommunicationid", required = true) String carCommunicationId) {
         return this.carCommunicationService.addRecord(carCommunicationId,communicationRecord);
     }
+
+
+    @SchemaDocumentation("增加买车沟通信息")
+    @GRequestMapping(path = "/addcarcommunication", method = RequestMethod.POST)
+    CarCommunication addcarCommunication(
+            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
+        return carCommunicationService.save(carCommunication);
+    }
+
+    @SchemaDocumentation("修改买车沟通信息")
+    @GRequestMapping(path = "/updatecarcommunication", method = RequestMethod.POST)
+    CarCommunication updatecarCommunication(
+            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
+        return this.carCommunicationService.save(carCommunication);
+    }
+
+    @SchemaDocumentation("删除买车沟通信息")
+    @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
+    CarCommunication removecarCommunication(
+            @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
+        return this.carCommunicationService.deleteById(carCommunication);
+    }
+
 }
