@@ -15,7 +15,7 @@ import javax.validation.constraints.Min;
 @RequestMapping("/valid")
 @RestController
 @Validated
-public class ValidController {
+public class ValidTestController {
 
 
     @GetMapping("/test1")

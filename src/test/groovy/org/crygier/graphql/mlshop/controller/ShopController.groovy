@@ -51,11 +51,11 @@ class ShopController {
         return this.shopRepository.save(client);
     }
 
-    @SchemaDocumentation("删除门店")
-    @GRequestMapping(path = "/removeshop", method = RequestMethod.POST)
-    Shop removeshop(@RequestParam(name = "shop", required = true) Shop client) {
-        client.disabled = false;
-        this.shopRepository.deleteById(client.getId());
-        return client;
-    }
+//    @SchemaDocumentation("删除门店")
+//    @GRequestMapping(path = "/removeshop", method = RequestMethod.POST)
+//    Shop removeshop(@RequestParam(name = "shop", required = true) Shop client) {
+//        client.disabled = false;
+//        this.shopRepository.deleteById(client.getId());
+//        return client;
+//    }
 }

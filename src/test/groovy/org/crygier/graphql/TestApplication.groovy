@@ -23,26 +23,6 @@ class TestApplication {
     public static void main(String[] args) {
         ApplicationContext ac =SpringApplication.run(TestApplication.class,args);
     }
-/*
-    @Bean
-    public GraphQLExecutor graphQLExecutor() {
-        return new GraphQLExecutor();
-    }
-
-    @Bean
-    public GraphQlController() {
-        return new GraphQlController();
-    }
-    @Bean
-    public BusinessController() {
-        return new BusinessController();
-    }
-
-    @Bean
-    public AliyunSTSController() {
-        return new AliyunSTSController();
-    }
-    */
 
 }
 

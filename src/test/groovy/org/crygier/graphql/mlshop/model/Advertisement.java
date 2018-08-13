@@ -18,8 +18,14 @@ import javax.persistence.Entity;
 @Bostype("A18")
 public class Advertisement extends BosEntity {
 
+    @SchemaDocumentation("广告模板")
+    String template;
+
     @SchemaDocumentation("/文本内容")
     String textContent;
+
+    @SchemaDocumentation("轮播时间 单位：秒")
+    Long time;
 
     @SchemaDocumentation("/image")
     String image;
