@@ -1,4 +1,4 @@
-package cn.zzk.test.controller;
+package org.crygier.graphql.mlshop.controller;
 
 
 import cn.zzk.test.domain.Person;

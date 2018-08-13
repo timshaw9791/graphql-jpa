@@ -1,27 +1,25 @@
 package cn.zzk.test.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import cn.zzk.validator.anntations.DomainRule;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.Min;
 
-@Entity
-@Getter
-@Setter
+@Data
 public class Person {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Length(min = 6,max = 12)
-    private String name;
 
     @Min(18)
     private int age;
+
+    @DomainRule("firstName && lastName")
+    private FullName fullName;
+
+    public Person(int age, String firstName, String lastName) {
+        this.age = age;
+        this.fullName = new FullName(firstName, lastName);
+    }
+
+    public Person() {
+
+    }
 }

@@ -2,26 +2,27 @@ package cn.zzk.validator.errors;
 
 import java.util.List;
 
+/**
+ * 一个 @ValidSelect 的错误的校验结果。
+ */
 public class ValidSelectError {
 
-    private String message = "方法校验未通过";
+    private String message;
 
-    private List<ParamError> errors;
-
+    private List<ParamInfo> paramInfos;
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+
+    public List<ParamInfo> getParamInfos() {
+        return paramInfos;
+    }
+
+    public ValidSelectError(String message, List<ParamInfo> paramInfos) {
         this.message = message;
+        this.paramInfos = paramInfos;
     }
 
-    public List<ParamError> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<ParamError> errors) {
-        this.errors = errors;
-    }
 }

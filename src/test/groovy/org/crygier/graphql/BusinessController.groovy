@@ -1,44 +1,17 @@
 package org.crygier.graphql.mlshop.controller
 
+import cn.zzk.validator.anntations.DomainRule
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
-import org.crygier.graphql.mlshop.model.Administ
-import org.crygier.graphql.mlshop.model.Advertisement
-import org.crygier.graphql.mlshop.model.CarCommunication
-
-import org.crygier.graphql.mlshop.model.CarInfo
-import org.crygier.graphql.mlshop.model.CarSource
-import org.crygier.graphql.mlshop.model.ConcernCar
-import org.crygier.graphql.mlshop.model.ConcernShop
-import org.crygier.graphql.mlshop.model.Customer
-import org.crygier.graphql.mlshop.model.Feedback
-import org.crygier.graphql.mlshop.model.Insurance
-import org.crygier.graphql.mlshop.model.InsuranceCommunication
-import org.crygier.graphql.mlshop.model.Order
-import org.crygier.graphql.mlshop.model.Salesman
-import org.crygier.graphql.mlshop.model.Shop
-import org.crygier.graphql.mlshop.repo.AdministRepository
-import org.crygier.graphql.mlshop.repo.AdvertisementRepository
-import org.crygier.graphql.mlshop.repo.CarCommunicationRepository
-
-import org.crygier.graphql.mlshop.repo.CarInfoRepository
-import org.crygier.graphql.mlshop.repo.CarSourceRepository
-import org.crygier.graphql.mlshop.repo.CustomerRepository
-import org.crygier.graphql.mlshop.repo.FeedbackRepository
-import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository
-import org.crygier.graphql.mlshop.repo.InsuranceRepository
-import org.crygier.graphql.mlshop.repo.OrderRepository
-import org.crygier.graphql.mlshop.repo.SalesmanRepository
-import org.crygier.graphql.mlshop.repo.ShopRepository
+import org.crygier.graphql.mlshop.model.*
+import org.crygier.graphql.mlshop.repo.*
 import org.crygier.graphql.mlshop.service.CarCommunicationService
 import org.crygier.graphql.mlshop.service.CarInfoService
-import org.crygier.graphql.mlshop.service.ConcernCarService
-import org.crygier.graphql.mlshop.service.ConcernShopService
 import org.crygier.graphql.mlshop.service.InsuranceService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -47,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @GRestController("mlshop")
 @RestController
 @CompileStatic
+@Validated
 public class BusinessController {
 
 
@@ -213,7 +187,7 @@ public class BusinessController {
 
     @SchemaDocumentation("添加反馈")
     @GRequestMapping(path = "/addfeedback", method = RequestMethod.POST)
-    Feedback addFeedback(@RequestParam(name = "feedback", required = true) Feedback feedback) {
+    Feedback addFeedback( @RequestParam(name = "feedback", required = true) @DomainRule Feedback feedback) {
         return feedbackRepository.save(feedback);
     }
 

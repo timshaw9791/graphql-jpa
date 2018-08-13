@@ -1,7 +1,11 @@
 package cn.zzk.validator.config;
 
-import cn.zzk.validator.core.ValidateAspect;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+
+import cn.zzk.validator.core.MutationValidator;
+import cn.zzk.validator.core.ValidatorAspect;
+import cn.zzk.validator.core.impl.MutationValidatorImpl;
+import cn.zzk.validator.errors.MutationValidationHandler;
+import cn.zzk.validator.events.RuleValidCheckEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,14 +15,23 @@ import org.springframework.context.annotation.Configuration;
 public class ValidationAutoConfig {
 
     @Bean
-    public ValidateAspect validateAspect() {
-        return new ValidateAspect();
+    public ValidatorAspect validateAspect() {
+        return new ValidatorAspect(mutationValidator());
     }
 
     @Bean
-    @ConditionalOnBean(ValidateAspect.class)
-    public ValidateConfig validateConfig() {
-        System.out.println("自定义验证开启 .....................................");
-        return new ValidateConfig();
+    public MutationValidator mutationValidator() {
+        return new MutationValidatorImpl();
     }
+
+    @Bean
+    public RuleValidCheckEvent ruleValidEvent() {
+        return new RuleValidCheckEvent();
+    }
+
+    @Bean
+    public MutationValidationHandler controllerValidationHandler() {
+        return new MutationValidationHandler();
+    }
+
 }
