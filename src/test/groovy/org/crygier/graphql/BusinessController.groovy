@@ -1,19 +1,9 @@
 package org.crygier.graphql.mlshop.controller
 
-import cn.zzk.validator.anntations.DomainRule
 import groovy.transform.CompileStatic
-import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
-import org.crygier.graphql.mlshop.model.*
-import org.crygier.graphql.mlshop.repo.*
-import org.crygier.graphql.mlshop.service.CarCommunicationService
-import org.crygier.graphql.mlshop.service.CarInfoService
-import org.crygier.graphql.mlshop.service.InsuranceService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @SchemaDocumentation("车辆来源相关的增删改操作")
@@ -22,201 +12,6 @@ import org.springframework.web.bind.annotation.RestController
 @CompileStatic
 @Validated
 public class BusinessController {
-
-
-    @Autowired
-    CarSourceRepository carSourceRepository;
-
-    @Autowired
-    CustomerRepository customerRepository;
-
-    @Autowired
-    ShopRepository shopRepository;
-
-    @Autowired
-    AdministRepository administRepository;
-
-    @Autowired
-    SalesmanRepository salesmanRepository;
-
-    @Autowired
-    CarCommunicationRepository carCommunicationRepository;
-
-    @Autowired
-    InsuranceRepository insuranceRepository;
-
-    @Autowired
-    InsuranceCommunicationRepository insuranceCommunicationRepository;
-
-
-    @Autowired
-    CarInfoService carInfoService;
-
-    @Autowired
-    CarCommunicationService carCommunicationServiceImpl;
-
-    @Autowired
-    OrderRepository orderRepository;
-
-
-    @Autowired
-    FeedbackRepository feedbackRepository;
-
-    @Autowired
-    InsuranceService insuranceService;
-
-    @Autowired
-    AdvertisementRepository advertisementRepository;
-
-    @SchemaDocumentation("增加车辆来源")
-    @GRequestMapping(path = "/addcarsource", method = RequestMethod.POST)
-    CarSource addcarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
-        return this.carSourceRepository.save(client);
-    }
-
-    @SchemaDocumentation("修改车辆来源")
-    @GRequestMapping(path = "/updatecarsource", method = RequestMethod.POST)
-    CarSource updatecarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
-        return this.carSourceRepository.save(client);
-    }
-
-    @SchemaDocumentation("禁用车辆来源")
-    @GRequestMapping(path = "/disablecarsource", method = RequestMethod.POST)
-    CarSource disablecarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
-        client.disabled = true;
-        return this.carSourceRepository.save(client);
-    }
-
-    @SchemaDocumentation("启用车辆来源")
-    @GRequestMapping(path = "/enablcarsource", method = RequestMethod.POST)
-    CarSource enablcarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
-        client.disabled = false;
-        return this.carSourceRepository.save(client);
-    }
-
-    @SchemaDocumentation("删除车辆来源")
-    @GRequestMapping(path = "/removecarsource", method = RequestMethod.POST)
-    CarSource removecarsource(@RequestParam(name = "carsource", required = true) CarSource client) {
-        client.disabled = false;
-        this.carSourceRepository.deleteById(client.getId());
-        return client;
-    }
-
-    @SchemaDocumentation("增加业务员")
-    @GRequestMapping(path = "/addsalesman", method = RequestMethod.POST)
-    Salesman addsalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
-        return this.salesmanRepository.save(client);
-    }
-
-    @SchemaDocumentation("修改业务员")
-    @GRequestMapping(path = "/updatesalesman", method = RequestMethod.POST)
-    Salesman updatesalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
-        return this.salesmanRepository.save(client);
-    }
-
-    @SchemaDocumentation("禁用业务员")
-    @GRequestMapping(path = "/disablesalesman", method = RequestMethod.POST)
-    Salesman disablesalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
-        client.disabled = true;
-        return this.salesmanRepository.save(client);
-    }
-
-    @SchemaDocumentation("启用业务员")
-    @GRequestMapping(path = "/enablsalesman", method = RequestMethod.POST)
-    Salesman enablsalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
-        client.disabled = false;
-        return this.salesmanRepository.save(client);
-    }
-
-    @SchemaDocumentation("删除业务员")
-    @GRequestMapping(path = "/removesalesman", method = RequestMethod.POST)
-    Salesman removesalesman(@RequestParam(name = "salesman", required = true) Salesman client) {
-        client.disabled = false;
-        this.salesmanRepository.deleteById(client.getId());
-        return client;
-    }
-
-
-    @SchemaDocumentation("增加用户信息")
-    @GRequestMapping(path = "/addcustomer", method = RequestMethod.POST)
-    Customer addcustomer(@RequestParam(name = "customer", required = true) Customer client) {
-        return this.customerRepository.save(client);
-    }
-
-    @SchemaDocumentation("修改用户信息")
-    @GRequestMapping(path = "/updatecustomer", method = RequestMethod.POST)
-    Customer updatecustomer(@RequestParam(name = "customer", required = true) Customer client) {
-        return this.customerRepository.save(client);
-    }
-
-    @SchemaDocumentation("禁用用户信息")
-    @GRequestMapping(path = "/disablecustomer", method = RequestMethod.POST)
-    Customer disablecustomer(@RequestParam(name = "customer", required = true) Customer client) {
-        client.disabled = true;
-        return this.customerRepository.save(client);
-    }
-
-    @SchemaDocumentation("启用用户信息")
-    @GRequestMapping(path = "/enablcustomer", method = RequestMethod.POST)
-    Customer enablcustomer(@RequestParam(name = "customer", required = true) Customer client) {
-        client.disabled = false;
-        return this.customerRepository.save(client);
-    }
-
-    @SchemaDocumentation("删除用户信息")
-    @GRequestMapping(path = "/removecustomer", method = RequestMethod.POST)
-    Customer removecustomer(@RequestParam(name = "customer", required = true) Customer client) {
-        client.disabled = false;
-        this.customerRepository.deleteById(client.getId());
-        return client;
-    }
-
-
-
-    @SchemaDocumentation("添加订单")
-    @GRequestMapping(path = "/addorder", method = RequestMethod.POST)
-    Order addOrder(@RequestParam(name = "order", required = true) Order order) {
-        return this.orderRepository.save(order);
-    }
-
-    @SchemaDocumentation("修改订单")
-    @GRequestMapping(path = "/updateorder", method = RequestMethod.POST)
-    Order updateOrder(@RequestParam(name = "order", required = true) Order order) {
-        return this.orderRepository.save(order);
-    }
-
-    @SchemaDocumentation("添加反馈")
-    @GRequestMapping(path = "/addfeedback", method = RequestMethod.POST)
-    Feedback addFeedback( @RequestParam(name = "feedback", required = true) @DomainRule Feedback feedback) {
-        return feedbackRepository.save(feedback);
-    }
-
-    @SchemaDocumentation("删除反馈")
-    @GRequestMapping(path = "/removefeedback", method = RequestMethod.POST)
-    Feedback removeFeedback(@RequestParam(name = "feedback", required = true) Feedback feedback) {
-        feedbackRepository.deleteById(feedback.getId());
-        return feedback;
-    }
-
-    @SchemaDocumentation("/添加广告")
-    @GRequestMapping(path = "/addadvertisement",method = RequestMethod.POST)
-    Advertisement addAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
-        return advertisementRepository.save(advertisement);
-    }
-
-    @SchemaDocumentation("/修改广告")
-    @GRequestMapping(path = "/updateadvertisement",method = RequestMethod.POST)
-    Advertisement updateAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
-        return advertisementRepository.save(advertisement);
-    }
-
-    @SchemaDocumentation("/删除广告")
-    @GRequestMapping(path = "/removeadvertisement",method = RequestMethod.POST)
-    Advertisement removeAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
-        advertisementRepository.deleteById(advertisement.getId());
-        return advertisement;
-    }
-
 
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
@@ -228,24 +23,15 @@ public class BusinessController {
     //3.准备数据
 
     /*
-
     UserService{
-
-
-
         updatePassword(String id, String password){
             findByid(id).set(password);
         }
-
         @Assert("exist('client(id,number)')")
         createAcceptance(
         @Item("client")
         Client client){
-
-
         }
     }
 */
-
-
 }
