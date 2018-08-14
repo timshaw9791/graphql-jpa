@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController
 @CompileStatic
 @Validated
 public class BusinessController {
-
     //@SchemaDocumentation("GraphQlController.create测试下行不行")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{id}')")
     //  @Validate(msg="一定要有姓名和id",value="exist('role{name,tel}')")
@@ -23,15 +22,24 @@ public class BusinessController {
     //3.准备数据
 
     /*
+
     UserService{
+
+
+
         updatePassword(String id, String password){
             findByid(id).set(password);
         }
+
         @Assert("exist('client(id,number)')")
         createAcceptance(
         @Item("client")
         Client client){
+
+
         }
     }
 */
+
+
 }

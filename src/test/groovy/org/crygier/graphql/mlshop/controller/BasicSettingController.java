@@ -1,6 +1,5 @@
 package org.crygier.graphql.mlshop.controller;
 
-import cn.zzk.validator.anntations.DomainRule;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
@@ -57,7 +56,7 @@ public class BasicSettingController {
 
     @SchemaDocumentation("添加反馈")
     @GRequestMapping(path = "/addfeedback", method = RequestMethod.POST)
-    Feedback addFeedback(@RequestParam(name = "feedback", required = true) @DomainRule Feedback feedback) {
+    Feedback addFeedback(@RequestParam(name = "feedback", required = true) Feedback feedback) {
         return feedbackRepository.save(feedback);
     }
 

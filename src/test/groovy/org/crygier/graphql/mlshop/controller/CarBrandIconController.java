@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author Curtain
  * @date 2018/8/14 10:12
@@ -35,7 +33,8 @@ public class CarBrandIconController {
 
     @SchemaDocumentation("保存所有已选车辆品牌信息")
     @GRequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
-    void saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
-        carBrandIconService.saveAll(carBrandIcons);
+    CarBrandIcon saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) CarBrandIcon carBrandIcons) {
+//        carBrandIconService.saveAll(carBrandIcons);
+        return null;
     }
 }

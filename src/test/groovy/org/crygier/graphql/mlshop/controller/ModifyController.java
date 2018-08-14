@@ -1,13 +1,11 @@
 package org.crygier.graphql.mlshop.controller;
 
 import org.crygier.graphql.mlshop.model.*;
-import org.crygier.graphql.mlshop.service.CarCommunicationService;
-import org.crygier.graphql.mlshop.service.CarInfoService;
-import org.crygier.graphql.mlshop.service.InsuranceCommunicationService;
-import org.crygier.graphql.mlshop.service.OrderService;
+import org.crygier.graphql.mlshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Curtain
@@ -25,6 +23,9 @@ public class ModifyController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CarBrandIconService carBrandIconService;
 
     @Autowired
     private InsuranceCommunicationService insuranceCommunicationService;
@@ -72,5 +73,15 @@ public class ModifyController {
     @RequestMapping("/addorder")
     public Order order(@RequestBody Order order) {
         return orderService.save(order);
+    }
+
+    @RequestMapping(path = "/addcarbrandicon", method = RequestMethod.POST)
+    CarBrandIcon addCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) CarBrandIcon carBrandIcon) {
+        return carBrandIconService.save(carBrandIcon);
+    }
+
+    @RequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
+    void saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
+        carBrandIconService.saveAll(carBrandIcons);
     }
 }

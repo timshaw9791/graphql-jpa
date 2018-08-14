@@ -16,7 +16,7 @@ import javax.persistence.Entity
 @SchemaDocumentation("问答帮助中心")
 @CompileStatic
 @Bostype("A22")
-class CarBrandIcon extends BosEntity{
+class CarBrandIcon extends BosEntity {
 
     @SchemaDocumentation("品牌名称")
     String brand;
@@ -25,5 +25,5 @@ class CarBrandIcon extends BosEntity{
     String icon;
 
     @SchemaDocumentation("是否已选")
-    boolean choose;
+    boolean choose = false;
 }

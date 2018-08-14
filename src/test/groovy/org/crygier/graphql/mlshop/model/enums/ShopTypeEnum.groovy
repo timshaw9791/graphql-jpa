@@ -8,9 +8,9 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import javax.persistence.Converter
 
 
-@SchemaDocumentation("���ͣ���Ϊ���˵����Ӫ�����֣�OWNΪ��Ӫ��COPORATEΪ����")
+@SchemaDocumentation("类型，分为加盟店和自营店两种，OWN为自营，COPORATE为加盟")
 enum ShopTypeEnum implements BosEnum {
-    OWN("OWN", "��Ӫ" ), COPORATE("COPORATE","����");
+    OWN("OWN", "自营" ), COPORATE("COPORATE","加盟");
 
     private ShopTypeEnum(String value, String name) {
         this.ev = new EnumInnerValue(value, name);
