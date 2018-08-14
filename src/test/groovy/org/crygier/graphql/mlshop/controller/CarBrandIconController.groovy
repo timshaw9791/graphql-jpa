@@ -33,8 +33,8 @@ public class CarBrandIconController {
 
     @SchemaDocumentation("保存所有已选车辆品牌信息")
     @GRequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
-    CarBrandIcon saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) CarBrandIcon carBrandIcons) {
-//        carBrandIconService.saveAll(carBrandIcons);
+    CarBrandIcon saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
+        carBrandIconService.saveAll(carBrandIcons);
         return null;
     }
 }

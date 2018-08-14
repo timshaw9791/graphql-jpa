@@ -10,6 +10,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.persistence.metamodel.EntityType;
 import java.lang.annotation.Annotation;
@@ -96,9 +97,11 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
             if (parameter.isVarArgs()) {//参数如果为集合类型的，则必须找到最终的泛型类型
                 isCollection = true;
                 typeClazz = parameter.getType();
-            } else if (typeClazz.isAssignableFrom(Collection.class)) {
+            } else if (Collection.class.isAssignableFrom(typeClazz)) {
                 isCollection = true;
-                typeClazz = parameter.getParameterizedType().getClass();
+                Type[] actualTypeArguments = ((ParameterizedTypeImpl) parameter.getParameterizedType()).getActualTypeArguments();
+                typeClazz = (Class) actualTypeArguments[0];
+//                typeClazz = actualTypeArguments;
             }
             GraphQLInputType graphQLObjectInputType = this.graphQlTypeMapper.getGraphQLInputType(typeClazz);
             graphQLObjectInputType = isCollection ? new GraphQLList(graphQLObjectInputType) : graphQLObjectInputType;
