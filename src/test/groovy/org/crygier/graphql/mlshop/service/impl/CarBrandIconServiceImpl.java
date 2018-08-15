@@ -6,7 +6,7 @@ import org.crygier.graphql.mlshop.service.CarBrandIconService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -31,7 +31,7 @@ public class CarBrandIconServiceImpl implements CarBrandIconService {
     }
 
     @Override
-    public void saveAll(List<CarBrandIcon> carBrandIcons) {
+    public void saveAll(Collection<CarBrandIcon> carBrandIcons) {
         carBrandIconRepository.saveAll(carBrandIcons);
     }
 }

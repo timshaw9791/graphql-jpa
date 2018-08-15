@@ -128,6 +128,11 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
         }
         //TODO 权限错误,业务逻辑错误，其他错误.
         Object[] args = Arrays.stream(this.argumentNames).map(argname -> argmaps.get(argname)).toArray();
+
+        //TODO  如果input是数组  但是这里获取到的只是set集合  暂时是直接把类型改为Collection
+//        if(nameArgMaps.containsKey("carbrandicon")){
+//            args[0] = new ArrayList((Collection) args[0]);
+//        }
         return ReflectionUtils.invokeMethod(this.proxyMethod, this.target, args);
 
     }
