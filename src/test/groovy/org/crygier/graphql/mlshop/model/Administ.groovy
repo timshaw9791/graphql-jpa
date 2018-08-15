@@ -72,7 +72,6 @@ public class Administ extends BosEntity implements UserDetails{
         return true;
     }
 
-
     @Override
     public String toString() {
         return this.username;

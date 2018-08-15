@@ -19,31 +19,30 @@ import javax.persistence.OneToMany
 //context(x,访问自己的订单)
 //@QueryDeny(exceptPredicate=QueryPermission.permission)
 //@QueryAllow(exceptPredicate="",exceptAttrs="{}")
-class User extends BosEntity{
+class User extends BosEntity {
 
-	@SchemaDocumentation("用户名")
-	private String username;
+    @SchemaDocumentation("用户名")
+    String username;
 
-	@SchemaDocumentation("密码")
-	private String password;
+    @SchemaDocumentation("密码")
+    String password;
 
-	@SchemaDocumentation("注册手机号")
-	private String registerPhone;
+    @SchemaDocumentation("注册手机号")
+    String registerPhone;
 
-	@SchemaDocumentation("在用手机号")
-	private String phone;
+    @SchemaDocumentation("在用手机号")
+    String phone;
 
-	@SchemaDocumentation("客户信息")
-	@ManyToOne
-	Customer customer;
+    @SchemaDocumentation("客户信息")
+    @ManyToOne
+    Customer customer;
 
-	@SchemaDocumentation("头像")
-	private String headImg;
+    @SchemaDocumentation("头像")
+    private String headImg;
 
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "parent",orphanRemoval = true)
-	Set<UserRoleItem> roleItems=new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+    Set<UserRoleItem> roleItems = new HashSet<>();
 }
-
 
 //final class QueryPermission //extends QueryPermissionBase
 //{

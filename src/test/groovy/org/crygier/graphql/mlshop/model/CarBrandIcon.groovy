@@ -13,7 +13,7 @@ import javax.persistence.Entity
  */
 
 @Entity
-@SchemaDocumentation("问答帮助中心")
+@SchemaDocumentation("品牌优选")
 @CompileStatic
 @Bostype("A22")
 class CarBrandIcon extends BosEntity {

@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne
  */
 
 @Entity
-@SchemaDocumentation("车辆信息")
+@SchemaDocumentation("门店关注")
 @CompileStatic
 @Bostype("A17")
 class ConcernShop extends BosEntity{

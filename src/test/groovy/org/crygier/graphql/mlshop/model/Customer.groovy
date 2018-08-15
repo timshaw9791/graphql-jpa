@@ -46,7 +46,4 @@ public class Customer extends BosEntity {
 
     @SchemaDocumentation("性别")
     String gender;
-
-
-
 }

@@ -27,6 +27,9 @@ public class VehiclePrice extends BosEntity{
     @SchemaDocumentation("车辆信息")
     CarInfo carInfo;
 
+    @SchemaDocumentation("购车价:单位 分")
+    Long price;
+
     @SchemaDocumentation("金融方案")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<FinancialScheme> financialSchemesItems = new HashSet<>();

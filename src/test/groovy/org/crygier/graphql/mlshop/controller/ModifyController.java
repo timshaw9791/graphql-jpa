@@ -5,6 +5,7 @@ import org.crygier.graphql.mlshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -83,5 +84,10 @@ public class ModifyController {
     @RequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
     void saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
         carBrandIconService.saveAll(carBrandIcons);
+    }
+
+    @RequestMapping(path = "/getinfo")
+    void getinfo(Principal principal){
+        System.out.println(principal.getName());
     }
 }

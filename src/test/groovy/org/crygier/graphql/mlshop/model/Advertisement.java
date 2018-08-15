@@ -13,7 +13,7 @@ import javax.persistence.Entity;
  */
 
 @Entity
-@SchemaDocumentation("车辆信息")
+@SchemaDocumentation("广告")
 @CompileStatic
 @Bostype("A18")
 public class Advertisement extends BosEntity {
@@ -21,17 +21,31 @@ public class Advertisement extends BosEntity {
     @SchemaDocumentation("广告模板")
     String template;
 
-    @SchemaDocumentation("/文本内容")
+    @SchemaDocumentation("文本内容")
     String textContent;
 
     @SchemaDocumentation("轮播时间 单位：秒")
     Long time;
 
-    @SchemaDocumentation("/image")
+    @SchemaDocumentation("图片")
     String image;
 
     @SchemaDocumentation("广告网址")
     String url;
+
+    @SchemaDocumentation("文章标题")
+    String articleTitle;
+
+    @SchemaDocumentation("品牌名")
+    String brand;
+
+    @SchemaDocumentation("图标")
+    String icon;
+
+    @SchemaDocumentation("子标题")
+    String subtitle;
+
+
 
 
 }

@@ -1,7 +1,8 @@
 package org.crygier.graphql.mlshop.config;
 
 
-
+import org.crygier.graphql.mlshop.authclient.ClientAuthenticationFilter;
+import org.crygier.graphql.mlshop.authclient.ClientAuthenticationProvider;
 import org.crygier.graphql.mlshop.service.AdministService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -58,13 +59,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().
                 csrf().disable()
-//                .addFilterBefore(ssoFilter(am), BasicAuthenticationFilter.class)
+                .addFilterBefore(ssoFilter(am), BasicAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login","/client/**").permitAll()
                 .antMatchers("/**").permitAll()
                 // .antMatchers("/agency/**").hasAnyRole("ADMIN")
                 .and()
@@ -89,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(this.administService)
                 .passwordEncoder(new MyPasswordEncoder());
-//         auth.authenticationProvider(new WeChatAuthenticationProvider());
+         auth.authenticationProvider(new ClientAuthenticationProvider());
     }
 
 
@@ -112,12 +113,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
 
-//        WeChatAuthenticationFilter wmaFilter = new WeChatAuthenticationFilter();
-//        wmaFilter.setAuthenticationManager(am);
-//        wmaFilter.setAuthenticationSuccessHandler(new MyAuthenticationSuccessHandler(true));
-//        wmaFilter.setAuthenticationFailureHandler(this.myAuthenticationFailHandle);
-//        filters.add(wmaFilter);
-//        filter.setFilters(filters);
+        ClientAuthenticationFilter wmaFilter = new ClientAuthenticationFilter();
+        wmaFilter.setAuthenticationManager(am);
+        wmaFilter.setAuthenticationSuccessHandler(new MyAuthenticationSuccessHandler(false));
+        wmaFilter.setAuthenticationFailureHandler(this.myAuthenticationFailHandle);
+        filters.add(wmaFilter);
+        filter.setFilters(filters);
 
         /*facebok，github的第三方登录
         filters.add(ssoFilter(facebook(), "/login/facebook"));
