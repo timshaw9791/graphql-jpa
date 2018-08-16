@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.CarCommunication
 import org.crygier.graphql.mlshop.model.CommunicationRecord
 import org.crygier.graphql.mlshop.service.CarCommunicationService
@@ -42,6 +43,7 @@ public class CarCommunicationController {
     }
 
     @SchemaDocumentation("修改买车沟通信息")
+    @Exclude
     @GRequestMapping(path = "/updatecarcommunication", method = RequestMethod.POST)
     CarCommunication updatecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {

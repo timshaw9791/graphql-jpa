@@ -3,7 +3,8 @@ package org.crygier.graphql.mlshop.controller;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude;
 import org.crygier.graphql.mlshop.model.CarSource;
 import org.crygier.graphql.mlshop.repo.CarSourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class CarSourceController {
     }
 
     @SchemaDocumentation("修改车辆来源")
+    @Exclude
     @GRequestMapping(path = "/updatecarsource", method = RequestMethod.POST)
     CarSource updateCarSource(@RequestParam(name = "carsource", required = true) CarSource carSource) {
         return this.carSourceRepository.save(carSource);

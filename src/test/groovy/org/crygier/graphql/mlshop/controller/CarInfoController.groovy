@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.CarInfo
 import org.crygier.graphql.mlshop.service.CarInfoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,6 +34,7 @@ public class CarInfoController {
 
     @SchemaDocumentation("修改车辆信息")
     @GRequestMapping(path = "/updatecarinfo", method = RequestMethod.POST)
+    @Exclude
     CarInfo updateCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         return this.carInfoService.update(carInfo);
     }

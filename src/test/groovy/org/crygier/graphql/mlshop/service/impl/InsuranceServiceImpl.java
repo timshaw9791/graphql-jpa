@@ -37,13 +37,20 @@ public class InsuranceServiceImpl implements InsuranceService {
 
     @Override
     public Insurance update(Insurance insurance) {
+
+        insurance.getCustomerName();
+
+
         return insuranceRepository.save(insurance);
+
+
     }
 
     @Override
     @Transactional
     public Insurance save(Insurance insurance) {
         InsuranceCommunication insuranceCommunication = new InsuranceCommunication();
+        //todo 去掉回访记录中 customername  等信息的保存  因为 insurance中已经存在
         insuranceCommunication.setCustomerName(insurance.getCustomerName());
         insuranceCommunication.setStatus(CarCommunicationStatusEnum.D);
         insuranceCommunication.setTel(insurance.getCustomerTel());

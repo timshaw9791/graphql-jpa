@@ -1,18 +1,23 @@
 package org.crygier.graphql;
 
+import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import com.aliyuncs.exceptions.ClientException;
+import org.crygier.graphql.mlshop.config.ContextRefreshedEventListen;
+import org.crygier.graphql.mlshop.model.Shop;
 import org.crygier.graphql.mlshop.service.VerificationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Curtain
@@ -27,6 +32,9 @@ public class RedisTest {
 
     @Autowired
     VerificationService verificationService;
+
+    @Autowired
+    ContextRefreshedEventListen refreshedEventListen;
 
     @Test
     public void add(){
@@ -76,6 +84,14 @@ public class RedisTest {
     @Test
     public void sendmessage() throws ClientException {
 //        verificationService.getCode("15395778303");
-        verificationService.getCode("18157726283");
+//        verificationService.getCode("18157726283");
+    }
+
+    @Test
+    public void getRepository(){
+        Repository repository = refreshedEventListen.getRepository(Shop.class);
+        Optional shop = ((CrudRepository) repository).findById("ZJuMOSMXHgSrB3NNzpGKb2A05");
+        ((BosEntity)shop.get()).getCreatetime();
+
     }
 }

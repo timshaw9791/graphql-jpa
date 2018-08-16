@@ -1,6 +1,5 @@
 package cn.wzvtcsoft.x.bos.domain.persist;
 
-import cn.wzvtcsoft.x.bos.domain.CoreObject;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
 

@@ -1,7 +1,7 @@
 package cn.wzvtcsoft.x.bos.domain;
 
 
-import cn.wzvtcsoft.x.bos.domain.CoreObject;
+import cn.wzvtcsoft.x.bos.domain.persist.CoreObject;
 import cn.wzvtcsoft.x.bos.domain.persist.EntryParentType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;

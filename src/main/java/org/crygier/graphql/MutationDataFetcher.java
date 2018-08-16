@@ -1,7 +1,6 @@
 package org.crygier.graphql;
 
-import cn.wzvtcsoft.x.bos.domain.CoreObject;
-import cn.wzvtcsoft.x.bos.domain.IEntity;
+import cn.wzvtcsoft.x.bos.domain.persist.CoreObject;
 import graphql.language.*;
 import graphql.schema.*;
 import org.springframework.util.StringUtils;

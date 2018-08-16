@@ -1,7 +1,6 @@
 package cn.wzvtcsoft.x.bos.domain.persist;
 
 import cn.wzvtcsoft.x.bos.domain.BosEntity;
-import cn.wzvtcsoft.x.bos.domain.CoreObject;
 import cn.wzvtcsoft.x.bos.domain.Entry;
 import cn.wzvtcsoft.x.bos.domain.util.BosUtils;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;

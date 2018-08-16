@@ -1,7 +1,5 @@
 package cn.wzvtcsoft.x.bos.domain.persist;
 
-import cn.wzvtcsoft.x.bos.domain.CoreObject;
-import cn.wzvtcsoft.x.bos.domain.persist.CoreObjectTypeDescriptor;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
 import org.hibernate.type.DiscriminatorType;

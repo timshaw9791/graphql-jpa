@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService
@@ -39,6 +40,7 @@ class InsuranceController {
     }
 
     @SchemaDocumentation("修改保险信息")
+    @Exclude
     @GRequestMapping(path = "/updateinsurance", method = RequestMethod.POST)
     Insurance updateInsurance(
             @RequestParam(name = "insurance", required = true) Insurance insurance) {

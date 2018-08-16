@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.Shop
 import org.crygier.graphql.mlshop.repo.ShopRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,8 +33,12 @@ class ShopController {
     }
 
     @SchemaDocumentation("修改门店")
+    @Exclude
     @GRequestMapping(path = "/updateshop", method = RequestMethod.POST)
+    //@Include("createtime","updatetime"...)
     Shop updateshop(@RequestParam(name = "shop", required = true) Shop client) {
+        //通过aop 获取到service 或者 也可以是 repository   然后查找数据   findone(client.getid)
+        //根据指定的字段 进行覆盖 （如这里注解指定的createtime..）
         return this.shopRepository.save(client);
     }
 

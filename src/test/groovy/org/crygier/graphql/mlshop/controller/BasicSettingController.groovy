@@ -3,7 +3,8 @@ package org.crygier.graphql.mlshop.controller;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude;
 import org.crygier.graphql.mlshop.model.Advertisement;
 import org.crygier.graphql.mlshop.model.Feedback;
 import org.crygier.graphql.mlshop.model.QuestionHelp;
@@ -42,6 +43,7 @@ public class BasicSettingController {
     }
 
     @SchemaDocumentation("修改问答帮助信息")
+    @Exclude
     @GRequestMapping(path = "/updatequestionhelp", method = RequestMethod.POST)
     QuestionHelp updateQuestionHelp(@RequestParam(name = "questionhelp", required = true) QuestionHelp questionHelp) {
         return this.questionHelpRepository.save(questionHelp);
@@ -74,6 +76,7 @@ public class BasicSettingController {
     }
 
     @SchemaDocumentation("/修改广告")
+    @Exclude
     @GRequestMapping(path = "/updateadvertisement",method = RequestMethod.POST)
     Advertisement updateAdvertisement(@RequestParam(name = "advertisement",required = true) Advertisement advertisement){
         return advertisementRepository.save(advertisement);

@@ -45,7 +45,8 @@ public class Advertisement extends BosEntity {
     @SchemaDocumentation("子标题")
     String subtitle;
 
-
+    @SchemaDocumentation("选区")
+    String constituency;
 
 
 }

@@ -1,6 +1,7 @@
-package cn.wzvtcsoft.x.bos.domain;
+package cn.wzvtcsoft.x.bos.domain.persist;
 
 
+import cn.wzvtcsoft.x.bos.domain.ICoreObject;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

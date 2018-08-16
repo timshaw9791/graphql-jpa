@@ -3,7 +3,8 @@ package org.crygier.graphql.mlshop.controller;
 import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.annotation.SchemaDocumentation
+import org.crygier.graphql.mlshop.anntations.Exclude;
 import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.repo.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class SalesmanController {
     }
 
     @SchemaDocumentation("修改业务员")
+    @Exclude
     @GRequestMapping(path = "/updatesalesman", method = RequestMethod.POST)
     Salesman updateSalesman(@RequestParam(name = "salesman", required = true) Salesman salesman) {
         return this.salesmanRepository.save(salesman);
