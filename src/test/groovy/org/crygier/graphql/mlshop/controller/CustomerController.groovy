@@ -39,6 +39,7 @@ public class CustomerController {
     }
 
     @SchemaDocumentation("禁用用户信息")
+    @Exclude
     @GRequestMapping(path = "/disablecustomer", method = RequestMethod.POST)
     Customer disablecustomer(@RequestParam(name = "customer", required = true) Customer client) {
         client.setDisabled(true);
@@ -46,6 +47,7 @@ public class CustomerController {
     }
 
     @SchemaDocumentation("启用用户信息")
+    @Exclude
     @GRequestMapping(path = "/enablcustomer", method = RequestMethod.POST)
     Customer enablcustomer(@RequestParam(name = "customer", required = true) Customer client) {
         client.setDisabled(false);
@@ -53,6 +55,7 @@ public class CustomerController {
     }
 
     @SchemaDocumentation("删除用户信息")
+    @Exclude
     @GRequestMapping(path = "/removecustomer", method = RequestMethod.POST)
     Customer removecustomer(@RequestParam(name = "customer", required = true) Customer client) {
         client.setDisabled(false);

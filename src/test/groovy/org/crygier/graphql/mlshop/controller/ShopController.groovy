@@ -43,6 +43,7 @@ class ShopController {
     }
 
     @SchemaDocumentation("禁用门店")
+    @Exclude
     @GRequestMapping(path = "/disableshop", method = RequestMethod.POST)
     Shop disableshop(@RequestParam(name = "shop", required = true) Shop client) {
         client.disabled = true;
@@ -50,6 +51,7 @@ class ShopController {
     }
 
     @SchemaDocumentation("启用门店")
+    @Exclude
     @GRequestMapping(path = "/enablshop", method = RequestMethod.POST)
     Shop enablshop(@RequestParam(name = "shop", required = true) Shop client) {
         client.disabled = false;

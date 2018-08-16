@@ -48,6 +48,7 @@ class InsuranceController {
     }
 
     @SchemaDocumentation("删除保险信息")
+    @Exclude
     @GRequestMapping(path = "/removeinsurance", method = RequestMethod.POST)
     Insurance removeInsurance(
             @RequestParam(name = "insurance", required = true) Insurance insurance) {
@@ -63,6 +64,7 @@ class InsuranceController {
     }
 
     @SchemaDocumentation("修改保险回访记录")
+    @Exclude
     @GRequestMapping(path = "/updateinsurancecommunication", method = RequestMethod.POST)
     InsuranceCommunication updateInsuranceCommunication(
             @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
@@ -76,6 +78,7 @@ class InsuranceController {
 //    )
 
     @SchemaDocumentation("删除保险回访记录")
+    @Exclude
     @GRequestMapping(path = "/removeinsurancecommunication", method = RequestMethod.POST)
     InsuranceCommunication removeInsuranceCommunication(
             @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {

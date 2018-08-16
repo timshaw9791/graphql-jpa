@@ -40,6 +40,7 @@ public class CarInfoController {
     }
 
     @SchemaDocumentation("删除车辆信息")
+    @Exclude
     @GRequestMapping(path = "/removecarinfo", method = RequestMethod.POST)
     CarInfo removeCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
         this.carInfoService.deleteById(carInfo.getId());

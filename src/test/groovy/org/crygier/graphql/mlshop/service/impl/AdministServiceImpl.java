@@ -49,8 +49,7 @@ public class AdministServiceImpl implements AdministService {
     }
 
     @Override
-    public Administ modifyPassword(Administ administ, String password) {
-        administ.setPassword(password);
+    public Administ modifyPassword(Administ administ) {
         return administRepository.save(administ);
     }
 }

@@ -38,6 +38,7 @@ class VehicleController {
     }
 
     @SchemaDocumentation("删除车辆价格信息")
+    @Exclude
     @GRequestMapping(path = "/removevehicleprice", method = RequestMethod.POST)
     VehiclePrice removeVehiclePrice(@RequestParam(name = "vehicleprice", required = true) VehiclePrice vehiclePrice) {
         vehiclePrice.setDisabled(true);

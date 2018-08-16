@@ -51,6 +51,7 @@ public class CarCommunicationController {
     }
 
     @SchemaDocumentation("删除买车沟通信息")
+    @Exclude
     @GRequestMapping(path = "/removecarcommunication", method = RequestMethod.POST)
     CarCommunication removecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {

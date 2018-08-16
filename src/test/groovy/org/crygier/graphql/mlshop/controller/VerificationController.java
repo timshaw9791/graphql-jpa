@@ -19,12 +19,12 @@ public class VerificationController {
 
     @RequestMapping("/getcode")
     public Object getCode(@RequestParam("phone") String phone){
-       return verificationService.getCode(phone);
+       return verificationService.getCode(phone,1);
     }
 
     @RequestMapping("/verify")
     public Object verify(@RequestParam("phone") String phone,@RequestParam("code") String code){
-        return verificationService.verify(code,phone);
+        return verificationService.verify(code,phone,1);
     }
 
 

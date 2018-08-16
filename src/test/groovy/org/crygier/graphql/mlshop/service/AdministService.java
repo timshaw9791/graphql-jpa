@@ -1,9 +1,7 @@
 package org.crygier.graphql.mlshop.service;
 
 import org.crygier.graphql.mlshop.model.Administ;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * @author Curtain
@@ -28,9 +26,8 @@ public interface AdministService extends UserDetailsService {
     /**
      * 修改密码
      * @param administ
-     * @param password
      * @return
      */
-    Administ modifyPassword(Administ administ,String password);
+    Administ modifyPassword(Administ administ);
 
 }

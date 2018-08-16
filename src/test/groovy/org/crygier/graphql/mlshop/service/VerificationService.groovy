@@ -1,6 +1,4 @@
-package org.crygier.graphql.mlshop.service;
-
-import com.aliyuncs.exceptions.ClientException;
+package org.crygier.graphql.mlshop.service
 
 public interface VerificationService {
 
@@ -9,12 +7,12 @@ public interface VerificationService {
      * @param number
      * @return
      */
-    String getCode(String number);
+    String getCode(String number,Integer type);
 
     /**
      * 验证
      * @param code
      * @param number
      */
-    String verify(String code, String number);
+    String verify(String code, String number,Integer type);
 }

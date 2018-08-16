@@ -41,6 +41,7 @@ public class CarSourceController {
     }
 
     @SchemaDocumentation("禁用车辆来源")
+    @Exclude
     @GRequestMapping(path = "/disablecarsource", method = RequestMethod.POST)
     CarSource disableCarSource(@RequestParam(name = "carsource", required = true) CarSource carSource) {
         carSource.setDisabled(true);
@@ -48,6 +49,7 @@ public class CarSourceController {
     }
 
     @SchemaDocumentation("启用车辆来源")
+    @Exclude
     @GRequestMapping(path = "/enablcarsource", method = RequestMethod.POST)
     CarSource enableCarSource(@RequestParam(name = "carsource", required = true) CarSource carSource) {
         carSource.setDisabled(false);
@@ -55,6 +57,7 @@ public class CarSourceController {
     }
 
     @SchemaDocumentation("删除车辆来源")
+    @Exclude
     @GRequestMapping(path = "/removecarsource", method = RequestMethod.POST)
     CarSource removeCarSource(@RequestParam(name = "carsource", required = true) CarSource carSource) {
         carSource.setDisabled(true);

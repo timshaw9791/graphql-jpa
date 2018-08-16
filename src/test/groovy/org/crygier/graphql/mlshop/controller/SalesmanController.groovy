@@ -40,6 +40,7 @@ public class SalesmanController {
     }
 
     @SchemaDocumentation("禁用业务员")
+    @Exclude
     @GRequestMapping(path = "/disablesalesman", method = RequestMethod.POST)
     Salesman disableSalesman(@RequestParam(name = "salesman", required = true) Salesman salesman) {
         salesman.setDisabled(true);
@@ -47,6 +48,7 @@ public class SalesmanController {
     }
 
     @SchemaDocumentation("启用业务员")
+    @Exclude
     @GRequestMapping(path = "/enablsalesman", method = RequestMethod.POST)
     Salesman enableSalesman(@RequestParam(name = "salesman", required = true) Salesman salesman) {
         salesman.setDisabled(false);
@@ -54,6 +56,7 @@ public class SalesmanController {
     }
 
     @SchemaDocumentation("删除业务员")
+    @Exclude
     @GRequestMapping(path = "/removesalesman", method = RequestMethod.POST)
     Salesman removeSalesman(@RequestParam(name = "salesman", required = true) Salesman salesman) {
         salesman.setDisabled(true);
