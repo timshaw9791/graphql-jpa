@@ -29,19 +29,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyPassword(String password) {
-
-    }
-
-    @Override
-    public void modifyPhone(String phone) {
-
-    }
-
-    @Override
     public User register(User user) {
-        return userRepository.save(user);
+        return null;
     }
 
+    @Override
+    public void modifyPassword(String password, String id) {
 
+    }
+
+    @Override
+    public void modifyPhone(String phone, String id) {
+
+    }
 }

@@ -6,10 +6,11 @@ import org.crygier.graphql.mlshop.model.user.User;
  * @author Curtain
  * @date 2018/8/7 11:21
  */
-public interface UserService{
+public interface UserService {
 
     /**
      * 通过用户名查找
+     *
      * @param username
      * @return
      */
@@ -17,6 +18,7 @@ public interface UserService{
 
     /**
      * 注册
+     *
      * @param user
      * @return
      */
@@ -24,14 +26,16 @@ public interface UserService{
 
     /**
      * 修改密码
+     *
      * @param password
      */
-    void modifyPassword(String password);
+    void modifyPassword(String password, String id);
 
     /**
      * 更换手机号
+     *
      * @param phone
      */
-    void modifyPhone(String phone);
+    void modifyPhone(String phone, String id);
 
 }
