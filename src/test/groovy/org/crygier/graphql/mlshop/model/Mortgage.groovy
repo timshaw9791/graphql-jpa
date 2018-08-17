@@ -1,14 +1,11 @@
 package org.crygier.graphql.mlshop.model
 
-import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype
 import cn.wzvtcsoft.x.bos.domain.Entry
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Entity
-import javax.persistence.ManyToOne
-
 /**
  * @author Curtain
  * @date 2018/7/30 11:06
@@ -84,7 +81,7 @@ class Mortgage extends Entry{
     Long serviceCharge;
 
     @SchemaDocumentation("GPS费")
-    Long GPSCharge;
+    Long gpsCharge;
 
     @SchemaDocumentation("签单费")
     Long signBill;

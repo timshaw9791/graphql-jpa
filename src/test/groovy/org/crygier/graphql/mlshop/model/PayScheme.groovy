@@ -1,13 +1,11 @@
-package org.crygier.graphql.mlshop.model;
+package org.crygier.graphql.mlshop.model
 
-import cn.wzvtcsoft.x.bos.domain.BosEntity;
 import cn.wzvtcsoft.x.bos.domain.Bostype
-import cn.wzvtcsoft.x.bos.domain.Entry;
-import groovy.transform.CompileStatic;
-import org.crygier.graphql.annotation.SchemaDocumentation;
+import cn.wzvtcsoft.x.bos.domain.Entry
+import groovy.transform.CompileStatic
+import org.crygier.graphql.annotation.SchemaDocumentation
 
-import javax.persistence.Entity;
-
+import javax.persistence.Entity
 /**
  * @author Curtain
  * @date 2018/7/30 10:48
@@ -52,7 +50,7 @@ public class PayScheme extends Entry{
     Long customerTax;
 
     @SchemaDocumentation("GPS费")
-    Long GPSCharge;
+    Long gpsCharge;
 
     @SchemaDocumentation("押金")
     Long deposit;
