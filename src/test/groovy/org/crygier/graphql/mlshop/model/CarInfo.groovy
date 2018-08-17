@@ -66,6 +66,9 @@ class CarInfo extends BosEntity {
     @SchemaDocumentation("车身颜色")
     String color;
 
+    @SchemaDocumentation("标签")
+    String tag;
+
 //    public void setFinancialSchemesItems(Set<FinancialScheme> financialSchemes){
 //        this.financialSchemesItems =financialSchemes;
 //    }
