@@ -40,6 +40,9 @@ class User extends BosEntity {
     @SchemaDocumentation("头像")
     private String headImg;
 
+    @SchemaDocumentation("昵称")
+    String nickname;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<UserRoleItem> roleItems = new HashSet<>();
 }

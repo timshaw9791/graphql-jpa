@@ -12,19 +12,15 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.crygier.graphql.mlshop.util.VerifyUtil.*;
+
 @Service
 public class VerificationServiceImpl implements VerificationService {
 
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private final String REGISTER = "register";
 
-    private final String MODIFY_PASSWORD = "modifyPassword";
-
-    private final String CONSULT = "consult";
-
-    private final String MODIFY_PHONE = "modifyPhone";
 
     @Override
     public String getCode(String number, Integer type) {
@@ -66,13 +62,34 @@ public class VerificationServiceImpl implements VerificationService {
     @Override
     public String verify(String code, String number, Integer type) {
 
-
-        String rs = (String) redisTemplate.opsForValue().get(number);
-        if (rs.equals(code)) {
-            redisTemplate.delete(number);
-            return "OK";
+        switch (type) {
+            case 1:
+                verifycode(code, number + REGISTER);
+                break;
+            case 2:
+                verifycode(code, number + MODIFY_PASSWORD);
+                break;
+            case 3:
+                verifycode(code, number + CONSULT);
+                break;
+            case 4:
+                verifycode(code, number + MODIFY_PHONE);
+                break;
+            default:
+                throw new RuntimeException("verify code fail. type not true");
         }
-        throw new RuntimeException("fail");
+
+        return "OK";
+
+    }
+
+    private void verifycode(String code, String key) {
+        String rs = (String) redisTemplate.opsForValue().get(key);
+        if (rs.equals(code)) {
+            redisTemplate.opsForValue().set(key, System.currentTimeMillis());
+        } else {
+            throw new RuntimeException("verify code fail");
+        }
 
     }
 

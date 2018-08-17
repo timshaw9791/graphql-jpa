@@ -25,7 +25,7 @@ public class CarBrandIconServiceImpl implements CarBrandIconService {
         if (optional.isPresent()){
             CarBrandIcon result = optional.get();
             result.setIcon(carBrandIcon.getIcon());
-            carBrandIconRepository.save(result);
+            return carBrandIconRepository.save(result);
         }
         return carBrandIconRepository.save(carBrandIcon);
     }

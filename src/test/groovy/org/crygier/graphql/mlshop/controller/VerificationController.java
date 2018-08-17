@@ -18,13 +18,13 @@ public class VerificationController {
     private VerificationService verificationService;
 
     @RequestMapping("/getcode")
-    public Object getCode(@RequestParam("phone") String phone){
-       return verificationService.getCode(phone,1);
+    public Object getCode(@RequestParam("phone") String phone,@RequestParam("type") Integer type){
+       return verificationService.getCode(phone,type);
     }
 
     @RequestMapping("/verify")
-    public Object verify(@RequestParam("phone") String phone,@RequestParam("code") String code){
-        return verificationService.verify(code,phone,1);
+    public Object verify(@RequestParam("phone") String phone,@RequestParam("code") String code,@RequestParam("type") Integer type){
+        return verificationService.verify(code,phone,type);
     }
 
 
