@@ -1,0 +1,15 @@
+  #显示h2的控制台，以便我们可以随时查看和修改测试数据。localhost/h2-console url: jdbc:h2:mem:testdb  username : as ,password: empty
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: true
+server:
+  port: 9090
+
+logging:
+  level: info
+  level.org.hibernate.type.descriptor.sql: trace
+  level.org.hibernate.SQL: debug
+  #level.org.hibernate.loader: debug
