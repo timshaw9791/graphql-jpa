@@ -1,5 +1,9 @@
 package org.crygier.graphql.mlshop.controller;
 
+import groovy.transform.CompileStatic;
+import org.crygier.graphql.annotation.GRequestMapping;
+import org.crygier.graphql.annotation.GRestController;
+import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.crygier.graphql.mlshop.model.*;
 import org.crygier.graphql.mlshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,8 @@ import java.util.List;
  * @author Curtain
  * @date 2018/7/31 10:29
  */
+@SchemaDocumentation("回访单相关修改操作")
+@GRestController("mlshop")
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, maxAge = 1800L, allowedHeaders = "*")
 public class ModifyController {
@@ -66,8 +72,10 @@ public class ModifyController {
         return this.carCommunicationService.allocate(carCommunicationId,salesman);
     }
 
+    @SchemaDocumentation("为保险回访单分配回访人员（业务员），以便进行回访")
+    @GRequestMapping(path = "/insurancecommunicationallocate", method = RequestMethod.POST)
     @RequestMapping("/insurancecommunicationallocate")
-    public Object insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId,@RequestBody Salesman salesman){
+    public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
         return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
     }
 
