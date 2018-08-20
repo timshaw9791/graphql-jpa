@@ -38,7 +38,7 @@ class User extends BosEntity {
     Customer customer;
 
     @SchemaDocumentation("头像")
-    private String headImg;
+    String headImg;
 
     @SchemaDocumentation("昵称")
     String nickname;

@@ -38,4 +38,11 @@ public interface UserService {
      */
     void modifyPhone(String phone, String id);
 
+    /**
+     * 修改信息
+     * @param user
+     * @return
+     */
+    User update(User user,String id);
+
 }
