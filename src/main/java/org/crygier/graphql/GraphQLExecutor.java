@@ -135,7 +135,13 @@ public class GraphQLExecutor implements ApplicationListener, IGraphQLExecutor {
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ApplicationStartedEvent) {
-            this.createGraphQL(((ApplicationStartedEvent) event).getApplicationContext());
+            try{
+                this.createGraphQL(((ApplicationStartedEvent) event).getApplicationContext());
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new RuntimeException("初始化graphql字段和类型不成功！");
+            }
+
         }
     }
 

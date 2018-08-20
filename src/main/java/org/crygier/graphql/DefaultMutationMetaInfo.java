@@ -34,7 +34,7 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
 
     private Annotation[] methodAnnotations;
     private String[] argumentNames;
-    private Map<String, Annotation[]> arguAnnotationsMap=new HashMap<>();
+    private Map<String, Annotation[]> arguAnnotationsMap = new HashMap<>();
     private Map<String, GraphQLArgument> arguGraphQLArguments = new HashMap<>();
 
     private MutationValidator mutationValidator;
@@ -66,21 +66,24 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
             isCollectionReturnValue = true;
         }
         this.entityType = this.graphQlTypeMapper.getEntityType((Class) type);
-        this.graphQLOutputType = !isCollectionReturnValue ?graphQlTypeMapper.getGraphQLOutputType(type):
-                entityType!=null?new GraphQLTypeReference(graphQlTypeMapper.getGraphQLTypeNameOfEntityList(this.entityType)): new GraphQLList(graphQlTypeMapper.getGraphQLOutputType(type));
+        this.graphQLOutputType = !isCollectionReturnValue ? graphQlTypeMapper.getGraphQLOutputType(type) :
+                entityType != null ? new GraphQLTypeReference(graphQlTypeMapper.getGraphQLTypeNameOfEntityList(this.entityType)) : new GraphQLList(graphQlTypeMapper.getGraphQLOutputType(type));
 
         this.argumentNames = Arrays.stream(properMethod.getParameters())
                 .map(parameter ->
                         {
-                            String val = parameter.getAnnotation(RequestParam.class).value();
-                            return StringUtils.hasText(val) ? val : parameter.getAnnotation(RequestParam.class).name();
+                            RequestParam rp = parameter.getAnnotation(RequestParam.class);
+                            if (rp == null) {
+                                throw new RuntimeException("这方法的某参数为提供RequestParam注解!");
+                            }
+                            return StringUtils.hasText(rp.value()) ? rp.value() : rp.name();
                         }
                 ).collect(Collectors.toList()).toArray(new String[]{});
 
 
-        Map<RequestParam, Parameter> map =new HashMap<>();
+        Map<RequestParam, Parameter> map = new HashMap<>();
         Arrays.stream(properMethod.getParameters())
-                .forEach(parameter ->map.put(parameter.getAnnotation(RequestParam.class), parameter));
+                .forEach(parameter -> map.put(parameter.getAnnotation(RequestParam.class), parameter));
         Annotation[][] annotations = properMethod.getParameterAnnotations();
         for (int i = 0; i < argumentNames.length; i++) {
             this.arguAnnotationsMap.put(argumentNames[i], annotations[i]);
@@ -90,7 +93,7 @@ public class DefaultMutationMetaInfo implements MutationMetaInfo {
         {
             RequestParam rp = entry.getKey();
             Parameter parameter = entry.getValue();
-            String typeName = StringUtils.hasText(rp.value())?rp.value():rp.name();
+            String typeName = StringUtils.hasText(rp.value()) ? rp.value() : rp.name();
             boolean required = rp.required();
             boolean isCollection = false;
             Class typeClazz = parameter.getType();
