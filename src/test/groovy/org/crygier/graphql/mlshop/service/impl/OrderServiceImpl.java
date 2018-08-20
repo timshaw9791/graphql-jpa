@@ -6,6 +6,8 @@ import org.crygier.graphql.mlshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Curtain
  * @date 2018/7/31 16:15
@@ -19,6 +21,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order update(Order order) {
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> findByUpdateTime(Long startTime, Long endTIme) {
+        return orderRepository.findByUpdatetimeBetween(startTime,endTIme);
     }
 
     @Override

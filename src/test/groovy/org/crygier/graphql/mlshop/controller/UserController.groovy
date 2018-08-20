@@ -37,7 +37,6 @@ class UserController {
         userService.modifyPassword(password, id);
         return "成功";
     }
-
     @SchemaDocumentation("修改手机号")
     @GRequestMapping(path = "/modifyphone", method = RequestMethod.POST)
     String modifyPhone(@RequestParam(name = "pbone", required = true) String phone,

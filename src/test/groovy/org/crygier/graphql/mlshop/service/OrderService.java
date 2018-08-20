@@ -2,6 +2,8 @@ package org.crygier.graphql.mlshop.service;
 
 import org.crygier.graphql.mlshop.model.Order;
 
+import java.util.List;
+
 /**
  * @author Curtain
  * @date 2018/7/31 16:06
@@ -28,5 +30,13 @@ public interface OrderService {
      * @return
      */
     Order findOne(String id);
+
+    /**
+     * 通过时间段查找订单
+     * @param startTime
+     * @param endTIme
+     * @return
+     */
+    List<Order> findByUpdateTime(Long startTime,Long endTIme);
 
 }

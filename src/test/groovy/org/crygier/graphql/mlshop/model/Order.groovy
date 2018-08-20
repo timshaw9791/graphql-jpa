@@ -5,6 +5,7 @@ import cn.wzvtcsoft.x.bos.domain.Bostype
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.model.enums.OrderAllocateStatusEnum
+import org.crygier.graphql.mlshop.model.enums.OrderPayStatusEnum
 import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum
 import org.crygier.graphql.mlshop.model.enums.OrderTypeEnum
 
@@ -29,6 +30,9 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("订单类别")
     OrderTypeEnum orderTypeEnum;
+
+    @SchemaDocumentation("支付状态")
+    OrderPayStatusEnum payStatusEnum;
 
     @SchemaDocumentation("门店")
     @ManyToOne

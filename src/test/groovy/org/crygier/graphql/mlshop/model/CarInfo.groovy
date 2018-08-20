@@ -22,6 +22,9 @@ import javax.persistence.PreUpdate
 @Bostype("A11")
 class CarInfo extends BosEntity {
 
+    @SchemaDocumentation("车辆信息状态 是否完善")
+    boolean  perfectState = false;
+
     @SchemaDocumentation("品牌")
     String brand;
 

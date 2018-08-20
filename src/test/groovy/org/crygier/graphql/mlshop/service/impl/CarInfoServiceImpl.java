@@ -6,6 +6,8 @@ import org.crygier.graphql.mlshop.service.CarInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Curtain
  * @date 2018/7/30 18:25
@@ -35,7 +37,15 @@ public class CarInfoServiceImpl implements CarInfoService {
             }
         }
 
+        //表示已完善车辆信息
+        carInfo.setPerfectState(true);
+
         return carInfoRepository.save(carInfo);
+    }
+
+    @Override
+    public List<CarInfo> findByUpdateTime(Long startTime, Long endTime) {
+        return carInfoRepository.findByUpdatetimeBetween(startTime,endTime);
     }
 
     @Override

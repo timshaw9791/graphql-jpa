@@ -1,7 +1,8 @@
 package org.crygier.graphql.mlshop.service;
 
-import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CarInfo;
+
+import java.util.List;
 
 /**
  * @author Curtain
@@ -31,5 +32,13 @@ public interface CarInfoService {
     CarInfo findOne(String id);
 
     void deleteById(String id);
+
+    /**
+     * 通过时间查询
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<CarInfo> findByUpdateTime(Long startTime,Long endTime);
 
 }
