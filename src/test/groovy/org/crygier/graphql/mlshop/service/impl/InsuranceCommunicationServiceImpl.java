@@ -9,6 +9,7 @@ import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository;
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService;
+import org.crygier.graphql.mlshop.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,9 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private VerificationService verificationService;
 
 
     @Override
@@ -71,7 +75,9 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
         insuranceCommunication.setSalesman(salesman);
         insuranceCommunication.setDistributeTime(System.currentTimeMillis());
-        return insuranceCommunicationRepository.save(insuranceCommunication);
+        InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
+        verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());
+        return result;
     }
 
     @Override
