@@ -12,6 +12,7 @@ import org.crygier.graphql.mlshop.service.CarCommunicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,6 +35,11 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         carCommunication.getCommunicationItems().add(communicationRecord);
         carCommunication.setStatus(communicationRecord.getStatus());
         return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
+    public void saveAll(Collection collection) {
+        carCommunicationRepository.saveAll(collection);
     }
 
     @Override

@@ -1,5 +1,10 @@
 package org.crygier.graphql.mlshop.util;
 
+/**
+ * @author Curtain
+ * @date 2018/8/2 10:59
+ */
+
 public class NumberUtil {
 
     public static String getNumber(){
