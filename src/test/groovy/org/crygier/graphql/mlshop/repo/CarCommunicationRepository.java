@@ -6,6 +6,8 @@ import org.crygier.graphql.mlshop.model.enums.CarCommunicationTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Curtain
  * @date 2018/7/26 9:34
@@ -17,5 +19,5 @@ public interface CarCommunicationRepository extends JpaRepository<CarCommunicati
 
     Long countByUpdatetimeBetweenAndStatus(Long startTime, Long endTime,CarCommunicationStatusEnum status);
 
-
+    List<CarCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime,CarCommunicationStatusEnum status);
 }

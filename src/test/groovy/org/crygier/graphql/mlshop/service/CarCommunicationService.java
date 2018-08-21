@@ -4,7 +4,9 @@ import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
 import org.crygier.graphql.mlshop.model.Salesman;
-import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
+
+import java.util.List;
 
 /**
  * @author Curtain
@@ -50,5 +52,14 @@ public interface CarCommunicationService {
      * @return
      */
     CarCommunication deleteById(CarCommunication carCommunication);
+
+    /**
+     *
+     * @param distributeTime
+     * @param status
+     * @return
+     */
+    List<CarCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime,CarCommunicationStatusEnum status);
+
 
 }

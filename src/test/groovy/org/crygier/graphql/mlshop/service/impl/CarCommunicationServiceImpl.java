@@ -1,10 +1,10 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
 import org.crygier.graphql.mlshop.model.Salesman;
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
@@ -12,8 +12,7 @@ import org.crygier.graphql.mlshop.service.CarCommunicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Curtain
@@ -35,6 +34,11 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         carCommunication.getCommunicationItems().add(communicationRecord);
         carCommunication.setStatus(communicationRecord.getStatus());
         return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
+    public List<CarCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime, CarCommunicationStatusEnum status) {
+        return carCommunicationRepository.findByDistributeTimeBeforeAndStatus(distributeTime,status);
     }
 
     @Override

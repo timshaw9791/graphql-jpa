@@ -89,7 +89,9 @@ public class StatisticServiceImpl implements StatisticService {
             if (OrderStatusEnum.FINISH.equals(order.getOrderStatusEnum())) {
                 finishOrder++;
                 //销售额
-                sellTotal += ((PayScheme) order.getPaySchemes().toArray()[0]).getPrice();
+                if (order.getPaySchemes().size() > 0) {
+                    sellTotal += ((PayScheme) order.getPaySchemes().toArray()[0]).getPrice();
+                }
             }
 
             //待分配订单
@@ -160,7 +162,7 @@ public class StatisticServiceImpl implements StatisticService {
         ArrayList<Long> orderCountList = new ArrayList<>();
         ArrayList<Long> orderAmountList = new ArrayList<>();
         ArrayList<Long> customerCountList = new ArrayList<>();
-        Map<String,ArrayList<Long>> map = new HashMap<>();
+        Map<String, ArrayList<Long>> map = new HashMap<>();
 
 
         //设定初始结束时间
@@ -177,11 +179,11 @@ public class StatisticServiceImpl implements StatisticService {
             //统计销售数量
 
             for (Order order : orderList) {
-                if (order.getCount()!=null){
+                if (order.getCount() != null) {
                     carSaleCount = order.getCount() + carSaleCount;
                 }
                 orderCount++;
-                if (order.getPaySchemes().size()>0){
+                if (order.getPaySchemes().size() > 0) {
                     orderAmount += ((PayScheme) order.getPaySchemes().toArray()[0]).getPrice();
                 }
 
@@ -197,10 +199,10 @@ public class StatisticServiceImpl implements StatisticService {
             endTime += 86400000;
         }
 
-        map.put("carSaleList",carSaleList);
-        map.put("orderCountList",orderCountList);
-        map.put("orderAmountList",orderAmountList);
-        map.put("customerCountList",customerCountList);
+        map.put("carSaleList", carSaleList);
+        map.put("orderCountList", orderCountList);
+        map.put("orderAmountList", orderAmountList);
+        map.put("customerCountList", customerCountList);
 
         result.add(map);
 
