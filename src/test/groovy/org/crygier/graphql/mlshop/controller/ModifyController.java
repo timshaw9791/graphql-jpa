@@ -1,6 +1,5 @@
 package org.crygier.graphql.mlshop.controller;
 
-import groovy.transform.CompileStatic;
 import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation;
@@ -36,6 +35,9 @@ public class ModifyController {
 
     @Autowired
     private InsuranceCommunicationService insuranceCommunicationService;
+
+    @Autowired
+    private StatisticService statisticService;
 
     @RequestMapping(value = "/updatecarinfo")
     public Object updateCarInfo(@RequestBody CarInfo carInfo) {
@@ -77,6 +79,11 @@ public class ModifyController {
     @RequestMapping("/insurancecommunicationallocate")
     public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
         return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
+    }
+
+    @RequestMapping("/statistic")
+    public Object statistic(@RequestParam("starttime") Long startTime,@RequestParam("endtime") Long endTime){
+        return statisticService.allStatistic(startTime,endTime);
     }
 
     @RequestMapping("/addorder")
