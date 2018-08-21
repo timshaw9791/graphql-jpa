@@ -12,7 +12,6 @@ import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService
 import org.crygier.graphql.mlshop.service.InsuranceService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -91,7 +90,7 @@ class InsuranceController {
 
     @SchemaDocumentation("添加回访记录")
     @GRequestMapping("/addinsurancecommunicationrecord")
-    public InsuranceCommunication updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
+    public InsuranceCommunication updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("record") CommunicationRecord communicationRecord) {
         return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
     }
 

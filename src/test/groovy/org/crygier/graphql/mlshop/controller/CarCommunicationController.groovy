@@ -10,7 +10,6 @@ import org.crygier.graphql.mlshop.model.CommunicationRecord
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.service.CarCommunicationService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -62,7 +61,7 @@ public class CarCommunicationController {
 
     @SchemaDocumentation("买车接待  分配")
     @GRequestMapping("/carcommunicationallocate")
-    public CarCommunication carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
+    public CarCommunication carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestParam("salesman") Salesman salesman){
         return this.carCommunicationService.allocate(carCommunicationId,salesman);
     }
 
