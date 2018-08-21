@@ -5,12 +5,14 @@ import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.anntations.Exclude
+import org.crygier.graphql.mlshop.model.CommunicationRecord
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
 import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService
 import org.crygier.graphql.mlshop.service.InsuranceService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -71,11 +73,6 @@ class InsuranceController {
         return this.insuranceCommunicationService.save(insuranceCommunication);
     }
 
-//    @SchemaDocumentation("分配保险回访")
-//    @GRequestMapping(path = "/allocateinsurancecommunication",method = RequestMethod.POST)
-//    InsuranceCommunication allocateInsuranceCommunication(
-//            @RequestParam()
-//    )
 
     @SchemaDocumentation("删除保险回访记录")
     @Exclude
@@ -91,4 +88,12 @@ class InsuranceController {
     public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
         return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
     }
+
+    @SchemaDocumentation("添加回访记录")
+    @GRequestMapping("/addinsurancecommunicationrecord")
+    public Object updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
+        return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
+    }
+
+
 }

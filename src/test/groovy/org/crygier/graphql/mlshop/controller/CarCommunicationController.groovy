@@ -1,18 +1,19 @@
-package org.crygier.graphql.mlshop.controller;
+package org.crygier.graphql.mlshop.controller
 
 import groovy.transform.CompileStatic
-import org.crygier.graphql.annotation.GRequestMapping;
-import org.crygier.graphql.annotation.GRestController;
+import org.crygier.graphql.annotation.GRequestMapping
+import org.crygier.graphql.annotation.GRestController
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.CarCommunication
 import org.crygier.graphql.mlshop.model.CommunicationRecord
+import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.service.CarCommunicationService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 /**
  * @author Curtain
  * @date 2018/7/28 10:49
@@ -26,7 +27,7 @@ public class CarCommunicationController {
     @Autowired
     private CarCommunicationService carCommunicationService;
 
-    @SchemaDocumentation("修改买车沟通信息")
+    @SchemaDocumentation("添加买车沟通记录（回访）")
     @GRequestMapping(path = "/addcarcommunicationrecord", method = RequestMethod.POST)
     CarCommunication updatecarCommunication(
             @RequestParam(name = "communicationrecord", required = true) CommunicationRecord communicationRecord,
@@ -35,7 +36,7 @@ public class CarCommunicationController {
     }
 
 
-    @SchemaDocumentation("增加买车沟通信息")
+    @SchemaDocumentation("增加买车沟通信息表单")
     @GRequestMapping(path = "/addcarcommunication", method = RequestMethod.POST)
     CarCommunication addcarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
@@ -56,6 +57,13 @@ public class CarCommunicationController {
     CarCommunication removecarCommunication(
             @RequestParam(name = "carcommunication", required = true) CarCommunication carCommunication) {
         return this.carCommunicationService.deleteById(carCommunication);
+    }
+
+
+    @SchemaDocumentation("买车接待  分配")
+    @GRequestMapping("/carcommunicationallocate")
+    public Object carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
+        return this.carCommunicationService.allocate(carCommunicationId,salesman);
     }
 
 }
