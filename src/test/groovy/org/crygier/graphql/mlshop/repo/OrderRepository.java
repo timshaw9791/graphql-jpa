@@ -12,10 +12,10 @@ import java.util.List;
  */
 public interface OrderRepository extends JpaRepository<Order,String> {
 
-    List<Order> findByUpdatetimeBetween(Long startTime, Long endTime);
+    List<Order> findByCreatetimeBetween(Long startTime, Long endTime);
 
-    Long countByUpdatetimeBetweenAndOrderStatusEnum(Long startTime, Long endTime,OrderStatusEnum orderStatusEnum);
+    Long countByCreatetimeBetweenAndOrderStatusEnum(Long startTime, Long endTime, OrderStatusEnum orderStatusEnum);
 
-    Long countByUpdatetimeBetween(Long startTime, Long endTime);
+    Long countByCreatetimeBetween(Long startTime, Long endTime);
 
 }

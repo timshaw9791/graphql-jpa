@@ -37,6 +37,9 @@ public class ModifyController {
     @Autowired
     private InsuranceCommunicationService insuranceCommunicationService;
 
+    @Autowired
+    private StatisticService statisticService;
+
     @RequestMapping(value = "/updatecarinfo")
     public Object updateCarInfo(@RequestBody CarInfo carInfo) {
         return carService.update(carInfo);
@@ -62,9 +65,8 @@ public class ModifyController {
         return this.insuranceCommunicationService.save(insuranceCommunication);
     }
 
-    @SchemaDocumentation("业务员在对保险单进行回访后添加回访记录")
-    @GRequestMapping("/addcommunicationRecord")
-    public InsuranceCommunication addcommunicationRecord(@RequestParam("communicationid") String insuranceCommunicationId, @RequestParam("record")  CommunicationRecord communicationRecord) {
+    @RequestMapping("/updateinsurancecommunication")
+    public Object updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
         return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
     }
 
@@ -73,8 +75,13 @@ public class ModifyController {
         return this.carCommunicationService.allocate(carCommunicationId,salesman);
     }
 
+    @RequestMapping("/statistic")
+    public Object statistic(@RequestParam("starttime") Long startTime,@RequestParam("endtime") Long endTime){
+        return statisticService.allStatistic(startTime,endTime);
+    }
+
     @SchemaDocumentation("为保险回访单分配回访人员（业务员），以便进行回访")
-    @GRequestMapping(path = "/insurancecommunicationallocate")
+    @GRequestMapping(path = "/insurancecommunicationallocate", method = RequestMethod.POST)
     @RequestMapping("/insurancecommunicationallocate")
     public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
         return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);

@@ -1,14 +1,20 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import org.crygier.graphql.mlshop.model.*;
+import org.crygier.graphql.mlshop.model.CommunicationRecord;
+import org.crygier.graphql.mlshop.model.Customer;
+import org.crygier.graphql.mlshop.model.InsuranceCommunication;
+import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.repo.InsuranceCommunicationRepository;
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService;
+import org.crygier.graphql.mlshop.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Curtain
@@ -22,6 +28,9 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private VerificationService verificationService;
 
 
     @Override
@@ -41,6 +50,16 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     }
 
     @Override
+    public void saveAll(Collection collection) {
+        insuranceCommunicationRepository.saveAll(collection);
+    }
+
+    @Override
+    public List<InsuranceCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime, CarCommunicationStatusEnum status) {
+        return insuranceCommunicationRepository.findByDistributeTimeBeforeAndStatus(distributeTime,status);
+    }
+
+    @Override
     public void deleteById(InsuranceCommunication insuranceCommunication) {
         insuranceCommunication.setDisabled(true);
         insuranceCommunicationRepository.save(insuranceCommunication);
@@ -56,7 +75,9 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
         insuranceCommunication.setSalesman(salesman);
         insuranceCommunication.setDistributeTime(System.currentTimeMillis());
-        return insuranceCommunicationRepository.save(insuranceCommunication);
+        InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
+        verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());
+        return result;
     }
 
     @Override

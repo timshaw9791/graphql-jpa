@@ -7,13 +7,13 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.Insurance
 import org.crygier.graphql.mlshop.model.InsuranceCommunication
+import org.crygier.graphql.mlshop.model.Salesman
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService
 import org.crygier.graphql.mlshop.service.InsuranceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-
 /**
  * @author Curtain
  * @date 2018/7/28 10:53
@@ -84,5 +84,11 @@ class InsuranceController {
             @RequestParam(name = "insurancecommunication", required = true) InsuranceCommunication insuranceCommunication) {
         this.insuranceCommunicationService.deleteById(insuranceCommunication);
         return insuranceCommunication;
+    }
+
+    @SchemaDocumentation("为保险回访单分配回访人员（业务员），以便进行回访")
+    @GRequestMapping(path = "/insurancecommunicationallocate", method = RequestMethod.POST)
+    public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
+        return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
     }
 }

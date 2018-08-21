@@ -57,4 +57,7 @@ public class PayScheme extends Entry{
 
     @SchemaDocumentation("业务员提成")
     String salesmanExtract;
+
+    @SchemaDocumentation("手续费  单位：分")
+    Long serviceCharge;
 }

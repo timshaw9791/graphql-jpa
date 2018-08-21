@@ -15,4 +15,11 @@ public interface VerificationService {
      * @param number
      */
     String verify(String code, String number,Integer type);
+
+    /**
+     * 回访短信提示
+     * @param code
+     * @return
+     */
+    void visitCode(String phone,String code);
 }

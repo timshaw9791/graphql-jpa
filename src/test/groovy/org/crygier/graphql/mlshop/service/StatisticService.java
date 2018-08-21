@@ -44,4 +44,11 @@ public interface StatisticService {
      * @return
      */
     List<Object> allStatistic(Long startTime,Long endTime);
+
+    /**
+     * 图表统计
+     * @param startTime
+     * @return
+     */
+    List<Object> chartStatistic(Long startTime);
 }

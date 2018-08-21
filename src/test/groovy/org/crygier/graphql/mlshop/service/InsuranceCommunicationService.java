@@ -1,6 +1,10 @@
 package org.crygier.graphql.mlshop.service;
 
 import org.crygier.graphql.mlshop.model.*;
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Curtain
@@ -52,5 +56,19 @@ public interface InsuranceCommunicationService {
      * @param insuranceCommunication
      */
     void deleteById(InsuranceCommunication insuranceCommunication);
+
+    /**
+     * 按分配时间前和回访状态查询
+     * @param distributeTime
+     * @param status
+     * @return
+     */
+    List<InsuranceCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime, CarCommunicationStatusEnum status);
+
+    /**
+     * 保存全部
+     * @param collection
+     */
+    void saveAll(Collection collection);
 
 }

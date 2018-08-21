@@ -30,6 +30,7 @@ public class VerificationServiceImpl implements VerificationService {
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("phoneNumber", number);
         paramMap.put("jsonContent", jsonContent);
+        paramMap.put("templateCode","SMS_141765077");
         SendSmsResponse sendSmsResponse = null;
         try {
             sendSmsResponse = AliyunMessageUtil.sendSms(paramMap);
@@ -57,6 +58,24 @@ public class VerificationServiceImpl implements VerificationService {
         }
         redisTemplate.opsForValue().set(number, randomNum);
         return randomNum;
+    }
+
+    @Override
+    public void visitCode(String phone, String code) {
+        String jsonContent = "{\"code\":\"" + code + "\"}";
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("phoneNumber", phone);
+        paramMap.put("jsonContent", jsonContent);
+        paramMap.put("templateCode","SMS_142384656");
+        SendSmsResponse sendSmsResponse = null;
+        try {
+            sendSmsResponse = AliyunMessageUtil.sendSms(paramMap);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        if (!(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK"))) {
+            throw new RuntimeException("Get verify code fail.");
+        }
     }
 
     @Override

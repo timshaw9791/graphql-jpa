@@ -1,19 +1,20 @@
 package org.crygier.graphql.mlshop.service.impl;
 
-import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import org.crygier.graphql.mlshop.model.CarCommunication;
 import org.crygier.graphql.mlshop.model.CommunicationRecord;
 import org.crygier.graphql.mlshop.model.Customer;
 import org.crygier.graphql.mlshop.model.Salesman;
+import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.service.CarCommunicationService;
+import org.crygier.graphql.mlshop.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Curtain
@@ -29,12 +30,25 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     @Autowired
     private CarCommunicationRepository carCommunicationRepository;
 
+    @Autowired
+    private VerificationService verificationService;
+
     @Override
     public CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord) {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.getCommunicationItems().add(communicationRecord);
         carCommunication.setStatus(communicationRecord.getStatus());
         return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
+    public void saveAll(Collection collection) {
+        carCommunicationRepository.saveAll(collection);
+    }
+
+    @Override
+    public List<CarCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime, CarCommunicationStatusEnum status) {
+        return carCommunicationRepository.findByDistributeTimeBeforeAndStatus(distributeTime,status);
     }
 
     @Override
@@ -48,7 +62,9 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.setSalesman(salesman);
         carCommunication.setDistributeTime(System.currentTimeMillis());
-        return carCommunicationRepository.save(carCommunication);
+        verificationService.visitCode(salesman.getTel(),carCommunication.getNumber());
+        CarCommunication result = carCommunicationRepository.save(carCommunication);
+        return result;
     }
 
     @Override

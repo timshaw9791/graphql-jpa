@@ -7,6 +7,11 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse
 import com.aliyuncs.profile.DefaultProfile
 import com.aliyuncs.profile.IClientProfile
 
+/**
+ * @author Curtain
+ * @date 2018/8/10 14:23
+ */
+
 public class AliyunMessageUtil {
 
     private static final String product = "Dysmsapi";
@@ -33,9 +38,9 @@ public class AliyunMessageUtil {
 
         request.setPhoneNumbers(paramMap.get("phoneNumber"));
         //必填:短信签名-可在短信控制台中找到
-        request.setSignName("阿里云短信测试专用");
+        request.setSignName("猛龙商城");
         //必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode("SMS_141765077");
+        request.setTemplateCode(paramMap.get("templateCode"));
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         request.setTemplateParam(paramMap.get("jsonContent"));
 
