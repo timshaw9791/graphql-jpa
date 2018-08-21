@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByUpdateTime(Long startTime, Long endTIme) {
-        return orderRepository.findByUpdatetimeBetween(startTime,endTIme);
+        return orderRepository.findByCreatetimeBetween(startTime,endTIme);
     }
 
     @Override

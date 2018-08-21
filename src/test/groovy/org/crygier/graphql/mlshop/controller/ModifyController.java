@@ -1,6 +1,5 @@
 package org.crygier.graphql.mlshop.controller;
 
-import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.crygier.graphql.mlshop.model.*;
@@ -72,13 +71,6 @@ public class ModifyController {
     @RequestMapping("/carcommunicationallocate")
     public Object carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
         return this.carCommunicationService.allocate(carCommunicationId,salesman);
-    }
-
-    @SchemaDocumentation("为保险回访单分配回访人员（业务员），以便进行回访")
-    @GRequestMapping(path = "/insurancecommunicationallocate", method = RequestMethod.POST)
-    @RequestMapping("/insurancecommunicationallocate")
-    public InsuranceCommunication insuranceCommunicationAllocate(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestParam("salesman") Salesman salesman){
-        return this.insuranceCommunicationService.allocate(insuranceCommunicationId,salesman);
     }
 
     @RequestMapping("/statistic")

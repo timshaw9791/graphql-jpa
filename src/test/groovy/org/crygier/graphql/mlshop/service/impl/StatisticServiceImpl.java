@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Curtain
@@ -74,7 +76,7 @@ public class StatisticServiceImpl implements StatisticService {
         Long orderTotal = 0L;
 
 
-        List<Order> orderList = orderRepository.findByUpdatetimeBetween(startTime, endTime);
+        List<Order> orderList = orderRepository.findByCreatetimeBetween(startTime, endTime);
 
         for (Order order : orderList) {
             //新订单
@@ -149,13 +151,71 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
+    public List<Object> chartStatistic(Long startTime) {
+
+        //初始化结果集
+        List<Object> result = new ArrayList<>();
+
+        ArrayList<Long> carSaleList = new ArrayList<>();
+        ArrayList<Long> orderCountList = new ArrayList<>();
+        ArrayList<Long> orderAmountList = new ArrayList<>();
+        ArrayList<Long> customerCountList = new ArrayList<>();
+        Map<String,ArrayList<Long>> map = new HashMap<>();
+
+
+        //设定初始结束时间
+        Long endTime = startTime + 86400000;
+
+        //统计 30天内 每天的数据
+        for (int i = 0; i < 30; i++) {
+            Long carSaleCount = 0L;
+            Long orderCount = 0L;
+            Long orderAmount = 0L;
+            Long customerCount = 0L;
+            List<Order> orderList = orderRepository.findByCreatetimeBetween(startTime, endTime);
+
+            //统计销售数量
+
+            for (Order order : orderList) {
+                if (order.getCount()!=null){
+                    carSaleCount = order.getCount() + carSaleCount;
+                }
+                orderCount++;
+                if (order.getPaySchemes().size()>0){
+                    orderAmount += ((PayScheme) order.getPaySchemes().toArray()[0]).getPrice();
+                }
+
+            }
+
+
+            carSaleList.add(carSaleCount);
+            orderCountList.add(orderCount);
+            orderAmountList.add(orderAmount);
+            customerCountList.add(carSaleCount);
+
+            startTime = endTime;
+            endTime += 86400000;
+        }
+
+        map.put("carSaleList",carSaleList);
+        map.put("orderCountList",orderCountList);
+        map.put("orderAmountList",orderAmountList);
+        map.put("customerCountList",customerCountList);
+
+        result.add(map);
+
+        return result;
+    }
+
+    @Override
     public List<Object> allStatistic(Long startTime, Long endTime) {
 
         List<Object> list = new ArrayList<>();
 
-        list.add(orderStatistic(startTime,endTime));
-        list.add(carStatistic(startTime,endTime));
-        list.add(receiveStatistic(startTime,endTime));
+        list.add(orderStatistic(startTime, endTime));
+        list.add(carStatistic(startTime, endTime));
+        list.add(receiveStatistic(startTime, endTime));
+        list.add(chartStatistic(startTime));
 
         return list;
     }
@@ -202,19 +262,19 @@ public class StatisticServiceImpl implements StatisticService {
 
         salesManTotal = salesmanRepository.count();
 
-        visitCustomerTotal = carCommunicationRepository.countByUpdatetimeBetweenAndType(0L,4099651200000L, CarCommunicationTypeEnum.A);
+        visitCustomerTotal = carCommunicationRepository.countByUpdatetimeBetweenAndType(0L, 4099651200000L, CarCommunicationTypeEnum.A);
 
-        replyCustomerTotal = carCommunicationRepository.countByUpdatetimeBetweenAndType(0L,4099651200000L, CarCommunicationTypeEnum.B);
+        replyCustomerTotal = carCommunicationRepository.countByUpdatetimeBetweenAndType(0L, 4099651200000L, CarCommunicationTypeEnum.B);
 
-        waitReplyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime,endTime, CarCommunicationStatusEnum.B);
+        waitReplyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime, endTime, CarCommunicationStatusEnum.B);
 
-        waitAllocateCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime,endTime,CarCommunicationStatusEnum.A);
+        waitAllocateCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime, endTime, CarCommunicationStatusEnum.A);
 
-        replyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndType(startTime,endTime, CarCommunicationTypeEnum.B);
+        replyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndType(startTime, endTime, CarCommunicationTypeEnum.B);
 
-        orderCustomer = orderRepository.countByUpdatetimeBetween(startTime,endTime);
+        orderCustomer = orderRepository.countByCreatetimeBetween(startTime, endTime);
 
-        dealCustomer = orderRepository.countByUpdatetimeBetweenAndOrderStatusEnum(startTime,endTime,OrderStatusEnum.FINISH);
+        dealCustomer = orderRepository.countByCreatetimeBetweenAndOrderStatusEnum(startTime, endTime, OrderStatusEnum.FINISH);
 
         shopTotal = shopRepository.count();
 

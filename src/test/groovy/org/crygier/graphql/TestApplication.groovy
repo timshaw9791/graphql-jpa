@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @Configuration
 @EnableAutoConfiguration
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableJpaRepositories(repositoryBaseClass = BosJpaRepositoryImpl.class)
+@EnableScheduling
 class TestApplication {
 
     public static void main(String[] args) {
