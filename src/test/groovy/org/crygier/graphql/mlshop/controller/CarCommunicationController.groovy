@@ -62,7 +62,7 @@ public class CarCommunicationController {
 
     @SchemaDocumentation("买车接待  分配")
     @GRequestMapping("/carcommunicationallocate")
-    public Object carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
+    public CarCommunication carCommunicationAllocate(@RequestParam("carcommunicationid") String carCommunicationId,@RequestBody Salesman salesman){
         return this.carCommunicationService.allocate(carCommunicationId,salesman);
     }
 

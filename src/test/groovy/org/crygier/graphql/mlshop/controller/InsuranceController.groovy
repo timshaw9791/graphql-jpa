@@ -91,7 +91,7 @@ class InsuranceController {
 
     @SchemaDocumentation("添加回访记录")
     @GRequestMapping("/addinsurancecommunicationrecord")
-    public Object updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
+    public InsuranceCommunication updateInsuranceCommunication(@RequestParam("insurancecommunicationid") String insuranceCommunicationId, @RequestBody CommunicationRecord communicationRecord) {
         return this.insuranceCommunicationService.addRecord(insuranceCommunicationId, communicationRecord);
     }
 
