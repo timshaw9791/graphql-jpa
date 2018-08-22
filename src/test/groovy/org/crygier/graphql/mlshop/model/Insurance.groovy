@@ -67,4 +67,7 @@ public class Insurance extends BosEntity{
     @SchemaDocumentation("客户微信昵称")
     String weixinnick;
 
+    @SchemaDocumentation("客户地址")
+    String customerAddress;
+
 }

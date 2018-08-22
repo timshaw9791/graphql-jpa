@@ -2,10 +2,9 @@ package org.crygier.graphql;
 
 import cn.wzvtcsoft.x.bos.domain.BosEnum;
 import graphql.language.*;
-import graphql.language.Selection;
 import graphql.schema.*;
-import org.springframework.beans.*;
-import org.springframework.lang.Nullable;
+import org.springframework.beans.ConfigurablePropertyAccessor;
+import org.springframework.beans.PropertyAccessorFactory;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -18,9 +17,6 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.springframework.util.ReflectionUtils.findField;
-import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 public class JpaDataFetcher implements DataFetcher {
 
@@ -46,9 +42,9 @@ public class JpaDataFetcher implements DataFetcher {
            throw new InputErrorException(map);
        }
 */
-        QueryFilter queryFilter=extractQueryFilter(environment,environment.getFields().iterator().next());
+        QueryFilter queryFilter = extractQueryFilter(environment, environment.getFields().iterator().next());
 
-        Object result = this.getResult(environment,queryFilter);
+        Object result = this.getResult(environment, queryFilter);
         //throw new CustomRuntimeException();
         //TODO 检查权限
         //checkPermission();
@@ -60,14 +56,15 @@ public class JpaDataFetcher implements DataFetcher {
         return null;
     }
 
-    public Object getResult(DataFetchingEnvironment environment,QueryFilter filter) {
-        TypedQuery typedQuery = getQuery(environment, environment.getFields().iterator().next(), filter, QueryForWhatEnum.NORMAL,null);
+    public Object getResult(DataFetchingEnvironment environment, QueryFilter filter) {
+        TypedQuery typedQuery = getQuery(environment, environment.getFields().iterator().next(), filter, QueryForWhatEnum.NORMAL, null);
         Object result = typedQuery.getResultList().stream().findFirst().orElse(null);
         return result;
     }
 
     /**
      * 遍历选中的字段集合，把entityGraph准备好
+     *
      * @param cb
      * @param root
      * @param selectionSet
@@ -90,7 +87,7 @@ public class JpaDataFetcher implements DataFetcher {
                         // Process the orderBy clause
                         // TODO 排序如果出现在第二层会有一些问题，似乎没法影响到，似乎在指明one2many下分录的排序规则时，会碰到问题，可能跟entry以set形式出现有关系。many2one应该不会。
 
-                        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID!=queryForWhat) {
+                        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID != queryForWhat) {
                             Optional<Argument> orderByArgument = selectedField.getArguments().stream().filter(it -> OrderByDirection.ORDER_BY.equals(it.getName())).findFirst();
                             if (orderByArgument.isPresent()) {
                                 if (OrderByDirection.DESC.getValue().equals(((EnumValue) orderByArgument.get().getValue()).getName())) {
@@ -104,13 +101,13 @@ public class JpaDataFetcher implements DataFetcher {
                         // Process arguments clauses
                         arguments.addAll(selectedField.getArguments().stream()
                                 .filter(it -> !OrderByDirection.ORDER_BY.equals(it.getName()))
-                                . filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
+                                .filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
                                 .map(it -> new Argument(selectedFieldName + "." + it.getName(), it.getValue()))
                                 .collect(Collectors.toList()));
 
                         Path root2 = joinIfNecessary((From) root, selectedFieldName);
                         Subgraph subgraph2 = null;
-                        if (root2 != root && (QueryForWhatEnum.NORMAL==queryForWhat)) {
+                        if (root2 != root && (QueryForWhatEnum.NORMAL == queryForWhat)) {
                             if (entityGraph != null) {
                                 subgraph2 = entityGraph.addSubgraph(selectedField.getName());
                             } else {
@@ -130,17 +127,17 @@ public class JpaDataFetcher implements DataFetcher {
 
     /**
      * @param environment
-     * @param field              -选择内容
-     * @param queryFilter        - 过滤条件
+     * @param field        -选择内容
+     * @param queryFilter  - 过滤条件
      * @param queryforWhat - 是否仅仅为了查询符合条件的对象个数。如果有collection的join，则抛弃掉不管。
-     * @param paginator -当   justforselectcount为false时，这个paginator可以起分页的作用，同样，分页对collection的join无效
+     * @param paginator    -当   justforselectcount为false时，这个paginator可以起分页的作用，同样，分页对collection的join无效
      * @return
      */
     protected TypedQuery getQuery(DataFetchingEnvironment environment, Field field, QueryFilter queryFilter, QueryForWhatEnum queryforWhat, Paginator paginator) {
 
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery query = (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID == queryforWhat) ? cb.createQuery(Long.class) : (QueryForWhatEnum.JUSTFORIDSINTHEPAGE == queryforWhat) ? cb.createQuery(): cb.createQuery((Class) entityType.getJavaType());
+        CriteriaQuery query = (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID == queryforWhat) ? cb.createQuery(Long.class) : (QueryForWhatEnum.JUSTFORIDSINTHEPAGE == queryforWhat) ? cb.createQuery() : cb.createQuery((Class) entityType.getJavaType());
         Root root = query.from(entityType);
 
         SelectionSet selectionSet = field.getSelectionSet();
@@ -151,7 +148,7 @@ public class JpaDataFetcher implements DataFetcher {
 
         // Loop through all of the fields being requested
         //迭代的形式以便组成一条语句
-        travelFieldSelection(cb, root, selectionSet, arguments, orders, graph, null,queryforWhat);
+        travelFieldSelection(cb, root, selectionSet, arguments, orders, graph, null, queryforWhat);
 
         Predicate predicatebyfilter = getPredicate(cb, root, environment, queryFilter);
         if (predicatebyfilter != null) {
@@ -162,40 +159,40 @@ public class JpaDataFetcher implements DataFetcher {
         arguments.addAll(field.getArguments());
         final Root roottemp = root;
         predicates.addAll(arguments.stream()
-                . filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
+                .filter(it -> "id".equals(it.getName()) || "number".equals(it.getName()))
                 .map(it -> getPredicate(cb, roottemp, environment, it)).collect(Collectors.toList()));
 
-        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID==queryforWhat) {
+        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID == queryforWhat) {
             SingularAttribute idAttribute = entityType.getId(Object.class);
             query.select(cb.countDistinct(root.get(idAttribute.getName())));
-        }else if(QueryForWhatEnum.JUSTFORIDSINTHEPAGE==queryforWhat){
-           // SingularAttribute idAttribute = entityType.getId(Object.class);
-           query.select(root.get("id").alias("id"));//pathSet.stream().map(path->root.get(path)).collect(Collectors.toList()));
+        } else if (QueryForWhatEnum.JUSTFORIDSINTHEPAGE == queryforWhat) {
+            // SingularAttribute idAttribute = entityType.getId(Object.class);
+            query.select(root.get("id").alias("id"));//pathSet.stream().map(path->root.get(path)).collect(Collectors.toList()));
         }
         query.where(predicates.toArray(new Predicate[predicates.size()]));
-        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID!=queryforWhat) {
+        if (QueryForWhatEnum.JUSTFORCOUNTBYDISTINCTID != queryforWhat) {
             query.orderBy(orders);
         }
-        TypedQuery result= entityManager.createQuery(query.distinct(true));
-        if (QueryForWhatEnum.NORMAL==queryforWhat) {
-            if(paginator!=null){
+        TypedQuery result = entityManager.createQuery(query.distinct(true));
+        if (QueryForWhatEnum.NORMAL == queryforWhat) {
+            if (paginator != null) {
                 result.setMaxResults(paginator.getSize());
-                result.setFirstResult((paginator.getPage()-1)*paginator.getSize());
+                result.setFirstResult((paginator.getPage() - 1) * paginator.getSize());
             }
         }
         //将entitygraph加入
         return result.setHint("javax.persistence.fetchgraph", graph);
     }
 
-    private void getPathlistForNestIds(String prefix,CriteriaQuery query, Set<String> result, Subgraph subgraph) {
+    private void getPathlistForNestIds(String prefix, CriteriaQuery query, Set<String> result, Subgraph subgraph) {
         Optional.ofNullable(subgraph).ifPresent(sg -> sg.getAttributeNodes().stream().forEach(attributeNode -> {
             Map<Class, Subgraph> classSubgraphMap = ((AttributeNode) attributeNode).getSubgraphs();
             Optional.ofNullable(classSubgraphMap).ifPresent(csm -> csm.entrySet().stream().forEach(entry -> {
                         EntityType entityType = graphQlTypeMapper.getEntityType(entry.getKey());
                         if (entityType != null) {
-                            String attrpath=prefix+"."+((AttributeNode) attributeNode).getAttributeName();
-                            result.add(attrpath+".id");
-                            getPathlistForNestIds(attrpath,query, result, entry.getValue());
+                            String attrpath = prefix + "." + ((AttributeNode) attributeNode).getAttributeName();
+                            result.add(attrpath + ".id");
+                            getPathlistForNestIds(attrpath, query, result, entry.getValue());
                         }
                     })
             );
@@ -231,13 +228,13 @@ public class JpaDataFetcher implements DataFetcher {
         switch (qfo) {
             case LIKE:
                 value = convertFilterValue(path.getJavaType(), v);
-                result = cb.like(path, (String) value);
+                result = cb.like(path, v);
                 break;
             case IN:
-                List<Object> inList=Stream.of(v.split(",")).map(str->{
-                    if(str.startsWith("'")&& str.endsWith("'")){//如果是字符
-                        return str.substring(1,str.length()-1);
-                    }else {//如果是数字，会不会有其他的？ TODO
+                List<Object> inList = Stream.of(v.split(",")).map(str -> {
+                    if (str.startsWith("'") && str.endsWith("'")) {//如果是字符
+                        return str.substring(1, str.length() - 1);
+                    } else {//如果是数字，会不会有其他的？ TODO  数字  枚举 转化
                         return Long.parseLong(str);
                     }
                 }).collect(Collectors.toList());
@@ -246,7 +243,6 @@ public class JpaDataFetcher implements DataFetcher {
             case ISNULL:
                 result = cb.isNull(path);
                 break;
-            // case GREATTHAN:cb.greaterThan(path,)
             case EQUEAL:
                 value = convertFilterValue(path.getJavaType(), v);
                 result = cb.equal(path, value);
@@ -286,7 +282,8 @@ public class JpaDataFetcher implements DataFetcher {
                 return result = cb.and(result, next);
             case OR:
                 return result = cb.or(result, next);
-            default:break;
+            default:
+                break;
             // case NOT:
         }
         return result;
@@ -294,9 +291,14 @@ public class JpaDataFetcher implements DataFetcher {
     }
 
     private Object convertFilterValue(Class javaType, String v) {
+
         return (javaType == boolean.class || javaType == Boolean.class) ? Boolean.valueOf(v) :
                 (javaType == int.class || javaType == Integer.class) ? Integer.valueOf(v) :
-                        (javaType == long.class || javaType == Long.class) ? Long.valueOf(v) : v;
+                        (javaType == long.class || javaType == Long.class) ? Long.valueOf(v) :
+                                (BosEnum.class.isAssignableFrom(javaType)) ?
+                                        Arrays.stream((BosEnum[]) javaType.getEnumConstants()).filter(bosEnum -> bosEnum.getValue().equals(v)).findFirst()
+                                                .orElse(null) : v;
+        //todo  如果沒找到枚舉  抛出异常
     }
 
     /**

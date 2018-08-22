@@ -38,4 +38,6 @@ public interface BosEnum {
     default public String getDescription() {
         return getEnumInnerValue().getDescription();
     }
+
+
 }

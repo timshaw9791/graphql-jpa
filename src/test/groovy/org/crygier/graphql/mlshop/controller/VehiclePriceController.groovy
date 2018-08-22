@@ -7,6 +7,7 @@ import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.anntations.Exclude
 import org.crygier.graphql.mlshop.model.VehiclePrice
 import org.crygier.graphql.mlshop.repo.VehiclePriceRepository
+import org.crygier.graphql.mlshop.service.VehiclePriceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -19,22 +20,25 @@ import org.springframework.web.bind.annotation.RestController
 @GRestController("mlshop")
 @RestController
 @CompileStatic
-class VehicleController {
+class VehiclePriceController {
 
     @Autowired
     private VehiclePriceRepository vehiclePriceRepository;
 
+    @Autowired
+    private VehiclePriceService vehiclePriceService;
+
     @SchemaDocumentation("添加车辆价格信息")
     @GRequestMapping(path = "/addvehicleprice", method = RequestMethod.POST)
     VehiclePrice addVehiclePrice(@RequestParam(name = "vehicleprice", required = true) VehiclePrice vehiclePrice) {
-        return this.vehiclePriceRepository.save(vehiclePrice);
+        return this.vehiclePriceService.save(vehiclePrice);
     }
 
     @SchemaDocumentation("修改车辆价格信息")
     @Exclude
     @GRequestMapping(path = "/updatevehicleprice", method = RequestMethod.POST)
     VehiclePrice updateVehiclePrice(@RequestParam(name = "vehicleprice", required = true) VehiclePrice vehiclePrice) {
-        return this.vehiclePriceRepository.save(vehiclePrice);
+        return this.vehiclePriceService.update(vehiclePrice);
     }
 
     @SchemaDocumentation("删除车辆价格信息")
