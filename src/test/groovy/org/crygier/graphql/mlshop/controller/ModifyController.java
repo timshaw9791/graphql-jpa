@@ -2,12 +2,18 @@ package org.crygier.graphql.mlshop.controller;
 
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation;
+import org.crygier.graphql.mlshop.model.CarBrandIcon;
+import org.crygier.graphql.mlshop.model.CarInfo;
 import org.crygier.graphql.mlshop.model.Order;
-import org.crygier.graphql.mlshop.service.*;
+import org.crygier.graphql.mlshop.service.CarBrandIconService;
+import org.crygier.graphql.mlshop.service.CarInfoService;
+import org.crygier.graphql.mlshop.service.OrderService;
+import org.crygier.graphql.mlshop.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * @author Curtain
@@ -25,15 +31,22 @@ public class ModifyController {
     @Autowired
     private StatisticService statisticService;
 
-//    @RequestMapping(value = "/updatecarinfo")
-//    public Object updateCarInfo(@RequestBody CarInfo carInfo) {
-//        return carService.update(carInfo);
-//    }
-//
-//    @RequestMapping(value = "/addcarinfo")
-//    public Object saveCarInfo(@RequestBody CarInfo carInfo){
-//        return carService.save(carInfo);
-//    }
+    @Autowired
+    private CarInfoService carInfoService;
+
+    @Autowired
+    private CarBrandIconService carBrandIconService;
+
+
+    @RequestMapping(value = "/updatecarinfo")
+    public Object updateCarInfo(@RequestBody CarInfo carInfo) {
+        return carInfoService.update(carInfo);
+    }
+
+    @RequestMapping(value = "/addcarinfo")
+    public Object saveCarInfo(@RequestBody CarInfo carInfo){
+        return carInfoService.save(carInfo);
+    }
 
     @RequestMapping("/statistic")
     public Object statistic(@RequestParam("starttime") Long startTime,@RequestParam("endtime") Long endTime){
@@ -45,15 +58,15 @@ public class ModifyController {
         return orderService.save(order);
     }
 
-//    @RequestMapping(path = "/addcarbrandicon", method = RequestMethod.POST)
-//    CarBrandIcon addCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) CarBrandIcon carBrandIcon) {
-//        return carBrandIconService.save(carBrandIcon);
-//    }
-//
-//    @RequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
-//    void saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
-//        carBrandIconService.saveAll(carBrandIcons);
-//    }
+    @RequestMapping(path = "/addcarbrandicon", method = RequestMethod.POST)
+    CarBrandIcon addCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) CarBrandIcon carBrandIcon) {
+        return carBrandIconService.save(carBrandIcon);
+    }
+
+    @RequestMapping(path = "/saveallcarbrandicon", method = RequestMethod.POST)
+    void saveAllCarBrandIcon(@RequestParam(name = "carbrandicon", required = true) List<CarBrandIcon> carBrandIcons) {
+        carBrandIconService.saveAll(carBrandIcons);
+    }
 
     @RequestMapping(path = "/getinfo")
     void getinfo(Principal principal){
