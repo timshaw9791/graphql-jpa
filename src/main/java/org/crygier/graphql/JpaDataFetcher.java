@@ -228,16 +228,13 @@ public class JpaDataFetcher implements DataFetcher {
         switch (qfo) {
             case LIKE:
                 value = convertFilterValue(path.getJavaType(), v);
-                result = cb.like(path, v);
+                result = cb.like(path, (String) value);
                 break;
             case IN:
-                List<Object> inList = Stream.of(v.split(",")).map(str -> {
-                    if (str.startsWith("'") && str.endsWith("'")) {//如果是字符
-                        return str.substring(1, str.length() - 1);
-                    } else {//如果是数字，会不会有其他的？ TODO  数字  枚举 转化
-                        return Long.parseLong(str);
-                    }
-                }).collect(Collectors.toList());
+                List<Object> inList = Stream.of(v.split(",")).collect(Collectors.toList());
+                for (int i=0;i<inList.size();i++){
+                    inList.set(i,convertFilterValue(path.getJavaType(), (String) inList.get(i)));
+                }
                 result = path.in(inList);
                 break;
             case ISNULL:
