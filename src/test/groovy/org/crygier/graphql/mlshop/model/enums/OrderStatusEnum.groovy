@@ -11,9 +11,10 @@ import javax.persistence.Converter
  * @date 2018/7/30 10:24
  */
 
-@SchemaDocumentation("订单状态 分为三种NEW:新订单  /  FINISH:已完结  /  REFUND:已退款")
+@SchemaDocumentation("订单状态 分为四种NEW:新订单 /  PENDING 待处理    /  FINISH:已完结  /  REFUND:已退款")
 enum OrderStatusEnum implements BosEnum{
     NEW("NEW", "新订单"),
+    PENDING("PENDING", "待处理"),
     FINISH("FINISH", "已完结"),
     REFUND("REFUND", "已退款");
 

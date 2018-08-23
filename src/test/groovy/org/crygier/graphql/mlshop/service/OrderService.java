@@ -1,6 +1,7 @@
 package org.crygier.graphql.mlshop.service;
 
 import org.crygier.graphql.mlshop.model.Order;
+import org.crygier.graphql.mlshop.model.Salesman;
 
 import java.util.List;
 
@@ -38,5 +39,14 @@ public interface OrderService {
      * @return
      */
     List<Order> findByUpdateTime(Long startTime,Long endTIme);
+
+
+    /**
+     * 订单分配
+     * @param id
+     * @param salesman
+     * @return
+     */
+    Order allocateOrder(String id, Salesman salesman);
 
 }

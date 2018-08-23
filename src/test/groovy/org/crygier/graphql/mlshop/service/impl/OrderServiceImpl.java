@@ -1,6 +1,8 @@
 package org.crygier.graphql.mlshop.service.impl;
 
 import org.crygier.graphql.mlshop.model.Order;
+import org.crygier.graphql.mlshop.model.Salesman;
+import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum;
 import org.crygier.graphql.mlshop.repo.OrderRepository;
 import org.crygier.graphql.mlshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order update(Order order) {
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order allocateOrder(String id, Salesman salesman) {
+        Order order = findOne(id);
+        order.setSalesman(salesman);
+        order.setOrderStatusEnum(OrderStatusEnum.PENDING);
         return orderRepository.save(order);
     }
 

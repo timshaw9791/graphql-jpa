@@ -5,8 +5,10 @@ import org.crygier.graphql.annotation.GRequestMapping;
 import org.crygier.graphql.annotation.GRestController;
 import org.crygier.graphql.annotation.SchemaDocumentation
 import org.crygier.graphql.mlshop.anntations.Exclude;
-import org.crygier.graphql.mlshop.model.Order;
-import org.crygier.graphql.mlshop.repo.OrderRepository;
+import org.crygier.graphql.mlshop.model.Order
+import org.crygier.graphql.mlshop.model.Salesman;
+import org.crygier.graphql.mlshop.repo.OrderRepository
+import org.crygier.graphql.mlshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,9 @@ public class OrderController{
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    OrderService orderService;
+
     @SchemaDocumentation("添加订单")
     @GRequestMapping(path = "/addorder", method = RequestMethod.POST)
     Order addOrder(@RequestParam(name = "order", required = true) Order order) {
@@ -37,6 +42,13 @@ public class OrderController{
     @GRequestMapping(path = "/updateorder", method = RequestMethod.POST)
     Order updateOrder(@RequestParam(name = "order", required = true) Order order) {
         return this.orderRepository.save(order);
+    }
+
+    @SchemaDocumentation("分配订单")
+    @GRequestMapping("/allocateorder")
+    Order allocateOrder(@RequestParam(name = "id",required = true)String id,
+                        @RequestParam(name = "salesman",required = true)Salesman salesman){
+        return orderService.allocateOrder(id,salesman);
     }
 
 }
