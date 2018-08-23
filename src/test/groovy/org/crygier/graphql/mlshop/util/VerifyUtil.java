@@ -20,7 +20,7 @@ public class VerifyUtil {
         RedisTemplate redisTemplate = (RedisTemplate) SpringUtil.getBean("redisTemplate");
 
         //判断验证是否过期  是否在一个小时内
-        Long time = Long.valueOf((String) redisTemplate.opsForValue().get(key));
+        Long time = (Long) redisTemplate.opsForValue().get(key);
         if ((time+3600000)>System.currentTimeMillis()){
             return true;
         }

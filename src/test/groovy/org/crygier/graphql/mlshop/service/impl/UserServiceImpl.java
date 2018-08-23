@@ -29,15 +29,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         Optional<User> optional = userRepository.findByUsername(username);
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             return optional.get();
-        }
-        else return null;
+        } else return null;
     }
 
     @Override
     public User register(User user) {
-        if(VerifyUtil.verifyExpire(VerifyUtil.REGISTER)){
+        if (VerifyUtil.verifyExpire(user.getRegisterPhone() + VerifyUtil.REGISTER)) {
             //todo 如果手机号已经被注册  则。。。
 
             //创建客户信息
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPassword(String password, String id) {
-        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PASSWORD)){
+        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PASSWORD)) {
             User user = userRepository.findById(id).get();
             user.setPassword(password);
             userRepository.save(user);
@@ -72,13 +71,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user, String id) {
         //判断登录的用户 和  修改的用户是不是同一个
-        if (!(user.getId().equals(id))){
+        if (!(user.getId().equals(id))) {
             throw new RuntimeException("修改的用户信息 和  登录的不是一个");
         }
         User result = userRepository.findById(user.getId()).get();
 
         //判断客户信息id 是否相同
-        if(!(result.getCustomer().getId().equals(user.getCustomer().getId()))){
+        if (!(result.getCustomer().getId().equals(user.getCustomer().getId()))) {
             throw new RuntimeException("修改的用户信息 和  登录的不是一个");
         }
         result.setHeadImg(user.getHeadImg());
@@ -91,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPhone(String phone, String id) {
-        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PHONE)){
+        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PHONE)) {
             User user = userRepository.findById(id).get();
             user.setPhone(phone);
             user.setUsername(phone);
