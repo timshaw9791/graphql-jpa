@@ -33,7 +33,12 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ save(Administ administ) {
-        //todo  密码加密
+        //todo  密码加密   如果用户已存在  提示
+        Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
+        if (administOptional.isPresent()){
+            throw new RuntimeException("用户名已存在");
+        }
+
         return administRepository.save(administ);
     }
 

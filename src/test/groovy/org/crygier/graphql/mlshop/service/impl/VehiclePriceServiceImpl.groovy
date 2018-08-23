@@ -28,8 +28,9 @@ class VehiclePriceServiceImpl implements org.crygier.graphql.mlshop.service.Vehi
 
         if (v!=null){
            BeanUtils.copyProperties(vehiclePrice,v,BeanCopyUtil.getNullPropertyNames(vehiclePrice));
+            return vehiclePriceRepository.save(v);
         }
 
-        return vehiclePriceRepository.save(v);
+        return vehiclePriceRepository.save(vehiclePrice);
     }
 }
