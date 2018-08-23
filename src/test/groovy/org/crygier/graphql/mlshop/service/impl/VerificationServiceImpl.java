@@ -105,7 +105,7 @@ public class VerificationServiceImpl implements VerificationService {
     private void verifycode(String code, String key) {
         String rs = String.valueOf( redisTemplate.opsForValue().get(key));
         if (rs.equals(code)) {
-            redisTemplate.opsForValue().set(key, System.currentTimeMillis());
+            redisTemplate.opsForValue().set(key, String.valueOf(System.currentTimeMillis()));
         } else {
             throw new RuntimeException("verify code fail");
         }
