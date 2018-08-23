@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne
 public class Insurance extends BosEntity{
 
     @SchemaDocumentation("购车单编号")
-    String carNumber;
+    String carOrderNumber;
 
     @SchemaDocumentation("保险公司")
     String company;
