@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findOne(String id) {
+        return userRepository.findById(id).get();
+    }
+
+    @Override
     public User update(User user, String id) {
         //判断登录的用户 和  修改的用户是不是同一个
         if (!(user.getId().equals(id))){

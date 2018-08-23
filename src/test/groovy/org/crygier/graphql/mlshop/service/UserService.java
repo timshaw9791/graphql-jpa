@@ -45,4 +45,11 @@ public interface UserService {
      */
     User update(User user,String id);
 
+    /**
+     * 查找用户
+     * @param id
+     * @return
+     */
+    User findOne(String id);
+
 }

@@ -5,10 +5,8 @@ import org.crygier.graphql.annotation.SchemaDocumentation;
 import org.crygier.graphql.mlshop.model.CarBrandIcon;
 import org.crygier.graphql.mlshop.model.CarInfo;
 import org.crygier.graphql.mlshop.model.Order;
-import org.crygier.graphql.mlshop.service.CarBrandIconService;
-import org.crygier.graphql.mlshop.service.CarInfoService;
-import org.crygier.graphql.mlshop.service.OrderService;
-import org.crygier.graphql.mlshop.service.StatisticService;
+import org.crygier.graphql.mlshop.model.user.User;
+import org.crygier.graphql.mlshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +34,9 @@ public class ModifyController {
 
     @Autowired
     private CarBrandIconService carBrandIconService;
+
+    @Autowired
+    private UserService userService;
 
 
     @RequestMapping(value = "/updatecarinfo")
@@ -69,7 +70,7 @@ public class ModifyController {
     }
 
     @RequestMapping(path = "/getinfo")
-    void getinfo(Principal principal){
-        System.out.println(principal.getName());
+    User getinfo(Principal principal){
+        return userService.findOne(principal.getName());
     }
 }
