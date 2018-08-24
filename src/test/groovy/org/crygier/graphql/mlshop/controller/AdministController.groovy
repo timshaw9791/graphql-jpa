@@ -42,7 +42,7 @@ public class AdministController {
 
     @SchemaDocumentation("修改管理员密码")
     @Exclude
-    @GRequestMapping(path = "/modifypassword", method = RequestMethod.POST)
+    @GRequestMapping(path = "/administmodifypassword", method = RequestMethod.POST)
     Administ modifyPassword(
             @RequestParam(name = "administ", required = true) Administ administ) {
         return administService.modifyPassword(administ);
