@@ -37,8 +37,8 @@ public class CarInfoServiceImpl implements CarInfoService {
             }
         }
 
-        //表示已完善车辆信息
-        carInfo.setPerfectState(true);
+//        //表示已完善车辆信息
+//        carInfo.setPerfectState(true);
 
         return carInfoRepository.save(carInfo);
     }

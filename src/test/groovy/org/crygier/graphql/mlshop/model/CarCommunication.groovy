@@ -46,4 +46,8 @@ public class CarCommunication extends BosEntity {
 
     @SchemaDocumentation("认证手机号")
     String phone;
+
+    @SchemaDocumentation("分配人")
+    @ManyToOne
+    Administ administ;
 }

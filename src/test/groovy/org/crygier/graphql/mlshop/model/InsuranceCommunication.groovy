@@ -55,6 +55,10 @@ class InsuranceCommunication extends BosEntity {
     @ManyToOne
     Insurance insurance;
 
+    @SchemaDocumentation("分配人")
+    @ManyToOne
+    Administ administ;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<CommunicationRecord> communicationItems = new HashSet<>();
 
