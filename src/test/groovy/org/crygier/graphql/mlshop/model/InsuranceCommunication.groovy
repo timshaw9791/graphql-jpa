@@ -58,4 +58,11 @@ class InsuranceCommunication extends BosEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     Set<CommunicationRecord> communicationItems = new HashSet<>();
 
+
+    public void distribute(Salesman salesman) {
+        this.setSalesman(salesman);
+        this.setDistributeTime(System.currentTimeMillis());
+        this.setStatus(CarCommunicationStatusEnum.B);
+    }
+
 }
