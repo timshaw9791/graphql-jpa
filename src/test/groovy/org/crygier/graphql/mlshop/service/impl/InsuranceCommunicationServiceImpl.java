@@ -79,6 +79,7 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
         salesman=salesmanRepository.findById(salesman.getId()).get();
         insuranceCommunication.distribute(salesman);
+        //TODO 应该加上adminst的赋值，用当前用户信息。
         InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
         verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());
         return result;
