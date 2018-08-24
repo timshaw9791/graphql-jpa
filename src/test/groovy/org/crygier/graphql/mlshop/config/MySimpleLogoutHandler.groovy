@@ -1,16 +1,13 @@
-package org.crygier.graphql.mlshop.config;
+package org.crygier.graphql.mlshop.config
 
-import org.crygier.graphql.mlshop.util.CharsetUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import org.springframework.stereotype.Component;
+import org.crygier.graphql.mlshop.util.CharsetUtil
+import org.springframework.security.core.Authentication
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
+import org.springframework.stereotype.Component
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 /**
  * @author Curtain
  * @date 2018/5/16 15:33

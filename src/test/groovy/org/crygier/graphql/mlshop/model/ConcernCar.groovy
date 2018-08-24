@@ -25,5 +25,5 @@ class ConcernCar extends BosEntity{
 
     @SchemaDocumentation("汽车信息")
     @ManyToOne
-    CarInfo carInfo;
+    VehiclePrice vehiclePrice;
 }

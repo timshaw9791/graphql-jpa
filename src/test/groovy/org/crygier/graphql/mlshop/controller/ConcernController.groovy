@@ -31,7 +31,6 @@ public class ConcernController {
     ConcernCarService concernCarService;
 
     @SchemaDocumentation("关注车辆")
-    @Exclude
     @GRequestMapping(path = "/concerncar", method = RequestMethod.POST)
     ConcernCar concernCar(@RequestParam(name = "concerncar", required = true) ConcernCar concernCar) {
         return this.concernCarService.concern(concernCar);
@@ -46,7 +45,6 @@ public class ConcernController {
     }
 
     @SchemaDocumentation("关注门店")
-    @Exclude
     @GRequestMapping(path = "/concernshop", method = RequestMethod.POST)
     ConcernShop concernShop(@RequestParam(name = "concernshop", required = true) ConcernShop concernShop) {
         return this.concernShopService.concern(concernShop);
