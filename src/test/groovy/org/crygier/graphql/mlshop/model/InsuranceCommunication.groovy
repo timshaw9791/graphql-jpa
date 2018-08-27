@@ -23,7 +23,7 @@ import javax.persistence.OneToMany
 class InsuranceCommunication extends BosEntity {
 
     @SchemaDocumentation("状态：分为待分配,待回访，已回访，已转换，已结束五种")
-    CarCommunicationStatusEnum status;
+    CarCommunicationStatusEnum status=CarCommunicationStatusEnum.A;
 
     @SchemaDocumentation("客户姓名")
     String customerName;
@@ -40,6 +40,10 @@ class InsuranceCommunication extends BosEntity {
     @SchemaDocumentation("业务员")
     @ManyToOne
     Salesman salesman;
+
+    @SchemaDocumentation("分配人")
+    @ManyToOne
+    Administ administ;
 
     @SchemaDocumentation("分配时间")
     Long distributeTime;
