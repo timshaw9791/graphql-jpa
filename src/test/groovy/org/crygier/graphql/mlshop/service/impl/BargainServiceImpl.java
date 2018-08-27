@@ -123,7 +123,7 @@ public class BargainServiceImpl implements BargainService {
 
     @Override
     public BargainSetting findBargainSetting() {
-        String bargain = (String) redisTemplate.opsForValue().get("bargain");
+        String bargain = (String) redisTemplate.opsForValue().get("bargainSetting");
 
         JSONObject jsonObject = (JSONObject) JSON.parse(bargain);
         BargainSetting result = JSONObject.toJavaObject(jsonObject, BargainSetting.class);
