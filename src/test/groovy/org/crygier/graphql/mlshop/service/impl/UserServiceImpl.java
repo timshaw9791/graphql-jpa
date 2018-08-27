@@ -36,17 +36,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-        if (VerifyUtil.verifyExpire(user.getRegisterPhone() + VerifyUtil.REGISTER)) {
+        if (VerifyUtil.validity(user.getPhone() + VerifyUtil.REGISTER)) {
             //todo 如果手机号已经被注册  则。。。
 
             //创建客户信息
             Customer customer = new Customer();
             customer.setLevel(CustomerLevelEnum.C);
-            customer.setTel(user.getRegisterPhone());
+            customer.setTel(user.getPhone());
             customer = customerRepository.save(customer);
-            user.setPhone(user.getRegisterPhone());
             user.setCustomer(customer);
-            user.setUsername(user.getRegisterPhone());
+            user.setUsername(user.getPhone());
 
             return userRepository.save(user);
         }
@@ -55,8 +54,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPassword(String password, String id) {
-        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PASSWORD)) {
-            User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).get();
+        if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PASSWORD)) {
             user.setPassword(password);
             userRepository.save(user);
         }
@@ -90,8 +89,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPhone(String phone, String id) {
-        if (VerifyUtil.verifyExpire(VerifyUtil.MODIFY_PHONE)) {
-            User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).get();
+        if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PHONE)) {
             user.setPhone(phone);
             user.setUsername(phone);
             userRepository.save(user);

@@ -13,7 +13,7 @@ import java.util.List;
  * @author Curtain
  * @date 2018/7/28 8:40
  */
-public interface CarCommunicationService {
+public interface    CarCommunicationService {
 
     /**
      * 用户等级更新

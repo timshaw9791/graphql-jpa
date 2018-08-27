@@ -21,7 +21,6 @@ public class VerificationServiceImpl implements VerificationService {
     private RedisTemplate redisTemplate;
 
 
-
     @Override
     public String getCode(String number, Integer type) {
 
@@ -30,7 +29,7 @@ public class VerificationServiceImpl implements VerificationService {
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("phoneNumber", number);
         paramMap.put("jsonContent", jsonContent);
-        paramMap.put("templateCode","SMS_141765077");
+        paramMap.put("templateCode", "SMS_141765077");
         SendSmsResponse sendSmsResponse = null;
         try {
             sendSmsResponse = AliyunMessageUtil.sendSms(paramMap);
@@ -53,6 +52,9 @@ public class VerificationServiceImpl implements VerificationService {
             case 4:
                 redisTemplate.opsForValue().set(number + MODIFY_PHONE, randomNum);
                 break;
+            case 5:
+                redisTemplate.opsForValue().set(number + BARGAIN, randomNum);
+                break;
             default:
                 throw new RuntimeException("Get verify code fail. type not true");
         }
@@ -66,7 +68,7 @@ public class VerificationServiceImpl implements VerificationService {
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("phoneNumber", phone);
         paramMap.put("jsonContent", jsonContent);
-        paramMap.put("templateCode","SMS_142384656");
+        paramMap.put("templateCode", "SMS_142384656");
         SendSmsResponse sendSmsResponse = null;
         try {
             sendSmsResponse = AliyunMessageUtil.sendSms(paramMap);
@@ -94,6 +96,9 @@ public class VerificationServiceImpl implements VerificationService {
             case 4:
                 verifycode(code, number + MODIFY_PHONE);
                 break;
+            case 5:
+                verifycode(code, number + BARGAIN);
+                break;
             default:
                 throw new RuntimeException("verify code fail. type not true");
         }
@@ -103,11 +108,11 @@ public class VerificationServiceImpl implements VerificationService {
     }
 
     private void verifycode(String code, String key) {
-        String rs = String.valueOf( redisTemplate.opsForValue().get(key));
+        String rs = String.valueOf(redisTemplate.opsForValue().get(key));
         if (rs.equals(code)) {
             redisTemplate.opsForValue().set(key, String.valueOf(System.currentTimeMillis()));
         } else {
-            throw new RuntimeException("verify code fail");
+            throw new RuntimeException("Verify code fail,please try to get the verification code.");
         }
 
     }

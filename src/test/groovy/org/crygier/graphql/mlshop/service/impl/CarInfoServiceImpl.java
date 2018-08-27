@@ -33,7 +33,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 //            }
 //            BeanUtils.copyProperties(carInfo, model, BeanCopyUtil.getNullPropertyNames(carInfo));
 //
-//            return carInfoRepository.save(model);
+//            return carInfoRepository.saveBargainSetting(model);
             }
         }
 
