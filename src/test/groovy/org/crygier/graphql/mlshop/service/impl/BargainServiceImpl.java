@@ -94,6 +94,12 @@ public class BargainServiceImpl implements BargainService {
                 throw new RuntimeException("you have already complete bargain.");
             }
 
+            //判断是否在砍价时间内
+            long time = bargainRecord.getCreatetime() + bargainRecord.getEffectiveTime();
+            if (System.currentTimeMillis()>time){
+                throw new RuntimeException("砍价已结束");
+            }
+
             //设置砍价信息
             if (bargainRecord.getChopCount().equals(0)) {
                 bargainRecord.setChopPhone(phone);

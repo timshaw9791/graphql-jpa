@@ -32,7 +32,7 @@ public class BargainSettingController {
     /*查找一条砍价设置*/
     @RequestMapping("/findbarginsetting")
     public BargainSetting findBargainSetting(){
-        return bargainService.findBargainSetting(bargainSetting);
+        return bargainService.findBargainSetting();
     }
 
 }
