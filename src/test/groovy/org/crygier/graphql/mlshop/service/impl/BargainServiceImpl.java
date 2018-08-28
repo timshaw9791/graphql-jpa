@@ -90,13 +90,15 @@ public class BargainServiceImpl implements BargainService {
             Order order = orderService.findOne(orderId);
             BargainRecord bargainRecord = bargainRecordRepository.findByOrder(order).get();
 
-            if (bargainRecord.getChopPhone().contains(phone)) {
+            String chopPhone = bargainRecord.getChopPhone();
+
+            if (chopPhone != null && chopPhone.contains(phone)) {
                 throw new RuntimeException("you have already complete bargain.");
             }
 
             //判断是否在砍价时间内
             long time = bargainRecord.getCreatetime() + bargainRecord.getEffectiveTime();
-            if (System.currentTimeMillis()>time){
+            if (System.currentTimeMillis() > time) {
                 throw new RuntimeException("砍价已结束");
             }
 
@@ -109,10 +111,10 @@ public class BargainServiceImpl implements BargainService {
             long amount = bargainRecord.getAmount() / bargainRecord.getPeopleNumber();
             bargainRecord.setChopAmount(bargainRecord.getChopAmount() + amount);
 
-            bargainRecord.setChopCount(bargainRecord.getChopCount()+1);
+            bargainRecord.setChopCount(bargainRecord.getChopCount() + 1);
 
             //如果人数达到 则砍价成功
-            if (bargainRecord.getPeopleNumber().equals(bargainRecord.getChopCount())){
+            if (bargainRecord.getPeopleNumber().equals(bargainRecord.getChopCount())) {
                 order.setBargainSuccess(true);
                 orderService.update(order);
             }
