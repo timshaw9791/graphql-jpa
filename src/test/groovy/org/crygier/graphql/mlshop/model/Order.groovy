@@ -109,4 +109,8 @@ public class Order extends BosEntity {
     @SchemaDocumentation("车辆信息")
     @ManyToOne
     CarInfo carInfo;
+    //todo  carindo 应该用 vehicleprice 代替
+
+    @SchemaDocumentation("砍价是否成功")
+    boolean bargainSuccess = false;
 }

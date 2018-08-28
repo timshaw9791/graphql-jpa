@@ -61,6 +61,9 @@ dependencies {
     compile "org.springframework.data:spring-data-redis:2.0.7.RELEASE"
     compile "redis.clients:jedis:2.7.3"
 
+    //json
+    compile "com.alibaba:fastjson:1.2.41"
+
     //aliyun message
 //    compile "com.aliyun:aliyun-java-sdk-core:3.7.1"   不需要再引入3.7.1 否者和sts服务要的3.5.0冲突
     compile "com.aliyun:aliyun-java-sdk-dysmsapi:1.1.0"

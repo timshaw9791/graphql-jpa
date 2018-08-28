@@ -16,7 +16,9 @@ public class VerifyUtil {
 
     public final static String MODIFY_PHONE = "modifyPhone";
 
-    public static boolean verifyExpire(String key){
+    public final static String BARGAIN = "bargain";
+
+    public static boolean validity(String key){
         RedisTemplate redisTemplate = (RedisTemplate) SpringUtil.getBean("redisTemplate");
 
         //判断验证是否过期  是否在一个小时内
