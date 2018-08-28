@@ -54,7 +54,11 @@ public class InsuranceServiceImpl implements InsuranceService {
         insuranceCommunication.setCustomerName(insurance.getCustomerName());
         insuranceCommunication.setStatus(CarCommunicationStatusEnum.D);
         insuranceCommunication.setTel(insurance.getCustomerTel());
+        insuranceCommunication.setWeixinid(insurance.getWeixinid());
+        insuranceCommunication.setWeixinnick(insurance.getWeixinnick());
+        insuranceCommunication.setAddressNow(insurance.getCustomerAddress());
         insuranceCommunication.setInsurance(insurance);
+
         insuranceCommunicationService.save(insuranceCommunication);
         return insuranceRepository.save(insurance);
     }
