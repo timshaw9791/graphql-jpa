@@ -1,28 +1,20 @@
-package org.crygier.graphql.mlshop.service.impl;
+package org.crygier.graphql.mlshop.service.impl
 
-
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.crygier.graphql.mlshop.bean.UnifiedOrder;
-import org.crygier.graphql.mlshop.bean.WxPaySyncResponse;
-import org.crygier.graphql.mlshop.service.PayService;
-import org.crygier.graphql.mlshop.service.WxPayApi;
-import org.crygier.graphql.mlshop.util.NumberUtil;
-import org.crygier.graphql.mlshop.util.StringUtils;
-import org.crygier.graphql.mlshop.util.XmlUtil;
-import org.springframework.stereotype.Service;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.apache.commons.codec.digest.DigestUtils
+import org.crygier.graphql.mlshop.bean.UnifiedOrder
+import org.crygier.graphql.mlshop.bean.WxPaySyncResponse
+import org.crygier.graphql.mlshop.service.PayService
+import org.crygier.graphql.mlshop.service.WxPayApi
+import org.crygier.graphql.mlshop.util.NumberUtil
+import org.crygier.graphql.mlshop.util.StringUtils
+import org.crygier.graphql.mlshop.util.XmlUtil
+import org.springframework.stereotype.Service
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 /**
  * @author Curtain
  * @date 2018/8/29 9:49
@@ -43,10 +35,10 @@ public class PayServiceImpl implements PayService {
         unifiedOrder.setOutTradeNo("201802372812");
         unifiedOrder.setTotalFee(1);
         //todo 获取用户ip
-        unifiedOrder.setSpbillCreateIp("192.168.249.120");
+        unifiedOrder.setSpbillCreateIp("183.245.77.244");
         unifiedOrder.setNotifyUrl("http://www.embracex.com/mlsop/notify");
         unifiedOrder.setTradeType("MWEB");
-        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"https://pay.qq.com\",\"wap_name\": \"腾讯充值\"}}");
+        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://www.embracex.com\",\"wap_name\": \"腾讯充值\"}}");
         //最后再添加签名
         unifiedOrder.setSign(sign(buildMap(unifiedOrder),"BawUezX73SHVbo2AFZCbyK2Htq1ZZER7"));
 

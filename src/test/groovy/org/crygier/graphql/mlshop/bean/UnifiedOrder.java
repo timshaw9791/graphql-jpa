@@ -15,6 +15,10 @@ public class UnifiedOrder {
      */
     private String appid;
     /**
+     * 商品描述
+     */
+    private String body;
+    /**
      * 商户号
      */
     @XStreamAlias("mch_id")
@@ -24,14 +28,6 @@ public class UnifiedOrder {
      */
     @XStreamAlias("nonce_str")
     private String nonceStr;
-    /**
-     * 签名
-     */
-    private String sign;
-    /**
-     * 商品描述
-     */
-    private String body;
     /**
      * 通知地址
      */
@@ -67,4 +63,8 @@ public class UnifiedOrder {
      */
     @XStreamAlias("scene_info")
     private String sceneInfo;
+    /**
+     * 签名
+     */
+    private String sign;
 }
