@@ -38,7 +38,7 @@ public class PayServiceImpl implements PayService {
         unifiedOrder.setSpbillCreateIp("183.245.77.244");
         unifiedOrder.setNotifyUrl("http://www.embracex.com/mlsop/notify");
         unifiedOrder.setTradeType("MWEB");
-        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://www.embracex.com\",\"wap_name\": \"腾讯充值\"}}");
+        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMall\"}}");
         //最后再添加签名
         unifiedOrder.setSign(sign(buildMap(unifiedOrder),"BawUezX73SHVbo2AFZCbyK2Htq1ZZER7"));
 
