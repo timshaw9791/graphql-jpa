@@ -1,14 +1,14 @@
 package org.crygier.graphql.mlshop.bean;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import lombok.Data;
 
 /**
  * @author Curtain
  * @date 2018/8/29 9:51
  */
-@Getter
-@Setter
+@Data
+@XStreamAlias("xml")
 public class UnifiedOrder {
     /**
      * 公众账号ID
@@ -17,11 +17,13 @@ public class UnifiedOrder {
     /**
      * 商户号
      */
-    private String mch_id;
+    @XStreamAlias("mch_id")
+    private String mchId;
     /**
      * 随机串
      */
-    private String nonce_str;
+    @XStreamAlias("nonce_str")
+    private String nonceStr;
     /**
      * 签名
      */
@@ -33,29 +35,36 @@ public class UnifiedOrder {
     /**
      * 通知地址
      */
-    private String notify_url;
+    @XStreamAlias("notify_url")
+    private String notifyUrl;
     /**
      * 商户订单号
      */
-    private String out_trade_no;
+    @XStreamAlias("out_trade_no")
+    private String outTradeNo;
     /**
      * 终端IP（用户）
      */
-    private String spbill_create_ip;
+    @XStreamAlias("spbill_create_ip")
+    private String spbillCreateIp;
     /**
      * 总金额
      */
-    private Integer total_fee;
+    @XStreamAlias("total_fee")
+    private Integer totalFee;
     /**
      * 交易类型
      */
-    private String trade_type;
+    @XStreamAlias("trade_type")
+    private String tradeType;
     /**
      * 统一下单接口
      */
-    private String prepay_id;
+    @XStreamAlias("prepay_id")
+    private String prepayId;
     /**
      * 信息
      */
-    private String scene_info;
+    @XStreamAlias("scene_info")
+    private String sceneInfo;
 }
