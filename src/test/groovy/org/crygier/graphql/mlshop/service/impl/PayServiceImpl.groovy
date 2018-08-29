@@ -15,6 +15,9 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+
+import javax.servlet.http.HttpServletRequest
+
 /**
  * @author Curtain
  * @date 2018/8/29 9:49
@@ -26,7 +29,7 @@ public class PayServiceImpl implements PayService {
     public static final String url = "https://api.mch.weixin.qq.com";
 
     @Override
-    public WxPaySyncResponse weChatPay() {
+    public WxPaySyncResponse weChatPay(HttpServletRequest request) {
         UnifiedOrder unifiedOrder = new UnifiedOrder();
         unifiedOrder.setAppid("wx5f6c931e05b2b39a");
         unifiedOrder.setMchId("1512065311");
@@ -35,7 +38,10 @@ public class PayServiceImpl implements PayService {
         unifiedOrder.setOutTradeNo("201802372812");
         unifiedOrder.setTotalFee(1);
         //todo 获取用户ip
-        unifiedOrder.setSpbillCreateIp("183.245.77.244");
+
+        String ip = getIPAddress(request);
+
+        unifiedOrder.setSpbillCreateIp(ip);
         unifiedOrder.setNotifyUrl("http://www.embracex.com/mlsop/notify");
         unifiedOrder.setTradeType("MWEB");
         unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMall\"}}");
@@ -119,5 +125,43 @@ public class PayServiceImpl implements PayService {
         toSign.append("key=").append(signKey);
         System.out.println(toSign.toString());
         return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
+    }
+
+    public static String getIPAddress(HttpServletRequest request) {
+        String ip = null;
+
+        //X-Forwarded-For：Squid 服务代理
+        String ipAddresses = request.getHeader("X-Forwarded-For");
+
+        if (ipAddresses == null || ipAddresses.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //Proxy-Client-IP：apache 服务代理
+            ipAddresses = request.getHeader("Proxy-Client-IP");
+        }
+
+        if (ipAddresses == null || ipAddresses.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //WL-Proxy-Client-IP：weblogic 服务代理
+            ipAddresses = request.getHeader("WL-Proxy-Client-IP");
+        }
+
+        if (ipAddresses == null || ipAddresses.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //HTTP_CLIENT_IP：有些代理服务器
+            ipAddresses = request.getHeader("HTTP_CLIENT_IP");
+        }
+
+        if (ipAddresses == null || ipAddresses.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
+            //X-Real-IP：nginx服务代理
+            ipAddresses = request.getHeader("X-Real-IP");
+        }
+
+        //有些网络通过多层代理，那么获取到的ip就会有多个，一般都是通过逗号（,）分割开来，并且第一个ip为客户端的真实IP
+        if (ipAddresses != null && ipAddresses.length() != 0) {
+            ip = ipAddresses.split(",")[0];
+        }
+
+        //还是不能获取到，最后再通过request.getRemoteAddr();获取
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 }

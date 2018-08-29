@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Curtain
  * @date 2018/8/29 11:07
@@ -19,8 +21,8 @@ public class PayController {
     private PayService payService;
 
     @RequestMapping("/pay")
-    public String weChatPay(){
-        WxPaySyncResponse response = payService.weChatPay();
+    public String weChatPay(HttpServletRequest request){
+        WxPaySyncResponse response = payService.weChatPay(request);
         String url = response.getMwebUrl();
         return "redirect:"+url;
 
