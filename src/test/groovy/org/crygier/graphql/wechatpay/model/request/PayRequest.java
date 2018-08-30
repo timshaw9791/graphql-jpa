@@ -1,0 +1,49 @@
+package org.crygier.graphql.wechatpay.model.request;
+
+import lombok.Data;
+import org.crygier.graphql.wechatpay.enums.WeChatPayTypeEnum;
+
+/**
+ * 支付时请求参数
+ * @author Curtain
+ * @date 2018/8/30 15:05
+ */
+@Data
+public class PayRequest {
+    /**
+     * 支付方式.
+     */
+    private WeChatPayTypeEnum payTypeEnum;
+
+    /**
+     * 订单号.
+     */
+    private String orderId;
+
+    /**
+     * 订单金额.
+     */
+    private Long orderAmount;
+
+    /**
+     * 订单名字.
+     */
+    private String orderName;
+
+    /**
+     * 微信openid, 仅微信支付时需要
+     */
+    private String openid;
+
+
+    //todo 增加h5支付时需要的参数
+    /**
+     * 信息
+     */
+    private String sceneInfo;
+
+    /**
+     * ip
+     */
+    private String spbillCreateIp;
+}

@@ -6,7 +6,7 @@ import org.crygier.graphql.mlshop.model.user.User;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.repo.UserRepository;
 import org.crygier.graphql.mlshop.service.UserService;
-import org.crygier.graphql.mlshop.util.VerifyUtil;
+import org.crygier.graphql.mlshop.utils.VerifyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package org.crygier.graphql.mlshop.service.impl
 
 import org.crygier.graphql.mlshop.model.VehiclePrice
 import org.crygier.graphql.mlshop.repo.VehiclePriceRepository
-import org.crygier.graphql.mlshop.util.BeanCopyUtil
+import org.crygier.graphql.mlshop.utils.BeanCopyUtil
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

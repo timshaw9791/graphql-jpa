@@ -1,4 +1,4 @@
-package org.crygier.graphql.mlshop.util;
+package org.crygier.graphql.mlshop.utils;
 
 /**
  * @author Curtain

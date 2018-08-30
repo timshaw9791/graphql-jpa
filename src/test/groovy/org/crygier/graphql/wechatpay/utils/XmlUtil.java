@@ -1,4 +1,4 @@
-package org.crygier.graphql.mlshop.util;
+package org.crygier.graphql.wechatpay.utils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;

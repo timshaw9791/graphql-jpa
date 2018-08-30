@@ -1,8 +1,6 @@
 package org.crygier.graphql.mlshop.service;
 
-import org.crygier.graphql.mlshop.bean.WxPaySyncResponse;
-
-import javax.servlet.http.HttpServletRequest;
+import org.crygier.graphql.wechatpay.model.response.PayResponse;
 
 /**
  * @author Curtain
@@ -10,6 +8,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface PayService {
 
-    WxPaySyncResponse weChatPay(HttpServletRequest request);
+    PayResponse weChatPay(String orderId, String ip);
 
 }

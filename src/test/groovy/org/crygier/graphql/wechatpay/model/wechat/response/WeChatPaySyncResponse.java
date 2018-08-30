@@ -1,17 +1,17 @@
-package org.crygier.graphql.mlshop.bean;
+package org.crygier.graphql.wechatpay.model.wechat.response;
 
 import lombok.Data;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 /**
+ * 同步返回参数
  * @author Curtain
- * @date 2018/8/29 14:35
+ * @date 2018/8/30 15:19
  */
 @Data
 @Root(name = "xml", strict = false)
-public class WxPaySyncResponse {
-
+public class WeChatPaySyncResponse {
     @Element(name = "return_code")
     private String returnCode;
 
@@ -50,6 +50,10 @@ public class WxPaySyncResponse {
     @Element(name = "prepay_id", required = false)
     private String prepayId;
 
-    @Element(name = "mweb_url", required = false)
+    @Element(name = "code_url", required = false)
+    private String codeUrl;
+
+    @Element(name="mweb_url",required = false)
     private String mwebUrl;
+
 }

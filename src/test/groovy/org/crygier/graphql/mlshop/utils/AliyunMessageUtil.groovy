@@ -1,4 +1,4 @@
-package org.crygier.graphql.mlshop.util
+package org.crygier.graphql.mlshop.utils
 
 import com.aliyuncs.DefaultAcsClient
 import com.aliyuncs.IAcsClient

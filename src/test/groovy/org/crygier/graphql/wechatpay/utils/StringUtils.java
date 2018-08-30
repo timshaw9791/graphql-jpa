@@ -1,4 +1,4 @@
-package org.crygier.graphql.mlshop.util;
+package org.crygier.graphql.wechatpay.utils;
 
 /**
  * @author Curtain

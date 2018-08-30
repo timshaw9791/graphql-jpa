@@ -8,14 +8,14 @@ import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.repo.BargainRecordRepository;
 import org.crygier.graphql.mlshop.service.BargainService;
 import org.crygier.graphql.mlshop.service.OrderService;
-import org.crygier.graphql.mlshop.util.VerifyUtil;
+import org.crygier.graphql.mlshop.utils.VerifyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.crygier.graphql.mlshop.util.VerifyUtil.BARGAIN;
+import static org.crygier.graphql.mlshop.utils.VerifyUtil.BARGAIN;
 
 /**
  * @author Curtain

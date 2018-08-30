@@ -1,6 +1,6 @@
 package org.crygier.graphql.mlshop.config
 
-import org.crygier.graphql.mlshop.util.CharsetUtil
+import org.crygier.graphql.mlshop.utils.CharsetUtil
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.stereotype.Component

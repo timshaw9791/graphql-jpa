@@ -1,58 +1,51 @@
-package org.crygier.graphql.mlshop.bean;
+package org.crygier.graphql.wechatpay.model.wechat.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
 
 /**
+ * 支付请求参数
  * @author Curtain
- * @date 2018/8/29 9:51
+ * @date 2018/8/30 15:16
  */
-@Data
 @XStreamAlias("xml")
-public class UnifiedOrder {
-    /**
-     * 公众账号ID
-     */
+@Data
+public class WeChatPayRequest {
+
     private String appid;
-    /**
-     * 商品描述
-     */
-    private String body;
-    /**
-     * 商户号
-     */
+
     @XStreamAlias("mch_id")
     private String mchId;
-    /**
-     * 随机串
-     */
+
     @XStreamAlias("nonce_str")
     private String nonceStr;
-    /**
-     * 通知地址
-     */
+
+    private String sign;
+
+    private String attach;
+
+    private String body;
+
+    private String detail;
+
+
     @XStreamAlias("notify_url")
     private String notifyUrl;
-    /**
-     * 商户订单号
-     */
+
+    private String openid;
+
     @XStreamAlias("out_trade_no")
     private String outTradeNo;
-    /**
-     * 终端IP（用户）
-     */
+
     @XStreamAlias("spbill_create_ip")
     private String spbillCreateIp;
-    /**
-     * 总金额
-     */
+
     @XStreamAlias("total_fee")
-    private Integer totalFee;
-    /**
-     * 交易类型
-     */
+    private Long totalFee;
+
     @XStreamAlias("trade_type")
     private String tradeType;
+
     /**
      * 统一下单接口
      */
@@ -63,8 +56,4 @@ public class UnifiedOrder {
      */
     @XStreamAlias("scene_info")
     private String sceneInfo;
-    /**
-     * 签名
-     */
-    private String sign;
 }

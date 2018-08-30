@@ -3,8 +3,8 @@ package org.crygier.graphql.mlshop.service.impl;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import org.crygier.graphql.mlshop.service.VerificationService;
-import org.crygier.graphql.mlshop.util.AliyunMessageUtil;
-import org.crygier.graphql.mlshop.util.NumberUtil;
+import org.crygier.graphql.mlshop.utils.AliyunMessageUtil;
+import org.crygier.graphql.mlshop.utils.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.crygier.graphql.mlshop.util.VerifyUtil.*;
+import static org.crygier.graphql.mlshop.utils.VerifyUtil.*;
 
 @Service
 public class VerificationServiceImpl implements VerificationService {
