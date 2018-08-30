@@ -35,16 +35,16 @@ public class PayServiceImpl implements PayService {
         unifiedOrder.setMchId("1512065311");
         unifiedOrder.setNonceStr(NumberUtil.getRandomStr());
         unifiedOrder.setBody("猛龙出行汽车商城-定金支付");
-        unifiedOrder.setOutTradeNo("201802372812");
+        unifiedOrder.setOutTradeNo("201802300728012");
         unifiedOrder.setTotalFee(1);
         //todo 获取用户ip
 
         String ip = getIPAddress(request);
 
-        unifiedOrder.setSpbillCreateIp(ip);
-        unifiedOrder.setNotifyUrl("http://www.embracex.com/mlsop/notify");
+        unifiedOrder.setSpbillCreateIp("ip");
+        unifiedOrder.setNotifyUrl("http://121.196.218.4:8080/mlsop/notify");
         unifiedOrder.setTradeType("MWEB");
-        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMall\"}}");
+        unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://www.menglongchuxing.cn\",\"wap_name\": \"猛龙出行\"}}");
         //最后再添加签名
         unifiedOrder.setSign(sign(buildMap(unifiedOrder),"BawUezX73SHVbo2AFZCbyK2Htq1ZZER7"));
 
