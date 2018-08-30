@@ -41,7 +41,7 @@ public class PayServiceImpl implements PayService {
 
         String ip = getIPAddress(request);
 
-        unifiedOrder.setSpbillCreateIp("ip");
+        unifiedOrder.setSpbillCreateIp(ip);
         unifiedOrder.setNotifyUrl("http://121.196.218.4:8080/mlsop/notify");
         unifiedOrder.setTradeType("MWEB");
         unifiedOrder.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://www.menglongchuxing.cn\",\"wap_name\": \"猛龙出行\"}}");
