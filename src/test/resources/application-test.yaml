@@ -25,5 +25,5 @@ wechat:
   appSecret:
   mchId: 1512065311
   mchKey: BawUezX73SHVbo2AFZCbyK2Htq1ZZER7
-  keyPath:
+  keyPath: \wu\graphql-jpa\src\test\resources\static\h.p12
   notifyUrl: http://115.159.154.194:8080/mlshop/notify

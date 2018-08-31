@@ -17,7 +17,7 @@ public interface WeChatPayApi {
      * @param body
      * @return
      */
-    @POST("/pay/unifiedorder")
+    @POST("/templates/pay/unifiedorder")
     Call<WeChatPaySyncResponse> unifiedOrder(@Body RequestBody body);
 
     /**
@@ -25,7 +25,7 @@ public interface WeChatPayApi {
      * @param body
      * @return
      */
-    @POST("/secapi/pay/refund")
+    @POST("/secapi/templates.pay/refund")
     Call<WeChatPayRefundResponse> refund(@Body RequestBody body);
 
 }

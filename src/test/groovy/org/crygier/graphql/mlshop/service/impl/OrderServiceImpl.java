@@ -45,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order save(Order order) {
+        //todo 部分数据初始化  支付状态  砍价状态 等等
+
         return orderRepository.save(order);
     }
 }

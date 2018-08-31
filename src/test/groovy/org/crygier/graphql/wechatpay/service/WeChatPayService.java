@@ -6,7 +6,6 @@ import org.crygier.graphql.wechatpay.model.request.RefundRequest;
 import org.crygier.graphql.wechatpay.model.response.PayResponse;
 import org.crygier.graphql.wechatpay.model.response.RefundResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -41,10 +40,10 @@ public interface WeChatPayService {
 
     /**
      * 同步回调
-     * @param request
+     * @param notifyData
      * @return
      */
-    PayResponse syncNotify(HttpServletRequest request);
+    PayResponse syncNotify(String notifyData);
 
     /**
      * 异步回调

@@ -1,10 +1,13 @@
 package org.crygier.graphql.wechatpay.model.response;
 
+import lombok.Data;
+
 /**
  * 退款时响应参数
  * @author Curtain
  * @date 2018/8/30 15:06
  */
+@Data
 public class RefundResponse {
     /**
      * 订单号.
@@ -14,7 +17,7 @@ public class RefundResponse {
     /**
      * 订单金额.
      */
-    private Double orderAmount;
+    private Long orderAmount;
 
     /**
      * 第三方支付流水号.

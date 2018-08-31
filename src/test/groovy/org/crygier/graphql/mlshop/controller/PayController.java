@@ -4,6 +4,7 @@ import org.crygier.graphql.mlshop.service.PayService;
 import org.crygier.graphql.wechatpay.model.response.PayResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Curtain
@@ -17,7 +18,7 @@ public class PayController {
     @Autowired
     private PayService payService;
 
-    @RequestMapping("/pay")
+    @RequestMapping("/templates/pay")
     public String weChatPay(@RequestParam(name = "orderid") String orderId, @RequestParam(name = "ip") String ip) {
         PayResponse payResponse = payService.weChatPay(orderId, ip);
         return payResponse.getMwebUrl();
@@ -25,8 +26,14 @@ public class PayController {
     }
 
     @PostMapping("/notify")
-    private void notify(@RequestBody String notifyData) {
-        System.out.println(notifyData);
+    private ModelAndView notify(@RequestBody String notifyData) {
+       payService.notify(notifyData);
+        //返回微信处理结果
+        return new ModelAndView("templates/pay/success");
     }
 
+    @PostMapping("/refund")
+    private void refund(@RequestParam("orderid") String orderId){
+        payService.refund(orderId);
+    }
 }
