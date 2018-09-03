@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Curtain
  * @date 2018/8/29 11:07
@@ -19,8 +21,8 @@ public class PayController {
     private PayService payService;
 
     @RequestMapping("/templates/pay")
-    public String weChatPay(@RequestParam(name = "orderid") String orderId, @RequestParam(name = "ip") String ip) {
-        PayResponse payResponse = payService.weChatPay(orderId, ip);
+    public String weChatPay(@RequestParam(name = "orderid") String orderId,HttpServletRequest httpServletRequest) {
+        PayResponse payResponse = payService.weChatPay(orderId,httpServletRequest);
         return payResponse.getMwebUrl();
 
     }

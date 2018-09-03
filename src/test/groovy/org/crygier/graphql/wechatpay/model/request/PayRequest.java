@@ -36,7 +36,6 @@ public class PayRequest {
     private String openid;
 
 
-    //todo 增加h5支付时需要的参数
     /**
      * 信息
      */

@@ -63,6 +63,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByPhone(String phone) {
+        return userRepository.findByPhone(phone).get();
+    }
+
+    @Override
+    public void forgetPassword(String phone, String password) {
+        User user = findByPhone(phone);
+        if (VerifyUtil.validity(phone+VerifyUtil.MODIFY_PASSWORD)){
+            user.setPassword(password);
+            userRepository.save(user);
+        }
+        throw new RuntimeException("验证码过期，请重新验证");
+    }
+
+    @Override
     public User findOne(String id) {
         return userRepository.findById(id).get();
     }

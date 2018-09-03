@@ -20,7 +20,7 @@ import java.util.List;
 public class TimeSchedule {
 
     /*超时订单设置*/
-    @Scheduled(cron = "00 16 14 * * ?")
+    @Scheduled(cron = "00 00 00 * * ?")
     public void updateCommunicationStatus() {
 
         CarCommunicationService carCommunicationService = (CarCommunicationService) SpringUtil.getBean("carCommunicationServiceImpl");

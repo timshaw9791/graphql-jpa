@@ -62,6 +62,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
         carCommunication.setSalesman(salesman);
         carCommunication.setDistributeTime(System.currentTimeMillis());
+        carCommunication.setStatus(CarCommunicationStatusEnum.B);
         verificationService.visitCode(salesman.getTel(),carCommunication.getNumber());
         CarCommunication result = carCommunicationRepository.save(carCommunication);
         return result;
