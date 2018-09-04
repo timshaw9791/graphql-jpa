@@ -69,11 +69,18 @@ public class PayServiceImpl implements PayService {
     @Override
     public PayResponse weChatPay(String orderId, HttpServletRequest httpServletRequest) {
 
-        Order order = orderService.findOne(orderId);
+//        Order order = orderService.findOne(orderId);
+//
+//        PayRequest payRequest = new PayRequest();
+//        payRequest.setOrderAmount(1L);
+//        payRequest.setOrderId(order.getId());
+//        payRequest.setOrderName("猛龙商城");
+//        payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
+//        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
 
         PayRequest payRequest = new PayRequest();
         payRequest.setOrderAmount(1L);
-        payRequest.setOrderId(order.getId());
+        payRequest.setOrderId("xxxxxx17818ydas8");
         payRequest.setOrderName("猛龙商城");
         payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
         payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
