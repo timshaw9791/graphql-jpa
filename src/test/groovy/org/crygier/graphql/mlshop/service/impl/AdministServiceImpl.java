@@ -34,10 +34,10 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ save(Administ administ) {
-        //todo  密码加密   如果用户已存在  提示
+        //todo  密码加密
         Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
         if (administOptional.isPresent()){
-            throw new RuntimeException("用户名已存在");
+            throw new MLShopRunTimeException("用户已存在,请重新填写用户名");
         }
 
         return administRepository.save(administ);
@@ -56,6 +56,14 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ modifyPassword(Administ administ) {
-        return administRepository.save(administ);
+        Optional<Administ> optional = administRepository.findById(administ.getId());
+        if (optional.isPresent()){
+            Administ result = optional.get();
+            result.setPassword(administ.getPassword());
+            return administRepository.save(result);
+        }
+       else {
+            throw new MLShopRunTimeException("未找到用户,修改密码失败");
+        }
     }
 }

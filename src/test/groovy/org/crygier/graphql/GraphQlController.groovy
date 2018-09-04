@@ -75,6 +75,10 @@ class GraphQlController {
         public List<GraphQLError> getErrors() {
             List<GraphQLError> errors=super.getErrors();
 
+            if(errors!=null && errors.size()==0){
+                return null;
+            }
+
             //获取异常
             ExceptionWhileDataFetching whileDataFetching = (ExceptionWhileDataFetching) errors.get(0)
 
@@ -82,12 +86,11 @@ class GraphQlController {
             //修改系统异常提示   保证业务异常简单清晰
             if (!(exception instanceof MLShopRunTimeException)){
                 whileDataFetching.message = "系统内部错误，请与管理员联系";
+                errors.set(0,whileDataFetching);
             }
-            errors.set(0,whileDataFetching);
 
-            if(errors!=null && errors.size()==0){
-                return null;
-            }
+
+
             return errors;
         }
     }
