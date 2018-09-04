@@ -47,7 +47,7 @@ class UserController {
     }
     @SchemaDocumentation("修改手机号")
     @GRequestMapping(path = "/modifyphone", method = RequestMethod.POST)
-    String modifyPhone(@RequestParam(name = "pbone", required = true) String phone,
+    String modifyPhone(@RequestParam(name = "phone", required = true) String phone,
                           @RequestParam(name = "id", required = true) String id) {
         userService.modifyPhone(phone, id);
         return "success";
