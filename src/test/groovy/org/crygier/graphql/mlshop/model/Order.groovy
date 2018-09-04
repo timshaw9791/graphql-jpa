@@ -112,4 +112,10 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("砍价是否成功")
     boolean bargainSuccess = false;
+
+    @SchemaDocumentation("是否审核")
+    boolean audit;
+
+    @SchemaDocumentation("审核不通过原因")
+    String cause;
 }

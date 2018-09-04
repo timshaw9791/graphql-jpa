@@ -9,6 +9,7 @@ import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.repo.CarCommunicationRepository;
 import org.crygier.graphql.mlshop.repo.CustomerRepository;
 import org.crygier.graphql.mlshop.service.CarCommunicationService;
+import org.crygier.graphql.mlshop.service.SalesmanService;
 import org.crygier.graphql.mlshop.service.VerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
 
     @Autowired
     private VerificationService verificationService;
+
+    @Autowired
+    private SalesmanService salesmanService;
 
     @Override
     public CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord) {
@@ -60,6 +64,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     @Override
     public CarCommunication allocate(String carCommunicationId, Salesman salesman) {
         CarCommunication carCommunication = carCommunicationRepository.findById(carCommunicationId).get();
+        salesman = salesmanService.findOne(salesman.getId());
         carCommunication.setSalesman(salesman);
         carCommunication.setDistributeTime(System.currentTimeMillis());
         carCommunication.setStatus(CarCommunicationStatusEnum.B);

@@ -49,4 +49,31 @@ public interface OrderService {
      */
     Order allocateOrder(String id, Salesman salesman);
 
+    /**
+     * 订单支付
+     * @param id
+     * @return
+     */
+    Order paid(String id);
+
+    /**
+     * 退款
+     * @param id
+     * @return
+     */
+    Order refund(String id);
+
+    /**
+     * 审核
+     * @param id
+     * @return
+     */
+    Order audit(String id,Boolean flag,String cause);
+
+    /**
+     * 完结
+     * @param id
+     * @return
+     */
+    Order finish(String id);
 }

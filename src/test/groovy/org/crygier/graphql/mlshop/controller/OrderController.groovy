@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @GRestController("mlshop")
 @RestController
 @CompileStatic
-public class OrderController{
+public class OrderController {
 
     @Autowired
     OrderRepository orderRepository;
@@ -46,9 +46,22 @@ public class OrderController{
 
     @SchemaDocumentation("分配订单")
     @GRequestMapping("/allocateorder")
-    Order allocateOrder(@RequestParam(name = "id",required = true)String id,
-                        @RequestParam(name = "salesman",required = true)Salesman salesman){
-        return orderService.allocateOrder(id,salesman);
+    Order allocateOrder(@RequestParam(name = "id", required = true) String id,
+                        @RequestParam(name = "salesman", required = true) Salesman salesman) {
+        return orderService.allocateOrder(id, salesman);
     }
 
+    @SchemaDocumentation("完结订单")
+    @GRequestMapping("/finishorder")
+    Order finishOrder(@RequestParam(name = "id", required = true) String id) {
+        return orderService.finish(id);
+    }
+
+    @SchemaDocumentation("审核订单")
+    @GRequestMapping("/auditorder")
+    Order auditOrder(@RequestParam(name = "id", required = true) String id,
+                     @RequestParam(name = "flag", required = true) Boolean flag,
+                     @RequestParam(name = "cause", required = true) String cause) {
+        return orderService.audit(id, flag, cause);
+    }
 }
