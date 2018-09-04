@@ -10,6 +10,7 @@ import org.crygier.graphql.wechatpay.model.request.RefundRequest;
 import org.crygier.graphql.wechatpay.model.response.PayResponse;
 import org.crygier.graphql.wechatpay.model.response.RefundResponse;
 import org.crygier.graphql.wechatpay.service.WeChatPayService;
+import org.crygier.graphql.wechatpay.utils.IPAddressUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,7 +82,7 @@ public class PayServiceImpl implements PayService {
         payRequest.setOrderAmount(1L);
         payRequest.setOrderId("xxxxxx17818ydas8");
         payRequest.setOrderName("猛龙商城");
-        payRequest.setSpbillCreateIp("183.245.77.242");
+        payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
         payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
 
         return weChatPayService.h5pay(payRequest);

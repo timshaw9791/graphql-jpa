@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.Administ;
 import org.crygier.graphql.mlshop.repo.AdministRepository;
 import org.crygier.graphql.mlshop.service.AdministService;
@@ -26,7 +27,7 @@ public class AdministServiceImpl implements AdministService {
         Optional<Administ> optional = administRepository.findByUsername(Optional.ofNullable(s).orElse(""));
         if (!optional.isPresent()) {
 //            throw new UsernameNotFoundException(ResultExceptionEnum.ROLE_IS_EXIST.getMessage());
-            new RuntimeException("no user");
+            new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
         }
         return optional.get();
     }

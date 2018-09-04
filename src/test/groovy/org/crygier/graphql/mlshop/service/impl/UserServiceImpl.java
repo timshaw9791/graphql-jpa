@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.Customer;
 import org.crygier.graphql.mlshop.model.enums.CustomerLevelEnum;
 import org.crygier.graphql.mlshop.model.user.User;
@@ -31,13 +32,20 @@ public class UserServiceImpl implements UserService {
         Optional<User> optional = userRepository.findByUsername(username);
         if (optional.isPresent()) {
             return optional.get();
-        } else return null;
+        } else {
+            //new runtimeexception
+            return null;
+        }
     }
 
     @Override
     public User register(User user) {
         if (VerifyUtil.validity(user.getPhone() + VerifyUtil.REGISTER)) {
             //todo 如果手机号已经被注册  则。。。
+            Optional<User> optional = userRepository.findByPhone(user.getPhone());
+            if (optional.isPresent()){
+                throw new MLShopRunTimeException("用户已经存在,此手机号已被注册");
+            }
 
             //创建客户信息
             Customer customer = new Customer();
@@ -48,8 +56,10 @@ public class UserServiceImpl implements UserService {
             user.setUsername(user.getPhone());
 
             return userRepository.save(user);
+        }else {
+            throw new RuntimeException("验证码过期，请重新验证");
         }
-        throw new RuntimeException("验证码过期，请重新验证");
+
     }
 
     @Override
@@ -58,8 +68,10 @@ public class UserServiceImpl implements UserService {
         if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PASSWORD)) {
             user.setPassword(password);
             userRepository.save(user);
+        }else {
+            throw new RuntimeException("验证码过期，请重新验证");
         }
-        throw new RuntimeException("验证码过期，请重新验证");
+
     }
 
     @Override
@@ -73,8 +85,10 @@ public class UserServiceImpl implements UserService {
         if (VerifyUtil.validity(phone+VerifyUtil.MODIFY_PASSWORD)){
             user.setPassword(password);
             userRepository.save(user);
+        }else {
+            throw new RuntimeException("验证码过期，请重新验证");
         }
-        throw new RuntimeException("验证码过期，请重新验证");
+
     }
 
     @Override
@@ -105,11 +119,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyPhone(String phone, String id) {
         User user = userRepository.findById(id).get();
+
+        Optional<User> optional = userRepository.findByPhone(phone);
+        if (optional.isPresent()){
+            throw new MLShopRunTimeException("手机号已经被注册使用，修改失败");
+        }
+
         if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PHONE)) {
             user.setPhone(phone);
             user.setUsername(phone);
             userRepository.save(user);
+        }else {
+            throw new RuntimeException("验证码过期，请重新验证");
         }
-        throw new RuntimeException("验证码过期，请重新验证");
+
     }
 }
