@@ -83,7 +83,7 @@ public class PayServiceImpl implements PayService {
         payRequest.setOrderId("xxxxxx17818ydas8");
         payRequest.setOrderName("猛龙商城");
         payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
-        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
+        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMal\"}}");
 
         return weChatPayService.h5pay(payRequest);
 
