@@ -118,4 +118,8 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("审核不通过原因")
     String cause;
+
+    @SchemaDocumentation("退款时间")
+    long refundTime;
+
 }

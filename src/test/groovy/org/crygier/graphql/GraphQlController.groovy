@@ -1,13 +1,11 @@
 package org.crygier.graphql
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import graphql.ExceptionWhileDataFetching
 import graphql.ExecutionResult
 import graphql.ExecutionResultImpl
 import graphql.GraphQLError
 import org.crygier.graphql.annotation.GRequestMapping
 import org.crygier.graphql.annotation.GRestController
-import org.crygier.graphql.mlshop.exception.MLShopRunTimeException
 import org.crygier.graphql.mlshop.model.user.Role
 import org.crygier.graphql.mlshop.model.user.User
 import org.crygier.graphql.mlshop.repo.UserRepository
@@ -74,23 +72,9 @@ class GraphQlController {
         @Override
         public List<GraphQLError> getErrors() {
             List<GraphQLError> errors=super.getErrors();
-
             if(errors!=null && errors.size()==0){
                 return null;
             }
-
-            //获取异常
-            ExceptionWhileDataFetching whileDataFetching = (ExceptionWhileDataFetching) errors.get(0)
-
-            Exception exception = whileDataFetching.exception
-            //修改系统异常提示   保证业务异常简单清晰
-            if (!(exception instanceof MLShopRunTimeException)){
-                whileDataFetching.message = "系统内部错误，请与管理员联系";
-                errors.set(0,whileDataFetching);
-            }
-
-
-
             return errors;
         }
     }

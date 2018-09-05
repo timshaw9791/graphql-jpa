@@ -43,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOne(id);
         order.setPayStatusEnum(OrderPayStatusEnum.REFUND);
         order.setOrderStatusEnum(OrderStatusEnum.REFUND);
+        order.setRefundTime(System.currentTimeMillis());
         return orderRepository.save(order);
     }
 
