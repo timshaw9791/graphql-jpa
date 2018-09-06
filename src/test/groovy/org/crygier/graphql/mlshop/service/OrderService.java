@@ -76,4 +76,10 @@ public interface OrderService {
      * @return
      */
     Order finish(String id);
+
+    /**
+     * 砍价成功设置
+     * @param id
+     */
+    void bargain(String id);
 }

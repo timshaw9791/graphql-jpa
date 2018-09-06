@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPassword(String password, String id) {
+        //todo  密码加密  还有注册时
         User user = userRepository.findById(id).get();
         if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PASSWORD)) {
             user.setPassword(password);

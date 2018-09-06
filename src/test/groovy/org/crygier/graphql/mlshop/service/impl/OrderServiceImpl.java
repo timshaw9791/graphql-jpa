@@ -7,6 +7,7 @@ import org.crygier.graphql.mlshop.model.enums.OrderPayStatusEnum;
 import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum;
 import org.crygier.graphql.mlshop.repo.OrderRepository;
 import org.crygier.graphql.mlshop.service.OrderService;
+import org.crygier.graphql.mlshop.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,17 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PayService payService;
+
     @Override
     public Order update(Order order) {
         //todo   查询数据库中的一些字段状态 比如保证支付状态一致
+        Order result = findOne(order.getId());
+
+
+        //保证支付状态 订单状态  砍价状态  不被编辑订单修改
+
         return orderRepository.save(order);
     }
 
@@ -45,6 +54,13 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatusEnum(OrderStatusEnum.REFUND);
         order.setRefundTime(System.currentTimeMillis());
         return orderRepository.save(order);
+    }
+
+    @Override
+    public void bargain(String id) {
+        Order order = findOne(id);
+        order.setBargainSuccess(true);
+        orderRepository.save(order);
     }
 
     @Override
@@ -81,8 +97,9 @@ public class OrderServiceImpl implements OrderService {
 
         }else {
             //不通过  退款
-            //todo 调用支付服务中的退款
+            payService.refund(order.getId());
             order.setCause(cause);
+
         }
         return orderRepository.save(order);
     }
@@ -107,8 +124,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order save(Order order) {
-        //todo 部分数据初始化  支付状态  砍价状态 等等
-
+        //数据初始化   支付状态  砍价状态
+        order.setPayStatusEnum(OrderPayStatusEnum.WAIT);
+        order.setBargainSuccess(false);
         return orderRepository.save(order);
     }
 }

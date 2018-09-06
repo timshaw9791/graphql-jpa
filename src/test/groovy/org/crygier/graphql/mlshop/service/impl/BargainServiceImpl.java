@@ -93,7 +93,12 @@ public class BargainServiceImpl implements BargainService {
             //判断此用户是否已经砍价
 
             Order order = orderService.findOne(orderId);
-            BargainRecord bargainRecord = bargainRecordRepository.findByOrder(order).get();
+            Optional<BargainRecord> optional = bargainRecordRepository.findByOrder(order);
+            if (!(optional.isPresent())){
+                throw new MLShopRunTimeException("该订单未生成砍价记录,无法砍价");
+            }
+
+            BargainRecord bargainRecord = optional.get();
 
             String chopPhone = bargainRecord.getChopPhone();
 
@@ -120,8 +125,7 @@ public class BargainServiceImpl implements BargainService {
 
             //如果人数达到 则砍价成功
             if (bargainRecord.getPeopleNumber().equals(bargainRecord.getChopCount())) {
-                order.setBargainSuccess(true);
-                orderService.update(order);
+                orderService.bargain(order.getId());
             }
             return bargainRecordRepository.save(bargainRecord);
         }
