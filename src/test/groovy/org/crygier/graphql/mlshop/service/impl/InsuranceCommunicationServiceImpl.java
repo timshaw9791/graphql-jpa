@@ -80,7 +80,6 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         insuranceCommunication.setDistributeTime(System.currentTimeMillis());
         Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication();
         insuranceCommunication.setAdminist(administ);
-        //TODO 应该加上adminst的赋值，用当前用户信息。
         InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
         verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());
         return result;
@@ -92,7 +91,7 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     public InsuranceCommunication addRecord(String insuranceCommunicationId, CommunicationRecord communicationRecord) {
         InsuranceCommunication insuranceCommunication = insuranceCommunicationRepository.findById(insuranceCommunicationId).get();
         //设置默认客户等级  默认  因为不需要展示
-        communicationRecord.setLevel(CustomerLevelEnum.A);
+//        communicationRecord.setLevel(CustomerLevelEnum.A);
         communicationRecord.setAdminist(insuranceCommunication.getAdminist());
         insuranceCommunication.getCommunicationItems().add(communicationRecord);
         insuranceCommunication.setStatus(communicationRecord.getStatus());
