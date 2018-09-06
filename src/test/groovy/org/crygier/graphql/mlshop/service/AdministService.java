@@ -30,4 +30,11 @@ public interface AdministService extends UserDetailsService {
      */
     Administ modifyPassword(Administ administ);
 
+    /**
+     * 查找一个用户 id
+     * @param id
+     * @return
+     */
+    Administ findOne(String id);
+
 }

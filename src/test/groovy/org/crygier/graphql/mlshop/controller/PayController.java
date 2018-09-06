@@ -23,6 +23,7 @@ public class PayController {
     @RequestMapping("/pay")
     public String weChatPay(@RequestParam(name = "orderid") String orderId,HttpServletRequest httpServletRequest) {
         PayResponse payResponse = payService.weChatPay(orderId,httpServletRequest);
+        
         return payResponse.getMwebUrl();
 
     }

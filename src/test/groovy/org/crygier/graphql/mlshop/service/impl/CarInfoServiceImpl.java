@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.CarInfo;
 import org.crygier.graphql.mlshop.repo.CarInfoRepository;
 import org.crygier.graphql.mlshop.service.CarInfoService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Curtain
@@ -24,7 +26,7 @@ public class CarInfoServiceImpl implements CarInfoService {
         if (!(carInfo.getModel().equals(result.getModel()))) {
             CarInfo model = carInfoRepository.findByModel(carInfo.getModel());
             if (model != null) {
-                throw new RuntimeException("The modification failed, the model already existed");
+                throw new RuntimeException("修改失败，这个型号的车已经存在");
 //
 //            if (carInfo.getFinancialSchemesItems() != null && carInfo.getFinancialSchemesItems().size()>0) {
 //                model.getFinancialSchemesItems().clear();
@@ -58,7 +60,11 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo findOne(String id) {
-        return carInfoRepository.findById(id).get();
+        Optional<CarInfo> optional = carInfoRepository.findById(id);
+        if (optional.isPresent()){
+            return optional.get();
+        }
+        throw new MLShopRunTimeException("未找到这辆车的信息");
     }
 
     @Override

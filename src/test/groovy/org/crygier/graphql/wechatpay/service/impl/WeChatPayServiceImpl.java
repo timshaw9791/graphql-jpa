@@ -56,7 +56,7 @@ public class WeChatPayServiceImpl implements WeChatPayService {
         weChatPayRequest.setOutTradeNo(request.getOrderId());
         weChatPayRequest.setTotalFee(request.getOrderAmount());
         weChatPayRequest.setBody(request.getOrderName());
-        weChatPayRequest.setSceneInfo(request.getSceneInfo());
+//        weChatPayRequest.setSceneInfo(request.getSceneInfo());
         weChatPayRequest.setSpbillCreateIp(request.getSpbillCreateIp());
 
         weChatPayRequest.setTradeType("MWEB");

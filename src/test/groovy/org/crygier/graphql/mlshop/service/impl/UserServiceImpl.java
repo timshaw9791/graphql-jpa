@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         if (VerifyUtil.validity(user.getPhone() + VerifyUtil.REGISTER)) {
-            //todo 如果手机号已经被注册  则。。。
             Optional<User> optional = userRepository.findByPhone(user.getPhone());
             if (optional.isPresent()){
                 throw new MLShopRunTimeException("用户已经存在,此手机号已被注册");

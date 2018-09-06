@@ -2,7 +2,6 @@ package org.crygier.graphql.mlshop.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.crygier.graphql.mlshop.model.Order;
-import org.crygier.graphql.mlshop.model.enums.OrderPayStatusEnum;
 import org.crygier.graphql.mlshop.service.OrderService;
 import org.crygier.graphql.mlshop.service.PayService;
 import org.crygier.graphql.wechatpay.model.request.PayRequest;
@@ -42,9 +41,8 @@ public class PayServiceImpl implements PayService {
             throw new RuntimeException("金额不正确");
         }
 
-        //修改订单支付状态  todo orderservice 增加paid接口
-        order.setPayStatusEnum(OrderPayStatusEnum.PAID);
-
+        //订单支付
+        orderService.paid(order.getId());
 
         return payResponse;
     }
@@ -57,11 +55,10 @@ public class PayServiceImpl implements PayService {
 
         refundRequest.setOrderId(orderId);
         refundRequest.setOrderAmount(order.getFrontMoney());
-//        refundRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
 
         RefundResponse refundResponse = weChatPayService.refund(refundRequest);
 
-        //todo 修改订单 为退款
+        orderService.refund(orderId);
 
         return refundResponse;
     }
@@ -70,7 +67,7 @@ public class PayServiceImpl implements PayService {
     public PayResponse weChatPay(String orderId, HttpServletRequest httpServletRequest) {
 
 //        Order order = orderService.findOne(orderId);
-//
+
 //        PayRequest payRequest = new PayRequest();
 //        payRequest.setOrderAmount(1L);
 //        payRequest.setOrderId(order.getId());
@@ -80,7 +77,7 @@ public class PayServiceImpl implements PayService {
 
         PayRequest payRequest = new PayRequest();
         payRequest.setOrderAmount(1L);
-        payRequest.setOrderId("xxxxxx17818ydas8");
+        payRequest.setOrderId(orderId);
         payRequest.setOrderName("猛龙商城");
         payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
         payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMal\"}}");

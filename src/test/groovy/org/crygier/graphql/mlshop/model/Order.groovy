@@ -34,6 +34,9 @@ public class Order extends BosEntity {
     @SchemaDocumentation("支付状态")
     OrderPayStatusEnum payStatusEnum;
 
+    @SchemaDocumentation("支付方式")
+    String payMode;
+
     @SchemaDocumentation("门店")
     @ManyToOne
     Shop shop;
@@ -73,6 +76,9 @@ public class Order extends BosEntity {
 
     @SchemaDocumentation("尾款：/分")
     Long tailMoney;
+
+    @SchemaDocumentation("赠送：/分")
+    Long presentMoney;
 
     @SchemaDocumentation("车辆来源")
     @ManyToOne

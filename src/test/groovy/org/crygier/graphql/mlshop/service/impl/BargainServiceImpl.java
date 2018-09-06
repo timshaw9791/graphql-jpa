@@ -3,6 +3,7 @@ package org.crygier.graphql.mlshop.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.crygier.graphql.mlshop.bean.BargainSetting;
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.BargainRecord;
 import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.repo.BargainRecordRepository;
@@ -60,7 +61,6 @@ public class BargainServiceImpl implements BargainService {
             return optional.get();
         }
 
-
         //获取砍价设置的内容
         BargainSetting bargainSetting = findBargainSetting();
 
@@ -72,13 +72,18 @@ public class BargainServiceImpl implements BargainService {
         bargainRecord.setPeopleNumber(bargainSetting.getNumber());
         bargainRecord.setOrder(order);
 
-
         return bargainRecordRepository.save(bargainRecord);
     }
 
     @Override
     public BargainRecord findBargainRecord(String orderId) {
-        return bargainRecordRepository.findByOrder(orderService.findOne(orderId)).get();
+
+        Optional<BargainRecord> optional = bargainRecordRepository.findByOrder(orderService.findOne(orderId));
+        if (optional.isPresent()){
+            return optional.get();
+        }else {
+            throw new MLShopRunTimeException("砍价记录未找到");
+        }
     }
 
     @Override
@@ -93,13 +98,13 @@ public class BargainServiceImpl implements BargainService {
             String chopPhone = bargainRecord.getChopPhone();
 
             if (chopPhone != null && chopPhone.contains(phone)) {
-                throw new RuntimeException("you have already complete bargain.");
+                throw new RuntimeException("你已经砍价过了");
             }
 
             //判断是否在砍价时间内
             long time = bargainRecord.getCreatetime() + bargainRecord.getEffectiveTime();
             if (System.currentTimeMillis() > time) {
-                throw new RuntimeException("砍价已结束");
+                throw new RuntimeException("时间已到期，砍价已结束");
             }
 
             //设置砍价信息

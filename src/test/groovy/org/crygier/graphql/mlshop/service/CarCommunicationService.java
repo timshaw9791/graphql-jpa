@@ -69,4 +69,9 @@ public interface    CarCommunicationService {
     void saveAll(Collection collection);
 
 
+    /**
+     * 查找单个  id
+     * @param id
+     */
+    CarCommunication findOne(String id);
 }

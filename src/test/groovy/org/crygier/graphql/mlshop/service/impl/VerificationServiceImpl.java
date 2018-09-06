@@ -37,7 +37,7 @@ public class VerificationServiceImpl implements VerificationService {
             e.printStackTrace();
         }
         if (!(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK"))) {
-            throw new RuntimeException("Get verify code fail.");
+            throw new RuntimeException("获取验证码失败");
         }
         switch (type) {
             case 1:
@@ -112,7 +112,7 @@ public class VerificationServiceImpl implements VerificationService {
         if (rs.equals(code)) {
             redisTemplate.opsForValue().set(key, String.valueOf(System.currentTimeMillis()));
         } else {
-            throw new RuntimeException("Verify code fail,please try to get the verification code.");
+            throw new RuntimeException("验证码不正确，验证失败，请重新获取验证码验证");
         }
 
     }

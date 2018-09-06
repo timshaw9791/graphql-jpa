@@ -26,8 +26,7 @@ public class AdministServiceImpl implements AdministService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Optional<Administ> optional = administRepository.findByUsername(Optional.ofNullable(s).orElse(""));
         if (!optional.isPresent()) {
-//            throw new UsernameNotFoundException(ResultExceptionEnum.ROLE_IS_EXIST.getMessage());
-            new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
+            throw new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
         }
         return optional.get();
     }
@@ -36,6 +35,7 @@ public class AdministServiceImpl implements AdministService {
     public Administ save(Administ administ) {
         //todo  密码加密
         Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
+
         if (administOptional.isPresent()){
             throw new MLShopRunTimeException("用户已存在,请重新填写用户名");
         }
@@ -45,7 +45,8 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ update(Administ administ) {
-        Administ result = administRepository.findById(administ.getId()).get();
+        Administ result =  findOne(administ.getId());
+
         if (result.getPassword()==null){
             administ.setPassword(null);
         }else {
@@ -55,15 +56,20 @@ public class AdministServiceImpl implements AdministService {
     }
 
     @Override
-    public Administ modifyPassword(Administ administ) {
-        Optional<Administ> optional = administRepository.findById(administ.getId());
+    public Administ findOne(String id) {
+        Optional<Administ> optional = administRepository.findById(id);
         if (optional.isPresent()){
-            Administ result = optional.get();
-            result.setPassword(administ.getPassword());
-            return administRepository.save(result);
+            return optional.get();
+        }else {
+            throw new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
         }
-       else {
-            throw new MLShopRunTimeException("未找到用户,修改密码失败");
-        }
+    }
+
+    @Override
+    public Administ modifyPassword(Administ administ) {
+
+        Administ result = findOne(administ.getId());
+        result.setPassword(administ.getPassword());
+        return administRepository.save(result);
     }
 }
