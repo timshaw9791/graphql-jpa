@@ -1,14 +1,11 @@
 package org.crygier.graphql.mlshop.model
 
-import cn.wzvtcsoft.x.bos.domain.BosEntity
 import cn.wzvtcsoft.x.bos.domain.Bostype
 import cn.wzvtcsoft.x.bos.domain.Entry
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
 import javax.persistence.Entity
-
-
 /**
  * @author Curtain
  * @date 2018/7/30 11:09
@@ -33,12 +30,12 @@ class Decor extends Entry{
     String shopName;
 
     @SchemaDocumentation("总成本")
-    Long cost;
+    String cost;
 
     @SchemaDocumentation("加装物品")
     String goods;
 
     @SchemaDocumentation("加装费用")
-    Long goodsRecharge;
+    String goodsRecharge;
 
 }

@@ -33,7 +33,7 @@ class Mortgage extends Entry{
     String customerPhone;
 
     @SchemaDocumentation("贷款金额")
-    Long loanAmount;
+    String loanAmount;
 
     @SchemaDocumentation("利率")
     BigDecimal rate;
@@ -48,7 +48,7 @@ class Mortgage extends Entry{
     String salesman;
 
     @SchemaDocumentation("返点金额")
-    Long rePointAmount;
+    String rePointAmount;
 
     @SchemaDocumentation("签订时间")
     Long signTime;
@@ -59,7 +59,7 @@ class Mortgage extends Entry{
     @SchemaDocumentation("签单地址")
     String mortgageAddress;
 
-    @SchemaDocumentation("首付比率")
+    @SchemaDocumentation("首付比率  %")
     BigDecimal downPaymentRate;
 
     @SchemaDocumentation("月供:单位分")
@@ -69,23 +69,23 @@ class Mortgage extends Entry{
     Long periods;
 
     @SchemaDocumentation("利息")
-    Long accrual;
+    String accrual;
 
     @SchemaDocumentation("首付金额")
     Long downPayments;
 
     @SchemaDocumentation("押金")
-    Long deposit;
+    String deposit;
 
     @SchemaDocumentation("手续费")
     Long serviceCharge;
 
     @SchemaDocumentation("GPS费")
-    Long gpsCharge;
+    String gpsCharge;
 
     @SchemaDocumentation("签单费")
-    Long signBill;
+    String signBill;
 
     @SchemaDocumentation("签单返点费")
-    Long signRePointBill;
+    String signRePointBill;
 }

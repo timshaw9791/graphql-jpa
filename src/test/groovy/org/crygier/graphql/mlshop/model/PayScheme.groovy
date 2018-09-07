@@ -17,47 +17,47 @@ import javax.persistence.Entity
 public class PayScheme extends Entry{
 
     @SchemaDocumentation("进价 单位：分")
-    Long purchasePrice;
+    String purchasePrice;
 
     @SchemaDocumentation("原价 单位：分")
-    Long oldPrice;
+    String oldPrice;
 
     @SchemaDocumentation("售价 单位: 分")
-    Long price;
+    String price;
 
     @SchemaDocumentation("发票价 单位：分")
-    Long receiptPrice;
+    String receiptPrice;
 
     @SchemaDocumentation("快递费 单位：分")
-    Long expressFee;
+    String expressFee;
 
     @SchemaDocumentation("销售提成 单位：分")
-    Long extract;
+    String extract;
 
     @SchemaDocumentation("购置税(包) 单位：分")
-    Long purchaseTax;
+    String purchaseTax;
 
     @SchemaDocumentation("上牌费 单位：分")
-    Long onCardFee;
+    String onCardFee;
 
     @SchemaDocumentation("服务费 单位：分")
-    Long serviceFee;
+    String serviceFee;
 
     @SchemaDocumentation("发票高开补税 单位：分")
-    Long taxCompensation;
+    String taxCompensation;
 
     @SchemaDocumentation("购置税（客户） 单位：分")
-    Long customerTax;
+    String customerTax;
 
     @SchemaDocumentation("GPS费")
-    Long gpsCharge;
+    String gpsCharge;
 
     @SchemaDocumentation("押金")
-    Long deposit;
+    String deposit;
 
     @SchemaDocumentation("业务员提成")
     String salesmanExtract;
 
     @SchemaDocumentation("手续费  单位：分")
-    Long serviceCharge;
+    String serviceCharge;
 }

@@ -29,11 +29,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order update(Order order) {
-        //todo   查询数据库中的一些字段状态 比如保证支付状态一致
         Order result = findOne(order.getId());
 
-
-        //保证支付状态 订单状态  砍价状态  不被编辑订单修改
+        //保证支付状态 砍价状态  不被编辑订单修改
+        order.setPayStatusEnum(result.getPayStatusEnum());
+        order.setBargainSuccess(result.getBargainSuccess());
 
         return orderRepository.save(order);
     }

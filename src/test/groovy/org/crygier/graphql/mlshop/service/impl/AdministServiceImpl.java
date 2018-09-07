@@ -33,12 +33,14 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ save(Administ administ) {
-        //todo  密码加密
+
         Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
 
         if (administOptional.isPresent()){
             throw new MLShopRunTimeException("用户已存在,请重新填写用户名");
         }
+        //todo  密码加密
+//        administ.setPassword(MD5Util.generate(administ.getPassword()));
 
         return administRepository.save(administ);
     }
@@ -69,6 +71,7 @@ public class AdministServiceImpl implements AdministService {
     public Administ modifyPassword(Administ administ) {
 
         Administ result = findOne(administ.getId());
+//        result.setPassword(MD5Util.generate(administ.getPassword()));
         result.setPassword(administ.getPassword());
         return administRepository.save(result);
     }

@@ -54,6 +54,8 @@ public class UserServiceImpl implements UserService {
             user.setCustomer(customer);
             user.setUsername(user.getPhone());
 
+//            user.setPassword(MD5Util.generate(user.getPassword()));
+
             return userRepository.save(user);
         }else {
             throw new RuntimeException("验证码过期，请重新验证");
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).get();
         if (VerifyUtil.validity(user.getPhone()+VerifyUtil.MODIFY_PASSWORD)) {
             user.setPassword(password);
+//            user.setPassword(MD5Util.generate(password));
             userRepository.save(user);
         }else {
             throw new RuntimeException("验证码过期，请重新验证");

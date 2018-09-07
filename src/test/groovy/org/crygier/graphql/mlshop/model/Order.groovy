@@ -74,8 +74,8 @@ public class Order extends BosEntity {
     @SchemaDocumentation("定金：/分")
     Long frontMoney;
 
-    @SchemaDocumentation("尾款：/分")
-    Long tailMoney;
+    @SchemaDocumentation("尾款")
+    String tailMoney;
 
     @SchemaDocumentation("赠送：/分")
     Long presentMoney;
