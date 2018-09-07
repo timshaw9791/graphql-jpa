@@ -23,7 +23,7 @@ public class PayScheme extends Entry{
     String oldPrice;
 
     @SchemaDocumentation("售价 单位: 分")
-    String price;
+    Long price;
 
     @SchemaDocumentation("发票价 单位：分")
     String receiptPrice;
