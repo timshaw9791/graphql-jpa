@@ -68,7 +68,14 @@ dependencies {
 //    compile "com.aliyun:aliyun-java-sdk-core:3.7.1"   不需要再引入3.7.1 否者和sts服务要的3.5.0冲突
     compile "com.aliyun:aliyun-java-sdk-dysmsapi:1.1.0"
 
-    provided group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
+    //wechat pay
+    compile "com.squareup.retrofit2:retrofit:2.0.2"
+    compile "com.thoughtworks.xstream:xstream:1.4.10"
+    compile "com.squareup.okhttp3:okhttp"
+    compile "org.simpleframework:simple-xml:2.7.1"
+    compile "com.squareup.retrofit2:converter-simplexml:2.0.1"
+    compile "org.projectlombok:lombok:1.18.0"
+
     provided 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 
     testCompile "org.springframework.boot:spring-boot-starter:2.0.3.RELEASE"
@@ -142,4 +149,8 @@ task wrapper(type: Wrapper) {
 //指定编译的编码
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
+}
+
+tasks.withType(GroovyCompile){
+    options.encoding="UTF-8"
 }

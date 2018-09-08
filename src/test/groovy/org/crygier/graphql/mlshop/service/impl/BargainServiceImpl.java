@@ -3,19 +3,20 @@ package org.crygier.graphql.mlshop.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.crygier.graphql.mlshop.bean.BargainSetting;
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.BargainRecord;
 import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.repo.BargainRecordRepository;
 import org.crygier.graphql.mlshop.service.BargainService;
 import org.crygier.graphql.mlshop.service.OrderService;
-import org.crygier.graphql.mlshop.util.VerifyUtil;
+import org.crygier.graphql.mlshop.utils.VerifyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.crygier.graphql.mlshop.util.VerifyUtil.BARGAIN;
+import static org.crygier.graphql.mlshop.utils.VerifyUtil.BARGAIN;
 
 /**
  * @author Curtain
@@ -60,7 +61,6 @@ public class BargainServiceImpl implements BargainService {
             return optional.get();
         }
 
-
         //获取砍价设置的内容
         BargainSetting bargainSetting = findBargainSetting();
 
@@ -72,13 +72,18 @@ public class BargainServiceImpl implements BargainService {
         bargainRecord.setPeopleNumber(bargainSetting.getNumber());
         bargainRecord.setOrder(order);
 
-
         return bargainRecordRepository.save(bargainRecord);
     }
 
     @Override
     public BargainRecord findBargainRecord(String orderId) {
-        return bargainRecordRepository.findByOrder(orderService.findOne(orderId)).get();
+
+        Optional<BargainRecord> optional = bargainRecordRepository.findByOrder(orderService.findOne(orderId));
+        if (optional.isPresent()){
+            return optional.get();
+        }else {
+            throw new MLShopRunTimeException("砍价记录未找到");
+        }
     }
 
     @Override
@@ -88,18 +93,23 @@ public class BargainServiceImpl implements BargainService {
             //判断此用户是否已经砍价
 
             Order order = orderService.findOne(orderId);
-            BargainRecord bargainRecord = bargainRecordRepository.findByOrder(order).get();
+            Optional<BargainRecord> optional = bargainRecordRepository.findByOrder(order);
+            if (!(optional.isPresent())){
+                throw new MLShopRunTimeException("该订单未生成砍价记录,无法砍价");
+            }
+
+            BargainRecord bargainRecord = optional.get();
 
             String chopPhone = bargainRecord.getChopPhone();
 
             if (chopPhone != null && chopPhone.contains(phone)) {
-                throw new RuntimeException("you have already complete bargain.");
+                throw new RuntimeException("你已经砍价过了");
             }
 
             //判断是否在砍价时间内
             long time = bargainRecord.getCreatetime() + bargainRecord.getEffectiveTime();
             if (System.currentTimeMillis() > time) {
-                throw new RuntimeException("砍价已结束");
+                throw new RuntimeException("时间已到期，砍价已结束");
             }
 
             //设置砍价信息
@@ -115,8 +125,7 @@ public class BargainServiceImpl implements BargainService {
 
             //如果人数达到 则砍价成功
             if (bargainRecord.getPeopleNumber().equals(bargainRecord.getChopCount())) {
-                order.setBargainSuccess(true);
-                orderService.update(order);
+                orderService.bargain(order.getId());
             }
             return bargainRecordRepository.save(bargainRecord);
         }

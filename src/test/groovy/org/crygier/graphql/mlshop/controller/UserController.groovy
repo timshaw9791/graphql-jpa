@@ -30,19 +30,27 @@ class UserController {
         return userService.register(user);
     }
 
+    @SchemaDocumentation("忘记密码")
+    @GRequestMapping("/forgetpassword")
+    String forgetPassword(@RequestParam(name = "phone",required = true)String phone,
+                          @RequestParam(name = "password",required = true)String password){
+        userService.forgetPassword(phone,password);
+        return "success";
+    }
+
     @SchemaDocumentation("修改密码")
     @GRequestMapping(path = "/modifypassword", method = RequestMethod.POST)
     String modifyPassword(@RequestParam(name = "password", required = true) String password,
                           @RequestParam(name = "id", required = true) String id) {
         userService.modifyPassword(password, id);
-        return "成功";
+        return "success";
     }
     @SchemaDocumentation("修改手机号")
     @GRequestMapping(path = "/modifyphone", method = RequestMethod.POST)
-    String modifyPhone(@RequestParam(name = "pbone", required = true) String phone,
+    String modifyPhone(@RequestParam(name = "phone", required = true) String phone,
                           @RequestParam(name = "id", required = true) String id) {
         userService.modifyPhone(phone, id);
-        return "成功";
+        return "success";
     }
 
     @SchemaDocumentation("修改信息")

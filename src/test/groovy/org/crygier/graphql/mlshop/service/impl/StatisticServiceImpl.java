@@ -5,10 +5,7 @@ import org.crygier.graphql.mlshop.bean.OrderStatistic;
 import org.crygier.graphql.mlshop.bean.ReceiveStatistic;
 import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.model.PayScheme;
-import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
-import org.crygier.graphql.mlshop.model.enums.CarCommunicationTypeEnum;
-import org.crygier.graphql.mlshop.model.enums.OrderAllocateStatusEnum;
-import org.crygier.graphql.mlshop.model.enums.OrderStatusEnum;
+import org.crygier.graphql.mlshop.model.enums.*;
 import org.crygier.graphql.mlshop.repo.*;
 import org.crygier.graphql.mlshop.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +79,9 @@ public class StatisticServiceImpl implements StatisticService {
             //新订单
             if (OrderStatusEnum.NEW.equals(order.getOrderStatusEnum())) {
                 newOrder++;
-                //todo 如果支付状态为已支付  进行中订单数量++
+                if (OrderPayStatusEnum.PAID.equals(order.getPayStatusEnum())){
+                    underwayOrder++;
+                }
             }
 
             //已完成订单

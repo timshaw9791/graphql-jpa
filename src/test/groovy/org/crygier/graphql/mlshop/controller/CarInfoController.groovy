@@ -10,8 +10,7 @@ import org.crygier.graphql.mlshop.service.CarInfoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RestController
 /**
  * @author Curtain
  * @date 2018/7/28 10:48

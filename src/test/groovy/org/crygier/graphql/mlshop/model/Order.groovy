@@ -34,6 +34,9 @@ public class Order extends BosEntity {
     @SchemaDocumentation("支付状态")
     OrderPayStatusEnum payStatusEnum;
 
+    @SchemaDocumentation("支付方式")
+    String payMode;
+
     @SchemaDocumentation("门店")
     @ManyToOne
     Shop shop;
@@ -71,8 +74,11 @@ public class Order extends BosEntity {
     @SchemaDocumentation("定金：/分")
     Long frontMoney;
 
-    @SchemaDocumentation("尾款：/分")
-    Long tailMoney;
+    @SchemaDocumentation("尾款")
+    String tailMoney;
+
+    @SchemaDocumentation("赠送：/分")
+    Long presentMoney;
 
     @SchemaDocumentation("车辆来源")
     @ManyToOne
@@ -109,8 +115,17 @@ public class Order extends BosEntity {
     @SchemaDocumentation("车辆信息")
     @ManyToOne
     CarInfo carInfo;
-    //todo  carindo 应该用 vehicleprice 代替
 
     @SchemaDocumentation("砍价是否成功")
     boolean bargainSuccess = false;
+
+    @SchemaDocumentation("是否审核")
+    boolean audit;
+
+    @SchemaDocumentation("审核不通过原因")
+    String cause;
+
+    @SchemaDocumentation("退款时间")
+    long refundTime;
+
 }

@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 用来做输入错误提示
@@ -23,8 +22,6 @@ public class InputErrorException extends RuntimeException implements GraphQLErro
         messageRelatePropsMap.entrySet().stream().forEach(e ->
                 this.messageRelatePropsMap.put(e.getKey(), StringUtils.collectionToCommaDelimitedString(Arrays.asList(e.getValue()))));
     }
-
-
 
     @Override
     public Map<String, Object> getExtensions() {

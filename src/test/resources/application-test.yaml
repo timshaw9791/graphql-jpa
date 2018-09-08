@@ -19,3 +19,11 @@ logging:
   level.org.hibernate.type.descriptor.sql: trace
   level.org.hibernate.SQL: debug
   #level.org.hibernate.loader: debug
+
+wechat:
+  appId: wx5f6c931e05b2b39a
+  appSecret:
+  mchId: 1512065311
+  mchKey: BawUezX73SHVbo2AFZCbyK2Htq1ZZER7
+  keyPath: \wu\graphql-jpa\src\test\resources\static\h.p12
+  notifyUrl: http://115.159.154.194:8080/mlshop/notify

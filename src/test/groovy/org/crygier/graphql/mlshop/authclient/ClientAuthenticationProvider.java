@@ -3,7 +3,7 @@ package org.crygier.graphql.mlshop.authclient;
 import org.crygier.graphql.mlshop.config.MyPasswordEncoder;
 import org.crygier.graphql.mlshop.model.user.User;
 import org.crygier.graphql.mlshop.service.UserService;
-import org.crygier.graphql.mlshop.util.SpringUtil;
+import org.crygier.graphql.mlshop.utils.SpringUtil;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;

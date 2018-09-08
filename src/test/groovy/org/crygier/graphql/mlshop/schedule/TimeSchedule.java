@@ -5,7 +5,7 @@ import org.crygier.graphql.mlshop.model.InsuranceCommunication;
 import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 import org.crygier.graphql.mlshop.service.CarCommunicationService;
 import org.crygier.graphql.mlshop.service.InsuranceCommunicationService;
-import org.crygier.graphql.mlshop.util.SpringUtil;
+import org.crygier.graphql.mlshop.utils.SpringUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class TimeSchedule {
 
     /*超时订单设置*/
-    @Scheduled(cron = "00 16 14 * * ?")
+    @Scheduled(cron = "00 00 00 * * ?")
     public void updateCommunicationStatus() {
 
         CarCommunicationService carCommunicationService = (CarCommunicationService) SpringUtil.getBean("carCommunicationServiceImpl");

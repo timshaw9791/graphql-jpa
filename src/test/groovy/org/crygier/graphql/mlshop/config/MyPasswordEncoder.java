@@ -1,6 +1,5 @@
 package org.crygier.graphql.mlshop.config;
 
-import org.crygier.graphql.mlshop.util.MD5Util;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

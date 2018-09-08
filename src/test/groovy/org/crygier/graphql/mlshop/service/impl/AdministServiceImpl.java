@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
+import org.crygier.graphql.mlshop.exception.MLShopRunTimeException;
 import org.crygier.graphql.mlshop.model.Administ;
 import org.crygier.graphql.mlshop.repo.AdministRepository;
 import org.crygier.graphql.mlshop.service.AdministService;
@@ -25,26 +26,29 @@ public class AdministServiceImpl implements AdministService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Optional<Administ> optional = administRepository.findByUsername(Optional.ofNullable(s).orElse(""));
         if (!optional.isPresent()) {
-//            throw new UsernameNotFoundException(ResultExceptionEnum.ROLE_IS_EXIST.getMessage());
-            new RuntimeException("no user");
+            throw new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
         }
         return optional.get();
     }
 
     @Override
     public Administ save(Administ administ) {
-        //todo  密码加密   如果用户已存在  提示
+
         Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
+
         if (administOptional.isPresent()){
-            throw new RuntimeException("用户名已存在");
+            throw new MLShopRunTimeException("用户已存在,请重新填写用户名");
         }
+        //todo  密码加密
+//        administ.setPassword(MD5Util.generate(administ.getPassword()));
 
         return administRepository.save(administ);
     }
 
     @Override
     public Administ update(Administ administ) {
-        Administ result = administRepository.findById(administ.getId()).get();
+        Administ result =  findOne(administ.getId());
+
         if (result.getPassword()==null){
             administ.setPassword(null);
         }else {
@@ -54,7 +58,21 @@ public class AdministServiceImpl implements AdministService {
     }
 
     @Override
+    public Administ findOne(String id) {
+        Optional<Administ> optional = administRepository.findById(id);
+        if (optional.isPresent()){
+            return optional.get();
+        }else {
+            throw new MLShopRunTimeException("用户不存在，请重新确认你的账号名是否正确");
+        }
+    }
+
+    @Override
     public Administ modifyPassword(Administ administ) {
-        return administRepository.save(administ);
+
+        Administ result = findOne(administ.getId());
+//        result.setPassword(MD5Util.generate(administ.getPassword()));
+        result.setPassword(administ.getPassword());
+        return administRepository.save(result);
     }
 }

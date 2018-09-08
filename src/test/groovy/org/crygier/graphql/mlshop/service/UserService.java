@@ -52,4 +52,18 @@ public interface UserService {
      */
     User findOne(String id);
 
+    /**
+     * 忘记密码修改密码
+     * @param phone
+     * @param password
+     */
+    void forgetPassword(String phone,String password);
+
+    /**
+     * 通过手机号查找
+     * @param phone
+     * @return
+     */
+    User findByPhone(String phone);
+
 }
