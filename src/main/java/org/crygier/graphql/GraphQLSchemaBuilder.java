@@ -442,7 +442,7 @@ public class GraphQLSchemaBuilder extends GraphQLSchema.Builder implements IGrap
 
     private static GraphQLEnumType getGraphQLEnumType(Class<? extends BosEnum> bosEnumClass) {
         return new GraphQLEnumType(bosEnumClass.getSimpleName(), getSchemaDocumentation(bosEnumClass), Arrays.stream(bosEnumClass.getEnumConstants())
-                .map(qfo -> new GraphQLEnumValueDefinition(((BosEnum) qfo).getValue(), ((BosEnum) qfo).getDescription(), ((BosEnum) qfo).getValue()))
+                .map(qfo -> new GraphQLEnumValueDefinition(((BosEnum) qfo).getValue(), ((BosEnum) qfo).getAlias(), ((BosEnum) qfo).getValue()))
                 .collect(Collectors.toList()));
     }
 }

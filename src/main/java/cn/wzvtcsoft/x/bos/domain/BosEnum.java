@@ -35,6 +35,7 @@ public interface BosEnum {
         return getEnumInnerValue().getName();
     }
 
+    @Deprecated
     default public String getDescription() {
         return getEnumInnerValue().getDescription();
     }
