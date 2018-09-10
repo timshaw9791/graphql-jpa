@@ -52,6 +52,11 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     }
 
     @Override
+    public List<InsuranceCommunication> findAll() {
+        return insuranceCommunicationRepository.findAll();
+    }
+
+    @Override
     public void saveAll(Collection collection) {
         insuranceCommunicationRepository.saveAll(collection);
     }

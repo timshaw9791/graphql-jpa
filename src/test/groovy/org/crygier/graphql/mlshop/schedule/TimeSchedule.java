@@ -46,5 +46,27 @@ public class TimeSchedule {
     }
 
 
+    /*保险到期*/
+    @Scheduled(cron = "00 00 00 * * ?")
+    public void updateInsuranceCommunication() {
+        InsuranceCommunicationService insuranceCommunicationService = (InsuranceCommunicationService) SpringUtil.getBean("insuranceCommunicationServiceImpl");
+        List<InsuranceCommunication> insuranceCommunicationList = insuranceCommunicationService.findAll();
+
+        //11个月的毫秒数
+        final long timeStamp = 28512000000l;
+
+        for (InsuranceCommunication insuranceCommunication : insuranceCommunicationList){
+            //保险时间
+            Long time = insuranceCommunication.getInsurance().getTime();
+
+            //如果保险时间 距离现在大于 11 个月  则将状态改为带分配
+
+            if (time+timeStamp<System.currentTimeMillis()){
+                insuranceCommunication.setStatus(CarCommunicationStatusEnum.A);
+                insuranceCommunicationService.save(insuranceCommunication);
+            }
+        }
+    }
+
 
 }
