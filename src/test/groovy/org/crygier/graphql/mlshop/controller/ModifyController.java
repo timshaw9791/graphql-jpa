@@ -39,6 +39,20 @@ public class ModifyController {
     private UserService userService;
 
 
+    @RequestMapping(path = "/registeruser", method = RequestMethod.POST)
+    User registerUser(@RequestParam(name = "user", required = true) User user) {
+        return userService.register(user);
+    }
+
+
+    @RequestMapping("/forgetpassword")
+    String forgetPassword(@RequestParam(name = "phone",required = true)String phone,
+                          @RequestParam(name = "password",required = true)String password){
+        userService.forgetPassword(phone,password);
+        return "success";
+    }
+
+
     @RequestMapping(value = "/updatecarinfo")
     public Object updateCarInfo(@RequestBody CarInfo carInfo) {
         return carInfoService.update(carInfo);
