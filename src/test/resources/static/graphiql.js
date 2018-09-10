@@ -256,7 +256,7 @@ DocExplorer.propTypes = {
   schema: _propTypes2.default.instanceOf(_graphql.GraphQLSchema)
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./DocExplorer/FieldDoc":4,"./DocExplorer/SchemaDoc":6,"./DocExplorer/SearchBox":7,"./DocExplorer/SearchResults":8,"./DocExplorer/TypeDoc":9,"graphql":95,"prop-types":233}],2:[function(require,module,exports){
+},{"./DocExplorer/FieldDoc":4,"./DocExplorer/SchemaDoc":6,"./DocExplorer/SearchBox":7,"./DocExplorer/SearchResults":8,"./DocExplorer/TypeDoc":9,"graphql":95,"prop-types":236}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -316,7 +316,7 @@ Argument.propTypes = {
   showDefaultValue: _propTypes2.default.bool
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./DefaultValue":3,"./TypeLink":10,"prop-types":233}],3:[function(require,module,exports){
+},{"./DefaultValue":3,"./TypeLink":10,"prop-types":236}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -368,7 +368,7 @@ DefaultValue.propTypes = {
   field: _propTypes2.default.object.isRequired
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"graphql":95,"prop-types":233}],4:[function(require,module,exports){
+},{"graphql":95,"prop-types":236}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -496,7 +496,7 @@ FieldDoc.propTypes = {
 };
 exports.default = FieldDoc;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./MarkdownContent":5,"./TypeLink":10,"prop-types":233}],5:[function(require,module,exports){
+},{"./Argument":2,"./MarkdownContent":5,"./TypeLink":10,"prop-types":236}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -572,7 +572,7 @@ MarkdownContent.propTypes = {
 };
 exports.default = MarkdownContent;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"markdown-it":172,"prop-types":233}],6:[function(require,module,exports){
+},{"markdown-it":175,"prop-types":236}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -700,7 +700,7 @@ SchemaDoc.propTypes = {
 };
 exports.default = SchemaDoc;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./MarkdownContent":5,"./TypeLink":10,"prop-types":233}],7:[function(require,module,exports){
+},{"./MarkdownContent":5,"./TypeLink":10,"prop-types":236}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -791,7 +791,7 @@ SearchBox.propTypes = {
 };
 exports.default = SearchBox;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utility/debounce":26,"prop-types":233}],8:[function(require,module,exports){
+},{"../../utility/debounce":26,"prop-types":236}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1034,7 +1034,7 @@ function isMatch(sourceText, searchValue) {
     }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./MarkdownContent":5,"./TypeLink":10,"prop-types":233}],9:[function(require,module,exports){
+},{"./Argument":2,"./MarkdownContent":5,"./TypeLink":10,"prop-types":236}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1258,6 +1258,7 @@ var TypeDoc = function (_React$Component) {
         deprecatedFieldsDef,
         valuesDef,
         deprecatedValuesDef,
+        'v',
         !(type instanceof _graphql.GraphQLObjectType) && typesDef
       );
     }
@@ -1347,7 +1348,7 @@ EnumValue.propTypes = {
   value: _propTypes2.default.object
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./DefaultValue":3,"./MarkdownContent":5,"./TypeLink":10,"graphql":95,"prop-types":233}],10:[function(require,module,exports){
+},{"./Argument":2,"./DefaultValue":3,"./MarkdownContent":5,"./TypeLink":10,"graphql":95,"prop-types":236}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1439,7 +1440,7 @@ function renderType(type, _onClick) {
   );
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"graphql":95,"prop-types":233}],11:[function(require,module,exports){
+},{"graphql":95,"prop-types":236}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1612,12 +1613,12 @@ ExecuteButton.propTypes = {
   operations: _propTypes2.default.array
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":233}],12:[function(require,module,exports){
+},{"prop-types":236}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.GraphiQL = undefined;
 
@@ -1640,6 +1641,10 @@ var _reactDom = (typeof window !== "undefined" ? window['ReactDOM'] : typeof glo
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _graphql = require('graphql');
+
+var _reactHotKeys = require('react-hot-keys');
+
+var _reactHotKeys2 = _interopRequireDefault(_reactHotKeys);
 
 var _ExecuteButton = require('./ExecuteButton');
 
@@ -1706,6 +1711,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 var DEFAULT_DOC_EXPLORER_WIDTH = 350;
+var DEFAULT_VARIABLE_EXPLORER_HEIGHT = 200;
 
 /**
  * The top-level React component for GraphiQL, intended to encompass the entire
@@ -1715,984 +1721,1025 @@ var DEFAULT_DOC_EXPLORER_WIDTH = 350;
  */
 
 var GraphiQL = exports.GraphiQL = function (_React$Component) {
-  _inherits(GraphiQL, _React$Component);
+    _inherits(GraphiQL, _React$Component);
 
-  function GraphiQL(props) {
-    _classCallCheck(this, GraphiQL);
+    function GraphiQL(props) {
+        _classCallCheck(this, GraphiQL);
 
-    // Ensure props are correct
-    var _this = _possibleConstructorReturn(this, (GraphiQL.__proto__ || Object.getPrototypeOf(GraphiQL)).call(this, props));
+        // Ensure props are correct
+        var _this = _possibleConstructorReturn(this, (GraphiQL.__proto__ || Object.getPrototypeOf(GraphiQL)).call(this, props));
 
-    _initialiseProps.call(_this);
+        _initialiseProps.call(_this);
 
-    if (typeof props.fetcher !== 'function') {
-      throw new TypeError('GraphiQL requires a fetcher function.');
-    }
-
-    // Cache the storage instance
-    _this._storage = new _StorageAPI2.default(props.storage);
-
-    // Determine the initial query to display.
-    var query = props.query !== undefined ? props.query : _this._storage.get('query') !== null ? _this._storage.get('query') : props.defaultQuery !== undefined ? props.defaultQuery : defaultQuery;
-
-    // Get the initial query facts.
-    var queryFacts = (0, _getQueryFacts2.default)(props.schema, query);
-
-    // Determine the initial variables to display.
-    var variables = props.variables !== undefined ? props.variables : _this._storage.get('variables');
-
-    // Determine the initial operationName to use.
-    var operationName = props.operationName !== undefined ? props.operationName : (0, _getSelectedOperationName2.default)(null, _this._storage.get('operationName'), queryFacts && queryFacts.operations);
-
-    // Initialize state
-    _this.state = _extends({
-      schema: props.schema,
-      query: query,
-      variables: variables,
-      operationName: operationName,
-      response: props.response,
-      editorFlex: Number(_this._storage.get('editorFlex')) || 1,
-      variableEditorOpen: Boolean(variables),
-      variableEditorHeight: Number(_this._storage.get('variableEditorHeight')) || 200,
-      docExplorerOpen: _this._storage.get('docExplorerOpen') === 'true' || false,
-      historyPaneOpen: _this._storage.get('historyPaneOpen') === 'true' || false,
-      docExplorerWidth: Number(_this._storage.get('docExplorerWidth')) || DEFAULT_DOC_EXPLORER_WIDTH,
-      isWaitingForResponse: false,
-      subscription: null
-    }, queryFacts);
-
-    // Ensure only the last executed editor query is rendered.
-    _this._editorQueryID = 0;
-
-    // Subscribe to the browser window closing, treating it as an unmount.
-    if ((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object') {
-      window.addEventListener('beforeunload', function () {
-        return _this.componentWillUnmount();
-      });
-    }
-    return _this;
-  }
-
-  _createClass(GraphiQL, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      // Only fetch schema via introspection if a schema has not been
-      // provided, including if `null` was provided.
-      if (this.state.schema === undefined) {
-        this._fetchSchema();
-      }
-
-      // Utility for keeping CodeMirror correctly sized.
-      this.codeMirrorSizer = new _CodeMirrorSizer2.default();
-
-      global.g = this;
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      var _this2 = this;
-
-      var nextSchema = this.state.schema;
-      var nextQuery = this.state.query;
-      var nextVariables = this.state.variables;
-      var nextOperationName = this.state.operationName;
-      var nextResponse = this.state.response;
-
-      if (nextProps.schema !== undefined) {
-        nextSchema = nextProps.schema;
-      }
-      if (nextProps.query !== undefined) {
-        nextQuery = nextProps.query;
-      }
-      if (nextProps.variables !== undefined) {
-        nextVariables = nextProps.variables;
-      }
-      if (nextProps.operationName !== undefined) {
-        nextOperationName = nextProps.operationName;
-      }
-      if (nextProps.response !== undefined) {
-        nextResponse = nextProps.response;
-      }
-      if (nextSchema !== this.state.schema || nextQuery !== this.state.query || nextOperationName !== this.state.operationName) {
-        var updatedQueryAttributes = this._updateQueryFacts(nextQuery, nextOperationName, this.state.operations, nextSchema);
-
-        if (updatedQueryAttributes !== undefined) {
-          nextOperationName = updatedQueryAttributes.operationName;
-
-          this.setState(updatedQueryAttributes);
-        }
-      }
-
-      // If schema is not supplied via props and the fetcher changed, then
-      // remove the schema so fetchSchema() will be called with the new fetcher.
-      if (nextProps.schema === undefined && nextProps.fetcher !== this.props.fetcher) {
-        nextSchema = undefined;
-      }
-
-      this.setState({
-        schema: nextSchema,
-        query: nextQuery,
-        variables: nextVariables,
-        operationName: nextOperationName,
-        response: nextResponse
-      }, function () {
-        if (_this2.state.schema === undefined) {
-          _this2.docExplorerComponent.reset();
-          _this2._fetchSchema();
-        }
-      });
-    }
-  }, {
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      // If this update caused DOM nodes to have changed sizes, update the
-      // corresponding CodeMirror instance sizes to match.
-      this.codeMirrorSizer.updateSizes([this.queryEditorComponent, this.variableEditorComponent, this.resultComponent]);
-    }
-
-    // When the component is about to unmount, store any persistable state, such
-    // that when the component is remounted, it will use the last used values.
-
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      this._storage.set('query', this.state.query);
-      this._storage.set('variables', this.state.variables);
-      this._storage.set('operationName', this.state.operationName);
-      this._storage.set('editorFlex', this.state.editorFlex);
-      this._storage.set('variableEditorHeight', this.state.variableEditorHeight);
-      this._storage.set('docExplorerWidth', this.state.docExplorerWidth);
-      this._storage.set('docExplorerOpen', this.state.docExplorerOpen);
-      this._storage.set('historyPaneOpen', this.state.historyPaneOpen);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this3 = this;
-
-      var children = _react2.default.Children.toArray(this.props.children);
-
-      var logo = (0, _find2.default)(children, function (child) {
-        return child.type === GraphiQL.Logo;
-      }) || _react2.default.createElement(GraphiQL.Logo, null);
-
-      var toolbar = (0, _find2.default)(children, function (child) {
-        return child.type === GraphiQL.Toolbar;
-      }) || _react2.default.createElement(
-        GraphiQL.Toolbar,
-        null,
-        _react2.default.createElement(_ToolbarButton.ToolbarButton, {
-          onClick: this.handlePrettifyQuery,
-          title: 'Prettify Query (Shift-Ctrl-P)',
-          label: 'Prettify'
-        }),
-        _react2.default.createElement(_ToolbarButton.ToolbarButton, {
-          onClick: this.handleToggleHistory,
-          title: 'Show History',
-          label: 'History'
-        })
-      );
-
-      var footer = (0, _find2.default)(children, function (child) {
-        return child.type === GraphiQL.Footer;
-      });
-
-      var queryWrapStyle = {
-        WebkitFlex: this.state.editorFlex,
-        flex: this.state.editorFlex
-      };
-
-      var docWrapStyle = {
-        display: this.state.docExplorerOpen ? 'block' : 'none',
-        width: this.state.docExplorerWidth
-      };
-      var docExplorerWrapClasses = 'docExplorerWrap' + (this.state.docExplorerWidth < 200 ? ' doc-explorer-narrow' : '');
-
-      var historyPaneStyle = {
-        display: this.state.historyPaneOpen ? 'block' : 'none',
-        width: '230px',
-        zIndex: '7'
-      };
-
-      var variableOpen = this.state.variableEditorOpen;
-      var variableStyle = {
-        height: variableOpen ? this.state.variableEditorHeight : null
-      };
-
-      return _react2.default.createElement(
-        'div',
-        { className: 'graphiql-container' },
-        _react2.default.createElement(
-          'div',
-          { className: 'historyPaneWrap', style: historyPaneStyle },
-          _react2.default.createElement(
-            _QueryHistory.QueryHistory,
-            {
-              operationName: this.state.operationName,
-              query: this.state.query,
-              variables: this.state.variables,
-              onSelectQuery: this.handleSelectHistoryQuery,
-              storage: this._storage,
-              queryID: this._editorQueryID },
-            _react2.default.createElement(
-              'div',
-              { className: 'docExplorerHide', onClick: this.handleToggleHistory },
-              '\u2715'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'editorWrap' },
-          _react2.default.createElement(
-            'div',
-            { className: 'topBarWrap' },
-            _react2.default.createElement(
-              'div',
-              { className: 'topBar' },
-              logo,
-              _react2.default.createElement(_ExecuteButton.ExecuteButton, {
-                isRunning: Boolean(this.state.subscription),
-                onRun: this.handleRunQuery,
-                onStop: this.handleStopQuery,
-                operations: this.state.operations
-              }),
-              toolbar
-            ),
-            !this.state.docExplorerOpen && _react2.default.createElement(
-              'button',
-              {
-                className: 'docExplorerShow',
-                onClick: this.handleToggleDocs },
-              'Docs'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            {
-              ref: function ref(n) {
-                _this3.editorBarComponent = n;
-              },
-              className: 'editorBar',
-              onDoubleClick: this.handleResetResize,
-              onMouseDown: this.handleResizeStart },
-            _react2.default.createElement(
-              'div',
-              { className: 'queryWrap', style: queryWrapStyle },
-              _react2.default.createElement(_QueryEditor.QueryEditor, {
-                ref: function ref(n) {
-                  _this3.queryEditorComponent = n;
-                },
-                schema: this.state.schema,
-                value: this.state.query,
-                onEdit: this.handleEditQuery,
-                onHintInformationRender: this.handleHintInformationRender,
-                onClickReference: this.handleClickReference,
-                onPrettifyQuery: this.handlePrettifyQuery,
-                onRunQuery: this.handleEditorRunQuery,
-                editorTheme: this.props.editorTheme
-              }),
-              _react2.default.createElement(
-                'div',
-                { className: 'variable-editor', style: variableStyle },
-                _react2.default.createElement(
-                  'div',
-                  {
-                    className: 'variable-editor-title',
-                    style: { cursor: variableOpen ? 'row-resize' : 'n-resize' },
-                    onMouseDown: this.handleVariableResizeStart },
-                  'Query Variables'
-                ),
-                _react2.default.createElement(_VariableEditor.VariableEditor, {
-                  ref: function ref(n) {
-                    _this3.variableEditorComponent = n;
-                  },
-                  value: this.state.variables,
-                  variableToType: this.state.variableToType,
-                  onEdit: this.handleEditVariables,
-                  onHintInformationRender: this.handleHintInformationRender,
-                  onPrettifyQuery: this.handlePrettifyQuery,
-                  onRunQuery: this.handleEditorRunQuery,
-                  editorTheme: this.props.editorTheme
-                })
-              )
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'resultWrap' },
-              this.state.isWaitingForResponse && _react2.default.createElement(
-                'div',
-                { className: 'spinner-container' },
-                _react2.default.createElement('div', { className: 'spinner' })
-              ),
-              _react2.default.createElement(_ResultViewer.ResultViewer, {
-                ref: function ref(c) {
-                  _this3.resultComponent = c;
-                },
-                value: this.state.response,
-                editorTheme: this.props.editorTheme,
-                ResultsTooltip: this.props.ResultsTooltip
-              }),
-              footer
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: docExplorerWrapClasses, style: docWrapStyle },
-          _react2.default.createElement('div', {
-            className: 'docExplorerResizer',
-            onDoubleClick: this.handleDocsResetResize,
-            onMouseDown: this.handleDocsResizeStart
-          }),
-          _react2.default.createElement(
-            _DocExplorer.DocExplorer,
-            {
-              ref: function ref(c) {
-                _this3.docExplorerComponent = c;
-              },
-              schema: this.state.schema },
-            _react2.default.createElement(
-              'div',
-              { className: 'docExplorerHide', onClick: this.handleToggleDocs },
-              '\u2715'
-            )
-          )
-        )
-      );
-    }
-
-    /**
-     * Get the query editor CodeMirror instance.
-     *
-     * @public
-     */
-
-  }, {
-    key: 'getQueryEditor',
-    value: function getQueryEditor() {
-      return this.queryEditorComponent.getCodeMirror();
-    }
-
-    /**
-     * Get the variable editor CodeMirror instance.
-     *
-     * @public
-     */
-
-  }, {
-    key: 'getVariableEditor',
-    value: function getVariableEditor() {
-      return this.variableEditorComponent.getCodeMirror();
-    }
-
-    /**
-     * Refresh all CodeMirror instances.
-     *
-     * @public
-     */
-
-  }, {
-    key: 'refresh',
-    value: function refresh() {
-      this.queryEditorComponent.getCodeMirror().refresh();
-      this.variableEditorComponent.getCodeMirror().refresh();
-      this.resultComponent.getCodeMirror().refresh();
-    }
-
-    /**
-     * Inspect the query, automatically filling in selection sets for non-leaf
-     * fields which do not yet have them.
-     *
-     * @public
-     */
-
-  }, {
-    key: 'autoCompleteLeafs',
-    value: function autoCompleteLeafs() {
-      var _fillLeafs = (0, _fillLeafs2.fillLeafs)(this.state.schema, this.state.query, this.props.getDefaultFieldNames),
-          insertions = _fillLeafs.insertions,
-          result = _fillLeafs.result;
-
-      if (insertions && insertions.length > 0) {
-        var editor = this.getQueryEditor();
-        editor.operation(function () {
-          var cursor = editor.getCursor();
-          var cursorIndex = editor.indexFromPos(cursor);
-          editor.setValue(result);
-          var added = 0;
-          var markers = insertions.map(function (_ref) {
-            var index = _ref.index,
-                string = _ref.string;
-            return editor.markText(editor.posFromIndex(index + added), editor.posFromIndex(index + (added += string.length)), {
-              className: 'autoInsertedLeaf',
-              clearOnEnter: true,
-              title: 'Automatically added leaf fields'
-            });
-          });
-          setTimeout(function () {
-            return markers.forEach(function (marker) {
-              return marker.clear();
-            });
-          }, 7000);
-          var newCursorIndex = cursorIndex;
-          insertions.forEach(function (_ref2) {
-            var index = _ref2.index,
-                string = _ref2.string;
-
-            if (index < cursorIndex) {
-              newCursorIndex += string.length;
-            }
-          });
-          editor.setCursor(editor.posFromIndex(newCursorIndex));
-        });
-      }
-
-      return result;
-    }
-
-    // Private methods
-
-  }, {
-    key: '_fetchSchema',
-    value: function _fetchSchema() {
-      var _this4 = this;
-
-      var fetcher = this.props.fetcher;
-
-      var fetch = observableToPromise(fetcher({ query: _introspectionQueries.introspectionQuery }));
-      if (!isPromise(fetch)) {
-        this.setState({
-          response: 'Fetcher did not return a Promise for introspection.'
-        });
-        return;
-      }
-
-      fetch.then(function (result) {
-        if (result.data) {
-          return result;
+        if (typeof props.fetcher !== 'function') {
+            throw new TypeError('GraphiQL requires a fetcher function.');
         }
 
-        // Try the stock introspection query first, falling back on the
-        // sans-subscriptions query for services which do not yet support it.
-        var fetch2 = observableToPromise(fetcher({
-          query: _introspectionQueries.introspectionQuerySansSubscriptions
-        }));
-        if (!isPromise(fetch)) {
-          throw new Error('Fetcher did not return a Promise for introspection.');
-        }
-        return fetch2;
-      }).then(function (result) {
-        // If a schema was provided while this fetch was underway, then
-        // satisfy the race condition by respecting the already
-        // provided schema.
-        if (_this4.state.schema !== undefined) {
-          return;
-        }
+        // Cache the storage instance
+        _this._storage = new _StorageAPI2.default(props.storage);
 
-        if (result && result.data) {
-          var schema = (0, _graphql.buildClientSchema)(result.data);
-          var queryFacts = (0, _getQueryFacts2.default)(schema, _this4.state.query);
-          _this4.setState(_extends({ schema: schema }, queryFacts));
-        } else {
-          var responseString = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
-          _this4.setState({
-            // Set schema to `null` to explicitly indicate that no schema exists.
-            schema: null,
-            response: responseString
-          });
-        }
-      }).catch(function (error) {
-        _this4.setState({
-          schema: null,
-          response: error && String(error.stack || error)
-        });
-      });
-    }
-  }, {
-    key: '_fetchQuery',
-    value: function _fetchQuery(query, variables, operationName, cb) {
-      var _this5 = this;
+        // Determine the initial query to display.
+        var query = props.query !== undefined ? props.query : _this._storage.get('query') !== null ? _this._storage.get('query') : props.defaultQuery !== undefined ? props.defaultQuery : defaultQuery;
 
-      var fetcher = this.props.fetcher;
-      var jsonVariables = null;
+        // Get the initial query facts.
+        var queryFacts = (0, _getQueryFacts2.default)(props.schema, query);
 
-      try {
-        jsonVariables = variables && variables.trim() !== '' ? JSON.parse(variables) : null;
-      } catch (error) {
-        throw new Error('Variables are invalid JSON: ' + error.message + '.');
-      }
+        // Determine the initial variables to display.
+        var variables = props.variables !== undefined ? props.variables : _this._storage.get('variables');
 
-      if ((typeof jsonVariables === 'undefined' ? 'undefined' : _typeof(jsonVariables)) !== 'object') {
-        throw new Error('Variables are not a JSON object.');
-      }
+        // Determine the initial operationName to use.
+        var operationName = props.operationName !== undefined ? props.operationName : (0, _getSelectedOperationName2.default)(null, _this._storage.get('operationName'), queryFacts && queryFacts.operations);
 
-      var fetch = fetcher({
-        query: query,
-        variables: jsonVariables,
-        operationName: operationName
-      });
-
-      if (isPromise(fetch)) {
-        // If fetcher returned a Promise, then call the callback when the promise
-        // resolves, otherwise handle the error.
-        fetch.then(cb).catch(function (error) {
-          _this5.setState({
+        // Initialize state
+        _this.state = _extends({
+            schema: props.schema,
+            query: query,
+            variables: variables,
+            operationName: operationName,
+            response: props.response,
+            editorFlex: Number(_this._storage.get('editorFlex')) || 1,
+            variableEditorOpen: Boolean(variables),
+            variableEditorHeight: Number(_this._storage.get('variableEditorHeight')) || DEFAULT_VARIABLE_EXPLORER_HEIGHT,
+            docExplorerOpen: _this._storage.get('docExplorerOpen') === 'true' || false,
+            historyPaneOpen: _this._storage.get('historyPaneOpen') === 'true' || false,
+            docExplorerWidth: Number(_this._storage.get('docExplorerWidth')) || DEFAULT_DOC_EXPLORER_WIDTH,
             isWaitingForResponse: false,
-            response: error && String(error.stack || error)
-          });
-        });
-      } else if (isObservable(fetch)) {
-        // If the fetcher returned an Observable, then subscribe to it, calling
-        // the callback on each next value, and handling both errors and the
-        // completion of the Observable. Returns a Subscription object.
-        var subscription = fetch.subscribe({
-          next: cb,
-          error: function error(_error) {
-            _this5.setState({
-              isWaitingForResponse: false,
-              response: _error && String(_error.stack || _error),
-              subscription: null
-            });
-          },
-          complete: function complete() {
-            _this5.setState({
-              isWaitingForResponse: false,
-              subscription: null
-            });
-          }
-        });
+            subscription: null
+        }, queryFacts);
 
-        return subscription;
-      } else {
-        throw new Error('Fetcher did not return Promise or Observable.');
-      }
+        // Ensure only the last executed editor query is rendered.
+        _this._editorQueryID = 0;
+
+        // Subscribe to the browser window closing, treating it as an unmount.
+        if ((typeof window === 'undefined' ? 'undefined' : _typeof(window)) === 'object') {
+            window.addEventListener('beforeunload', function () {
+                return _this.componentWillUnmount();
+            });
+        }
+        return _this;
     }
-  }, {
-    key: '_runQueryAtCursor',
-    value: function _runQueryAtCursor() {
-      if (this.state.subscription) {
-        this.handleStopQuery();
-        return;
-      }
 
-      var operationName = void 0;
-      var operations = this.state.operations;
-      if (operations) {
-        var editor = this.getQueryEditor();
-        if (editor.hasFocus()) {
-          var cursor = editor.getCursor();
-          var cursorIndex = editor.indexFromPos(cursor);
-
-          // Loop through all operations to see if one contains the cursor.
-          for (var i = 0; i < operations.length; i++) {
-            var operation = operations[i];
-            if (operation.loc.start <= cursorIndex && operation.loc.end >= cursorIndex) {
-              operationName = operation.name && operation.name.value;
-              break;
+    _createClass(GraphiQL, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            // Only fetch schema via introspection if a schema has not been
+            // provided, including if `null` was provided.
+            if (this.state.schema === undefined) {
+                this._fetchSchema();
             }
-          }
-        }
-      }
 
-      this.handleRunQuery(operationName);
-    }
-  }, {
-    key: '_didClickDragBar',
-    value: function _didClickDragBar(event) {
-      // Only for primary unmodified clicks
-      if (event.button !== 0 || event.ctrlKey) {
-        return false;
-      }
-      var target = event.target;
-      // We use codemirror's gutter as the drag bar.
-      if (target.className.indexOf('CodeMirror-gutter') !== 0) {
-        return false;
-      }
-      // Specifically the result window's drag bar.
-      var resultWindow = _reactDom2.default.findDOMNode(this.resultComponent);
-      while (target) {
-        if (target === resultWindow) {
-          return true;
-        }
-        target = target.parentNode;
-      }
-      return false;
-    }
-  }]);
+            // Utility for keeping CodeMirror correctly sized.
+            this.codeMirrorSizer = new _CodeMirrorSizer2.default();
 
-  return GraphiQL;
+            global.g = this;
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            var _this2 = this;
+
+            var nextSchema = this.state.schema;
+            var nextQuery = this.state.query;
+            var nextVariables = this.state.variables;
+            var nextOperationName = this.state.operationName;
+            var nextResponse = this.state.response;
+
+            if (nextProps.schema !== undefined) {
+                nextSchema = nextProps.schema;
+            }
+            if (nextProps.query !== undefined) {
+                nextQuery = nextProps.query;
+            }
+            if (nextProps.variables !== undefined) {
+                nextVariables = nextProps.variables;
+            }
+            if (nextProps.operationName !== undefined) {
+                nextOperationName = nextProps.operationName;
+            }
+            if (nextProps.response !== undefined) {
+                nextResponse = nextProps.response;
+            }
+            if (nextSchema !== this.state.schema || nextQuery !== this.state.query || nextOperationName !== this.state.operationName) {
+                var updatedQueryAttributes = this._updateQueryFacts(nextQuery, nextOperationName, this.state.operations, nextSchema);
+
+                if (updatedQueryAttributes !== undefined) {
+                    nextOperationName = updatedQueryAttributes.operationName;
+
+                    this.setState(updatedQueryAttributes);
+                }
+            }
+
+            // If schema is not supplied via props and the fetcher changed, then
+            // remove the schema so fetchSchema() will be called with the new fetcher.
+            if (nextProps.schema === undefined && nextProps.fetcher !== this.props.fetcher) {
+                nextSchema = undefined;
+            }
+
+            this.setState({
+                schema: nextSchema,
+                query: nextQuery,
+                variables: nextVariables,
+                operationName: nextOperationName,
+                response: nextResponse
+            }, function () {
+                if (_this2.state.schema === undefined) {
+                    _this2.docExplorerComponent.reset();
+                    _this2._fetchSchema();
+                }
+            });
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            // If this update caused DOM nodes to have changed sizes, update the
+            // corresponding CodeMirror instance sizes to match.
+            this.codeMirrorSizer.updateSizes([this.queryEditorComponent, this.variableEditorComponent, this.resultComponent]);
+        }
+
+        // When the component is about to unmount, store any persistable state, such
+        // that when the component is remounted, it will use the last used values.
+
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this._storage.set('query', this.state.query);
+            this._storage.set('variables', this.state.variables);
+            this._storage.set('operationName', this.state.operationName);
+            this._storage.set('editorFlex', this.state.editorFlex);
+            this._storage.set('variableEditorHeight', this.state.variableEditorHeight);
+            this._storage.set('docExplorerWidth', this.state.docExplorerWidth);
+            this._storage.set('docExplorerOpen', this.state.docExplorerOpen);
+            this._storage.set('historyPaneOpen', this.state.historyPaneOpen);
+        }
+    }, {
+        key: 'onKeyUp',
+        value: function onKeyUp(keyName, e, handle) {
+            console.log("test:onKeyUp", e, handle);
+            this.setState({
+                output: 'onKeyUp ' + keyName
+            });
+        }
+    }, {
+        key: 'onKeyDown',
+        value: function onKeyDown(keyName, e, handle) {
+            console.log("test:onKeyDown", keyName, e, handle);
+            if ("ctrl+d" == keyName.toLowerCase()) {
+                if (!this.state.docExplorerOpen) {
+                    this.setState({ docExplorerOpen: true });
+                } else if (this.state.docExplorerWidth >= 3 * DEFAULT_DOC_EXPLORER_WIDTH) {
+                    this.setState({ docExplorerOpen: false, docExplorerWidth: DEFAULT_DOC_EXPLORER_WIDTH });
+                } else {
+                    this.setState({ docExplorerWidth: 3 * DEFAULT_DOC_EXPLORER_WIDTH });
+                }
+            } else if ("ctrl+h" == keyName.toLowerCase()) {
+                var doccfg = { historyPaneOpen: !this.state.historyPaneOpen };
+                this.setState(doccfg);
+            } else if ("ctrl+q" == keyName.toLowerCase()) {
+                if (!this.state.variableEditorOpen) {
+                    this.setState({ variableEditorOpen: true });
+                } else if (this.state.variableEditorHeight >= 3 * DEFAULT_VARIABLE_EXPLORER_HEIGHT) {
+                    this.setState({ variableEditorOpen: false, variableEditorHeight: DEFAULT_VARIABLE_EXPLORER_HEIGHT });
+                } else {
+                    this.setState({ variableEditorHeight: 3 * DEFAULT_VARIABLE_EXPLORER_HEIGHT });
+                }
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            var children = _react2.default.Children.toArray(this.props.children);
+
+            var logo = (0, _find2.default)(children, function (child) {
+                return child.type === GraphiQL.Logo;
+            }) || _react2.default.createElement(GraphiQL.Logo, null);
+
+            var toolbar = (0, _find2.default)(children, function (child) {
+                return child.type === GraphiQL.Toolbar;
+            }) || _react2.default.createElement(
+                GraphiQL.Toolbar,
+                null,
+                _react2.default.createElement(_ToolbarButton.ToolbarButton, {
+                    onClick: this.handlePrettifyQuery,
+                    title: 'Prettify Query (Shift-Ctrl-P)',
+                    label: 'Prettify'
+                }),
+                _react2.default.createElement(_ToolbarButton.ToolbarButton, {
+                    onClick: this.handleToggleHistory,
+                    title: 'Show History',
+                    label: 'History'
+                })
+            );
+
+            var footer = (0, _find2.default)(children, function (child) {
+                return child.type === GraphiQL.Footer;
+            });
+
+            var queryWrapStyle = {
+                WebkitFlex: this.state.editorFlex,
+                flex: this.state.editorFlex
+            };
+
+            var docWrapStyle = {
+                display: this.state.docExplorerOpen ? 'block' : 'none',
+                width: this.state.docExplorerWidth
+            };
+            var docExplorerWrapClasses = 'docExplorerWrap' + (this.state.docExplorerWidth < 200 ? ' doc-explorer-narrow' : '');
+
+            var historyPaneStyle = {
+                display: this.state.historyPaneOpen ? 'block' : 'none',
+                width: '230px',
+                zIndex: '7'
+            };
+
+            var variableOpen = this.state.variableEditorOpen;
+            var variableStyle = {
+                height: variableOpen ? this.state.variableEditorHeight : null
+            };
+
+            return _react2.default.createElement(
+                _reactHotKeys2.default,
+                {
+                    keyName: 'ctrl+d,ctrl+h,ctrl+q',
+                    onKeyDown: this.onKeyDown.bind(this),
+                    onKeyUp: this.onKeyUp.bind(this)
+                },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'graphiql-container' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'historyPaneWrap', style: historyPaneStyle },
+                        _react2.default.createElement(
+                            _QueryHistory.QueryHistory,
+                            {
+                                operationName: this.state.operationName,
+                                query: this.state.query,
+                                variables: this.state.variables,
+                                onSelectQuery: this.handleSelectHistoryQuery,
+                                storage: this._storage,
+                                queryID: this._editorQueryID },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'docExplorerHide', onClick: this.handleToggleHistory },
+                                '\u2715'
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'editorWrap' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'topBarWrap' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'topBar' },
+                                logo,
+                                _react2.default.createElement(_ExecuteButton.ExecuteButton, {
+                                    isRunning: Boolean(this.state.subscription),
+                                    onRun: this.handleRunQuery,
+                                    onStop: this.handleStopQuery,
+                                    operations: this.state.operations
+                                }),
+                                toolbar
+                            ),
+                            !this.state.docExplorerOpen && _react2.default.createElement(
+                                'button',
+                                {
+                                    className: 'docExplorerShow',
+                                    onClick: this.handleToggleDocs },
+                                'Docs'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            {
+                                ref: function ref(n) {
+                                    _this3.editorBarComponent = n;
+                                },
+                                className: 'editorBar',
+                                onDoubleClick: this.handleResetResize,
+                                onMouseDown: this.handleResizeStart },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'queryWrap', style: queryWrapStyle },
+                                _react2.default.createElement(_QueryEditor.QueryEditor, {
+                                    ref: function ref(n) {
+                                        _this3.queryEditorComponent = n;
+                                    },
+                                    schema: this.state.schema,
+                                    value: this.state.query,
+                                    onEdit: this.handleEditQuery,
+                                    onHintInformationRender: this.handleHintInformationRender,
+                                    onClickReference: this.handleClickReference,
+                                    onPrettifyQuery: this.handlePrettifyQuery,
+                                    onRunQuery: this.handleEditorRunQuery,
+                                    editorTheme: this.props.editorTheme
+                                }),
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'variable-editor', style: variableStyle },
+                                    _react2.default.createElement(
+                                        'div',
+                                        {
+                                            className: 'variable-editor-title',
+                                            style: { cursor: variableOpen ? 'row-resize' : 'n-resize' },
+                                            onMouseDown: this.handleVariableResizeStart },
+                                        'Query Variables'
+                                    ),
+                                    _react2.default.createElement(_VariableEditor.VariableEditor, {
+                                        ref: function ref(n) {
+                                            _this3.variableEditorComponent = n;
+                                        },
+                                        value: this.state.variables,
+                                        variableToType: this.state.variableToType,
+                                        onEdit: this.handleEditVariables,
+                                        onHintInformationRender: this.handleHintInformationRender,
+                                        onPrettifyQuery: this.handlePrettifyQuery,
+                                        onRunQuery: this.handleEditorRunQuery,
+                                        editorTheme: this.props.editorTheme
+                                    })
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'resultWrap' },
+                                this.state.isWaitingForResponse && _react2.default.createElement(
+                                    'div',
+                                    { className: 'spinner-container' },
+                                    _react2.default.createElement('div', { className: 'spinner' })
+                                ),
+                                _react2.default.createElement(_ResultViewer.ResultViewer, {
+                                    ref: function ref(c) {
+                                        _this3.resultComponent = c;
+                                    },
+                                    value: this.state.response,
+                                    editorTheme: this.props.editorTheme,
+                                    ResultsTooltip: this.props.ResultsTooltip
+                                }),
+                                footer
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: docExplorerWrapClasses, style: docWrapStyle },
+                        _react2.default.createElement('div', {
+                            className: 'docExplorerResizer',
+                            onDoubleClick: this.handleDocsResetResize,
+                            onMouseDown: this.handleDocsResizeStart
+                        }),
+                        _react2.default.createElement(
+                            _DocExplorer.DocExplorer,
+                            {
+                                ref: function ref(c) {
+                                    _this3.docExplorerComponent = c;
+                                },
+                                schema: this.state.schema },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'docExplorerHide', onClick: this.handleToggleDocs },
+                                '\u2715'
+                            )
+                        )
+                    )
+                )
+            );
+        }
+
+        /**
+         * Get the query editor CodeMirror instance.
+         *
+         * @public
+         */
+
+    }, {
+        key: 'getQueryEditor',
+        value: function getQueryEditor() {
+            return this.queryEditorComponent.getCodeMirror();
+        }
+
+        /**
+         * Get the variable editor CodeMirror instance.
+         *
+         * @public
+         */
+
+    }, {
+        key: 'getVariableEditor',
+        value: function getVariableEditor() {
+            return this.variableEditorComponent.getCodeMirror();
+        }
+
+        /**
+         * Refresh all CodeMirror instances.
+         *
+         * @public
+         */
+
+    }, {
+        key: 'refresh',
+        value: function refresh() {
+            this.queryEditorComponent.getCodeMirror().refresh();
+            this.variableEditorComponent.getCodeMirror().refresh();
+            this.resultComponent.getCodeMirror().refresh();
+        }
+
+        /**
+         * Inspect the query, automatically filling in selection sets for non-leaf
+         * fields which do not yet have them.
+         *
+         * @public
+         */
+
+    }, {
+        key: 'autoCompleteLeafs',
+        value: function autoCompleteLeafs() {
+            var _fillLeafs = (0, _fillLeafs2.fillLeafs)(this.state.schema, this.state.query, this.props.getDefaultFieldNames),
+                insertions = _fillLeafs.insertions,
+                result = _fillLeafs.result;
+
+            if (insertions && insertions.length > 0) {
+                var editor = this.getQueryEditor();
+                editor.operation(function () {
+                    var cursor = editor.getCursor();
+                    var cursorIndex = editor.indexFromPos(cursor);
+                    editor.setValue(result);
+                    var added = 0;
+                    var markers = insertions.map(function (_ref) {
+                        var index = _ref.index,
+                            string = _ref.string;
+                        return editor.markText(editor.posFromIndex(index + added), editor.posFromIndex(index + (added += string.length)), {
+                            className: 'autoInsertedLeaf',
+                            clearOnEnter: true,
+                            title: 'Automatically added leaf fields'
+                        });
+                    });
+                    setTimeout(function () {
+                        return markers.forEach(function (marker) {
+                            return marker.clear();
+                        });
+                    }, 7000);
+                    var newCursorIndex = cursorIndex;
+                    insertions.forEach(function (_ref2) {
+                        var index = _ref2.index,
+                            string = _ref2.string;
+
+                        if (index < cursorIndex) {
+                            newCursorIndex += string.length;
+                        }
+                    });
+                    editor.setCursor(editor.posFromIndex(newCursorIndex));
+                });
+            }
+
+            return result;
+        }
+
+        // Private methods
+
+    }, {
+        key: '_fetchSchema',
+        value: function _fetchSchema() {
+            var _this4 = this;
+
+            var fetcher = this.props.fetcher;
+
+            var fetch = observableToPromise(fetcher({ query: _introspectionQueries.introspectionQuery }));
+            if (!isPromise(fetch)) {
+                this.setState({
+                    response: 'Fetcher did not return a Promise for introspection.'
+                });
+                return;
+            }
+
+            fetch.then(function (result) {
+                if (result.data) {
+                    return result;
+                }
+
+                // Try the stock introspection query first, falling back on the
+                // sans-subscriptions query for services which do not yet support it.
+                var fetch2 = observableToPromise(fetcher({
+                    query: _introspectionQueries.introspectionQuerySansSubscriptions
+                }));
+                if (!isPromise(fetch)) {
+                    throw new Error('Fetcher did not return a Promise for introspection.');
+                }
+                return fetch2;
+            }).then(function (result) {
+                // If a schema was provided while this fetch was underway, then
+                // satisfy the race condition by respecting the already
+                // provided schema.
+                if (_this4.state.schema !== undefined) {
+                    return;
+                }
+
+                if (result && result.data) {
+                    var schema = (0, _graphql.buildClientSchema)(result.data);
+                    var queryFacts = (0, _getQueryFacts2.default)(schema, _this4.state.query);
+                    _this4.setState(_extends({ schema: schema }, queryFacts));
+                } else {
+                    var responseString = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+                    _this4.setState({
+                        // Set schema to `null` to explicitly indicate that no schema exists.
+                        schema: null,
+                        response: responseString
+                    });
+                }
+            }).catch(function (error) {
+                _this4.setState({
+                    schema: null,
+                    response: error && String(error.stack || error)
+                });
+            });
+        }
+    }, {
+        key: '_fetchQuery',
+        value: function _fetchQuery(query, variables, operationName, cb) {
+            var _this5 = this;
+
+            var fetcher = this.props.fetcher;
+            var jsonVariables = null;
+
+            try {
+                jsonVariables = variables && variables.trim() !== '' ? JSON.parse(variables) : null;
+            } catch (error) {
+                throw new Error('Variables are invalid JSON: ' + error.message + '.');
+            }
+
+            if ((typeof jsonVariables === 'undefined' ? 'undefined' : _typeof(jsonVariables)) !== 'object') {
+                throw new Error('Variables are not a JSON object.');
+            }
+
+            var fetch = fetcher({
+                query: query,
+                variables: jsonVariables,
+                operationName: operationName
+            });
+
+            if (isPromise(fetch)) {
+                // If fetcher returned a Promise, then call the callback when the promise
+                // resolves, otherwise handle the error.
+                fetch.then(cb).catch(function (error) {
+                    _this5.setState({
+                        isWaitingForResponse: false,
+                        response: error && String(error.stack || error)
+                    });
+                });
+            } else if (isObservable(fetch)) {
+                // If the fetcher returned an Observable, then subscribe to it, calling
+                // the callback on each next value, and handling both errors and the
+                // completion of the Observable. Returns a Subscription object.
+                var subscription = fetch.subscribe({
+                    next: cb,
+                    error: function error(_error) {
+                        _this5.setState({
+                            isWaitingForResponse: false,
+                            response: _error && String(_error.stack || _error),
+                            subscription: null
+                        });
+                    },
+                    complete: function complete() {
+                        _this5.setState({
+                            isWaitingForResponse: false,
+                            subscription: null
+                        });
+                    }
+                });
+
+                return subscription;
+            } else {
+                throw new Error('Fetcher did not return Promise or Observable.');
+            }
+        }
+    }, {
+        key: '_runQueryAtCursor',
+        value: function _runQueryAtCursor() {
+            if (this.state.subscription) {
+                this.handleStopQuery();
+                return;
+            }
+
+            var operationName = void 0;
+            var operations = this.state.operations;
+            if (operations) {
+                var editor = this.getQueryEditor();
+                if (editor.hasFocus()) {
+                    var cursor = editor.getCursor();
+                    var cursorIndex = editor.indexFromPos(cursor);
+
+                    // Loop through all operations to see if one contains the cursor.
+                    for (var i = 0; i < operations.length; i++) {
+                        var operation = operations[i];
+                        if (operation.loc.start <= cursorIndex && operation.loc.end >= cursorIndex) {
+                            operationName = operation.name && operation.name.value;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            this.handleRunQuery(operationName);
+        }
+    }, {
+        key: '_didClickDragBar',
+        value: function _didClickDragBar(event) {
+            // Only for primary unmodified clicks
+            if (event.button !== 0 || event.ctrlKey) {
+                return false;
+            }
+            var target = event.target;
+            // We use codemirror's gutter as the drag bar.
+            if (target.className.indexOf('CodeMirror-gutter') !== 0) {
+                return false;
+            }
+            // Specifically the result window's drag bar.
+            var resultWindow = _reactDom2.default.findDOMNode(this.resultComponent);
+            while (target) {
+                if (target === resultWindow) {
+                    return true;
+                }
+                target = target.parentNode;
+            }
+            return false;
+        }
+    }]);
+
+    return GraphiQL;
 }(_react2.default.Component);
 
 // Configure the UI by providing this Component as a child of GraphiQL.
 
 
 GraphiQL.propTypes = {
-  fetcher: _propTypes2.default.func.isRequired,
-  schema: _propTypes2.default.instanceOf(_graphql.GraphQLSchema),
-  query: _propTypes2.default.string,
-  variables: _propTypes2.default.string,
-  operationName: _propTypes2.default.string,
-  response: _propTypes2.default.string,
-  storage: _propTypes2.default.shape({
-    getItem: _propTypes2.default.func,
-    setItem: _propTypes2.default.func,
-    removeItem: _propTypes2.default.func
-  }),
-  defaultQuery: _propTypes2.default.string,
-  onEditQuery: _propTypes2.default.func,
-  onEditVariables: _propTypes2.default.func,
-  onEditOperationName: _propTypes2.default.func,
-  onToggleDocs: _propTypes2.default.func,
-  getDefaultFieldNames: _propTypes2.default.func,
-  editorTheme: _propTypes2.default.string,
-  onToggleHistory: _propTypes2.default.func,
-  ResultsTooltip: _propTypes2.default.any
+    fetcher: _propTypes2.default.func.isRequired,
+    schema: _propTypes2.default.instanceOf(_graphql.GraphQLSchema),
+    query: _propTypes2.default.string,
+    variables: _propTypes2.default.string,
+    operationName: _propTypes2.default.string,
+    response: _propTypes2.default.string,
+    storage: _propTypes2.default.shape({
+        getItem: _propTypes2.default.func,
+        setItem: _propTypes2.default.func,
+        removeItem: _propTypes2.default.func
+    }),
+    defaultQuery: _propTypes2.default.string,
+    onEditQuery: _propTypes2.default.func,
+    onEditVariables: _propTypes2.default.func,
+    onEditOperationName: _propTypes2.default.func,
+    onToggleDocs: _propTypes2.default.func,
+    getDefaultFieldNames: _propTypes2.default.func,
+    editorTheme: _propTypes2.default.string,
+    onToggleHistory: _propTypes2.default.func,
+    ResultsTooltip: _propTypes2.default.any
 };
 
 var _initialiseProps = function _initialiseProps() {
-  var _this6 = this;
+    var _this6 = this;
 
-  this.handleClickReference = function (reference) {
-    _this6.setState({ docExplorerOpen: true }, function () {
-      _this6.docExplorerComponent.showDocForReference(reference);
-    });
-  };
+    this.handleClickReference = function (reference) {
+        _this6.setState({ docExplorerOpen: true }, function () {
+            _this6.docExplorerComponent.showDocForReference(reference);
+        });
+    };
 
-  this.handleRunQuery = function (selectedOperationName) {
-    _this6._editorQueryID++;
-    var queryID = _this6._editorQueryID;
+    this.handleRunQuery = function (selectedOperationName) {
+        _this6._editorQueryID++;
+        var queryID = _this6._editorQueryID;
 
-    // Use the edited query after autoCompleteLeafs() runs or,
-    // in case autoCompletion fails (the function returns undefined),
-    // the current query from the editor.
-    var editedQuery = _this6.autoCompleteLeafs() || _this6.state.query;
-    var variables = _this6.state.variables;
-    var operationName = _this6.state.operationName;
+        // Use the edited query after autoCompleteLeafs() runs or,
+        // in case autoCompletion fails (the function returns undefined),
+        // the current query from the editor.
+        var editedQuery = _this6.autoCompleteLeafs() || _this6.state.query;
+        var variables = _this6.state.variables;
+        var operationName = _this6.state.operationName;
 
-    // If an operation was explicitly provided, different from the current
-    // operation name, then report that it changed.
-    if (selectedOperationName && selectedOperationName !== operationName) {
-      operationName = selectedOperationName;
-      _this6.handleEditOperationName(operationName);
-    }
+        // If an operation was explicitly provided, different from the current
+        // operation name, then report that it changed.
+        if (selectedOperationName && selectedOperationName !== operationName) {
+            operationName = selectedOperationName;
+            _this6.handleEditOperationName(operationName);
+        }
 
-    try {
-      _this6.setState({
-        isWaitingForResponse: true,
-        response: null,
-        operationName: operationName
-      });
+        try {
+            _this6.setState({
+                isWaitingForResponse: true,
+                response: null,
+                operationName: operationName
+            });
 
-      // _fetchQuery may return a subscription.
-      var subscription = _this6._fetchQuery(editedQuery, variables, operationName, function (result) {
-        if (queryID === _this6._editorQueryID) {
-          _this6.setState({
+            // _fetchQuery may return a subscription.
+            var subscription = _this6._fetchQuery(editedQuery, variables, operationName, function (result) {
+                if (queryID === _this6._editorQueryID) {
+                    _this6.setState({
+                        isWaitingForResponse: false,
+                        response: JSON.stringify(result, null, 2)
+                    });
+                }
+            });
+
+            _this6.setState({ subscription: subscription });
+        } catch (error) {
+            _this6.setState({
+                isWaitingForResponse: false,
+                response: error.message
+            });
+        }
+    };
+
+    this.handleStopQuery = function () {
+        var subscription = _this6.state.subscription;
+        _this6.setState({
             isWaitingForResponse: false,
-            response: JSON.stringify(result, null, 2)
-          });
+            subscription: null
+        });
+        if (subscription) {
+            subscription.unsubscribe();
         }
-      });
+    };
 
-      _this6.setState({ subscription: subscription });
-    } catch (error) {
-      _this6.setState({
-        isWaitingForResponse: false,
-        response: error.message
-      });
-    }
-  };
+    this.handlePrettifyQuery = function () {
+        var editor = _this6.getQueryEditor();
+        editor.setValue((0, _graphql.print)((0, _graphql.parse)(editor.getValue())));
+    };
 
-  this.handleStopQuery = function () {
-    var subscription = _this6.state.subscription;
-    _this6.setState({
-      isWaitingForResponse: false,
-      subscription: null
-    });
-    if (subscription) {
-      subscription.unsubscribe();
-    }
-  };
-
-  this.handlePrettifyQuery = function () {
-    var editor = _this6.getQueryEditor();
-    editor.setValue((0, _graphql.print)((0, _graphql.parse)(editor.getValue())));
-  };
-
-  this.handleEditQuery = (0, _debounce2.default)(100, function (value) {
-    var queryFacts = _this6._updateQueryFacts(value, _this6.state.operationName, _this6.state.operations, _this6.state.schema);
-    _this6.setState(_extends({
-      query: value
-    }, queryFacts));
-    if (_this6.props.onEditQuery) {
-      return _this6.props.onEditQuery(value);
-    }
-  });
-
-  this._updateQueryFacts = function (query, operationName, prevOperations, schema) {
-    var queryFacts = (0, _getQueryFacts2.default)(schema, query);
-    if (queryFacts) {
-      // Update operation name should any query names change.
-      var updatedOperationName = (0, _getSelectedOperationName2.default)(prevOperations, operationName, queryFacts.operations);
-
-      // Report changing of operationName if it changed.
-      var onEditOperationName = _this6.props.onEditOperationName;
-      if (onEditOperationName && operationName !== updatedOperationName) {
-        onEditOperationName(updatedOperationName);
-      }
-
-      return _extends({
-        operationName: updatedOperationName
-      }, queryFacts);
-    }
-  };
-
-  this.handleEditVariables = function (value) {
-    _this6.setState({ variables: value });
-    if (_this6.props.onEditVariables) {
-      _this6.props.onEditVariables(value);
-    }
-  };
-
-  this.handleEditOperationName = function (operationName) {
-    var onEditOperationName = _this6.props.onEditOperationName;
-    if (onEditOperationName) {
-      onEditOperationName(operationName);
-    }
-  };
-
-  this.handleHintInformationRender = function (elem) {
-    elem.addEventListener('click', _this6._onClickHintInformation);
-
-    var _onRemoveFn = void 0;
-    elem.addEventListener('DOMNodeRemoved', _onRemoveFn = function onRemoveFn() {
-      elem.removeEventListener('DOMNodeRemoved', _onRemoveFn);
-      elem.removeEventListener('click', _this6._onClickHintInformation);
-    });
-  };
-
-  this.handleEditorRunQuery = function () {
-    _this6._runQueryAtCursor();
-  };
-
-  this._onClickHintInformation = function (event) {
-    if (event.target.className === 'typeName') {
-      var typeName = event.target.innerHTML;
-      var schema = _this6.state.schema;
-      if (schema) {
-        var type = schema.getType(typeName);
-        if (type) {
-          _this6.setState({ docExplorerOpen: true }, function () {
-            _this6.docExplorerComponent.showDoc(type);
-          });
+    this.handleEditQuery = (0, _debounce2.default)(100, function (value) {
+        var queryFacts = _this6._updateQueryFacts(value, _this6.state.operationName, _this6.state.operations, _this6.state.schema);
+        _this6.setState(_extends({
+            query: value
+        }, queryFacts));
+        if (_this6.props.onEditQuery) {
+            return _this6.props.onEditQuery(value);
         }
-      }
-    }
-  };
+    });
 
-  this.handleToggleDocs = function () {
-    if (typeof _this6.props.onToggleDocs === 'function') {
-      _this6.props.onToggleDocs(!_this6.state.docExplorerOpen);
-    }
-    _this6.setState({ docExplorerOpen: !_this6.state.docExplorerOpen });
-  };
+    this._updateQueryFacts = function (query, operationName, prevOperations, schema) {
+        var queryFacts = (0, _getQueryFacts2.default)(schema, query);
+        if (queryFacts) {
+            // Update operation name should any query names change.
+            var updatedOperationName = (0, _getSelectedOperationName2.default)(prevOperations, operationName, queryFacts.operations);
 
-  this.handleToggleHistory = function () {
-    if (typeof _this6.props.onToggleHistory === 'function') {
-      _this6.props.onToggleHistory(!_this6.state.historyPaneOpen);
-    }
-    _this6.setState({ historyPaneOpen: !_this6.state.historyPaneOpen });
-  };
+            // Report changing of operationName if it changed.
+            var onEditOperationName = _this6.props.onEditOperationName;
+            if (onEditOperationName && operationName !== updatedOperationName) {
+                onEditOperationName(updatedOperationName);
+            }
 
-  this.handleSelectHistoryQuery = function (query, variables, operationName) {
-    _this6.handleEditQuery(query);
-    _this6.handleEditVariables(variables);
-    _this6.handleEditOperationName(operationName);
-  };
-
-  this.handleResizeStart = function (downEvent) {
-    if (!_this6._didClickDragBar(downEvent)) {
-      return;
-    }
-
-    downEvent.preventDefault();
-
-    var offset = downEvent.clientX - (0, _elementPosition.getLeft)(downEvent.target);
-
-    var onMouseMove = function onMouseMove(moveEvent) {
-      if (moveEvent.buttons === 0) {
-        return onMouseUp();
-      }
-
-      var editorBar = _reactDom2.default.findDOMNode(_this6.editorBarComponent);
-      var leftSize = moveEvent.clientX - (0, _elementPosition.getLeft)(editorBar) - offset;
-      var rightSize = editorBar.clientWidth - leftSize;
-      _this6.setState({ editorFlex: leftSize / rightSize });
+            return _extends({
+                operationName: updatedOperationName
+            }, queryFacts);
+        }
     };
 
-    var onMouseUp = function (_onMouseUp) {
-      function onMouseUp() {
-        return _onMouseUp.apply(this, arguments);
-      }
-
-      onMouseUp.toString = function () {
-        return _onMouseUp.toString();
-      };
-
-      return onMouseUp;
-    }(function () {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      onMouseMove = null;
-      onMouseUp = null;
-    });
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-
-  this.handleResetResize = function () {
-    _this6.setState({ editorFlex: 1 });
-  };
-
-  this.handleDocsResizeStart = function (downEvent) {
-    downEvent.preventDefault();
-
-    var hadWidth = _this6.state.docExplorerWidth;
-    var offset = downEvent.clientX - (0, _elementPosition.getLeft)(downEvent.target);
-
-    var onMouseMove = function onMouseMove(moveEvent) {
-      if (moveEvent.buttons === 0) {
-        return onMouseUp();
-      }
-
-      var app = _reactDom2.default.findDOMNode(_this6);
-      var cursorPos = moveEvent.clientX - (0, _elementPosition.getLeft)(app) - offset;
-      var docsSize = app.clientWidth - cursorPos;
-
-      if (docsSize < 100) {
-        _this6.setState({ docExplorerOpen: false });
-      } else {
-        _this6.setState({
-          docExplorerOpen: true,
-          docExplorerWidth: Math.min(docsSize, 650)
-        });
-      }
+    this.handleEditVariables = function (value) {
+        _this6.setState({ variables: value });
+        if (_this6.props.onEditVariables) {
+            _this6.props.onEditVariables(value);
+        }
     };
 
-    var onMouseUp = function (_onMouseUp2) {
-      function onMouseUp() {
-        return _onMouseUp2.apply(this, arguments);
-      }
-
-      onMouseUp.toString = function () {
-        return _onMouseUp2.toString();
-      };
-
-      return onMouseUp;
-    }(function () {
-      if (!_this6.state.docExplorerOpen) {
-        _this6.setState({ docExplorerWidth: hadWidth });
-      }
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      onMouseMove = null;
-      onMouseUp = null;
-    });
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-
-  this.handleDocsResetResize = function () {
-    _this6.setState({
-      docExplorerWidth: DEFAULT_DOC_EXPLORER_WIDTH
-    });
-  };
-
-  this.handleVariableResizeStart = function (downEvent) {
-    downEvent.preventDefault();
-
-    var didMove = false;
-    var wasOpen = _this6.state.variableEditorOpen;
-    var hadHeight = _this6.state.variableEditorHeight;
-    var offset = downEvent.clientY - (0, _elementPosition.getTop)(downEvent.target);
-
-    var onMouseMove = function onMouseMove(moveEvent) {
-      if (moveEvent.buttons === 0) {
-        return onMouseUp();
-      }
-
-      didMove = true;
-
-      var editorBar = _reactDom2.default.findDOMNode(_this6.editorBarComponent);
-      var topSize = moveEvent.clientY - (0, _elementPosition.getTop)(editorBar) - offset;
-      var bottomSize = editorBar.clientHeight - topSize;
-      if (bottomSize < 60) {
-        _this6.setState({
-          variableEditorOpen: false,
-          variableEditorHeight: hadHeight
-        });
-      } else {
-        _this6.setState({
-          variableEditorOpen: true,
-          variableEditorHeight: bottomSize
-        });
-      }
+    this.handleEditOperationName = function (operationName) {
+        var onEditOperationName = _this6.props.onEditOperationName;
+        if (onEditOperationName) {
+            onEditOperationName(operationName);
+        }
     };
 
-    var onMouseUp = function (_onMouseUp3) {
-      function onMouseUp() {
-        return _onMouseUp3.apply(this, arguments);
-      }
+    this.handleHintInformationRender = function (elem) {
+        elem.addEventListener('click', _this6._onClickHintInformation);
 
-      onMouseUp.toString = function () {
-        return _onMouseUp3.toString();
-      };
+        var _onRemoveFn = void 0;
+        elem.addEventListener('DOMNodeRemoved', _onRemoveFn = function onRemoveFn() {
+            elem.removeEventListener('DOMNodeRemoved', _onRemoveFn);
+            elem.removeEventListener('click', _this6._onClickHintInformation);
+        });
+    };
 
-      return onMouseUp;
-    }(function () {
-      if (!didMove) {
-        _this6.setState({ variableEditorOpen: !wasOpen });
-      }
+    this.handleEditorRunQuery = function () {
+        _this6._runQueryAtCursor();
+    };
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      onMouseMove = null;
-      onMouseUp = null;
-    });
+    this._onClickHintInformation = function (event) {
+        if (event.target.className === 'typeName') {
+            var typeName = event.target.innerHTML;
+            var schema = _this6.state.schema;
+            if (schema) {
+                var type = schema.getType(typeName);
+                if (type) {
+                    _this6.setState({ docExplorerOpen: true }, function () {
+                        _this6.docExplorerComponent.showDoc(type);
+                    });
+                }
+            }
+        }
+    };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
+    this.handleToggleDocs = function () {
+        if (typeof _this6.props.onToggleDocs === 'function') {
+            _this6.props.onToggleDocs(!_this6.state.docExplorerOpen);
+        }
+        _this6.setState({ docExplorerOpen: !_this6.state.docExplorerOpen });
+    };
+
+    this.handleToggleHistory = function () {
+        if (typeof _this6.props.onToggleHistory === 'function') {
+            _this6.props.onToggleHistory(!_this6.state.historyPaneOpen);
+        }
+        _this6.setState({ historyPaneOpen: !_this6.state.historyPaneOpen });
+    };
+
+    this.handleSelectHistoryQuery = function (query, variables, operationName) {
+        _this6.handleEditQuery(query);
+        _this6.handleEditVariables(variables);
+        _this6.handleEditOperationName(operationName);
+    };
+
+    this.handleResizeStart = function (downEvent) {
+        if (!_this6._didClickDragBar(downEvent)) {
+            return;
+        }
+
+        downEvent.preventDefault();
+
+        var offset = downEvent.clientX - (0, _elementPosition.getLeft)(downEvent.target);
+
+        var onMouseMove = function onMouseMove(moveEvent) {
+            if (moveEvent.buttons === 0) {
+                return onMouseUp();
+            }
+
+            var editorBar = _reactDom2.default.findDOMNode(_this6.editorBarComponent);
+            var leftSize = moveEvent.clientX - (0, _elementPosition.getLeft)(editorBar) - offset;
+            var rightSize = editorBar.clientWidth - leftSize;
+            _this6.setState({ editorFlex: leftSize / rightSize });
+        };
+
+        var onMouseUp = function (_onMouseUp) {
+            function onMouseUp() {
+                return _onMouseUp.apply(this, arguments);
+            }
+
+            onMouseUp.toString = function () {
+                return _onMouseUp.toString();
+            };
+
+            return onMouseUp;
+        }(function () {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            onMouseMove = null;
+            onMouseUp = null;
+        });
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+
+    this.handleResetResize = function () {
+        _this6.setState({ editorFlex: 1 });
+    };
+
+    this.handleDocsResizeStart = function (downEvent) {
+        downEvent.preventDefault();
+
+        var hadWidth = _this6.state.docExplorerWidth;
+        var offset = downEvent.clientX - (0, _elementPosition.getLeft)(downEvent.target);
+
+        var onMouseMove = function onMouseMove(moveEvent) {
+            if (moveEvent.buttons === 0) {
+                return onMouseUp();
+            }
+
+            var app = _reactDom2.default.findDOMNode(_this6);
+            var cursorPos = moveEvent.clientX - (0, _elementPosition.getLeft)(app) - offset;
+            var docsSize = app.clientWidth - cursorPos;
+
+            if (docsSize < 100) {
+                _this6.setState({ docExplorerOpen: false });
+            } else {
+                _this6.setState({
+                    docExplorerOpen: true,
+                    docExplorerWidth: Math.min(docsSize, 650)
+                });
+            }
+        };
+
+        var onMouseUp = function (_onMouseUp2) {
+            function onMouseUp() {
+                return _onMouseUp2.apply(this, arguments);
+            }
+
+            onMouseUp.toString = function () {
+                return _onMouseUp2.toString();
+            };
+
+            return onMouseUp;
+        }(function () {
+            if (!_this6.state.docExplorerOpen) {
+                _this6.setState({ docExplorerWidth: hadWidth });
+            }
+
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            onMouseMove = null;
+            onMouseUp = null;
+        });
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+
+    this.handleDocsResetResize = function () {
+        _this6.setState({
+            docExplorerWidth: DEFAULT_DOC_EXPLORER_WIDTH
+        });
+    };
+
+    this.handleVariableResizeStart = function (downEvent) {
+        downEvent.preventDefault();
+
+        var didMove = false;
+        var wasOpen = _this6.state.variableEditorOpen;
+        var hadHeight = _this6.state.variableEditorHeight;
+        var offset = downEvent.clientY - (0, _elementPosition.getTop)(downEvent.target);
+
+        var onMouseMove = function onMouseMove(moveEvent) {
+            if (moveEvent.buttons === 0) {
+                return onMouseUp();
+            }
+
+            didMove = true;
+
+            var editorBar = _reactDom2.default.findDOMNode(_this6.editorBarComponent);
+            var topSize = moveEvent.clientY - (0, _elementPosition.getTop)(editorBar) - offset;
+            var bottomSize = editorBar.clientHeight - topSize;
+            if (bottomSize < 60) {
+                _this6.setState({
+                    variableEditorOpen: false,
+                    variableEditorHeight: hadHeight
+                });
+            } else {
+                _this6.setState({
+                    variableEditorOpen: true,
+                    variableEditorHeight: bottomSize
+                });
+            }
+        };
+
+        var onMouseUp = function (_onMouseUp3) {
+            function onMouseUp() {
+                return _onMouseUp3.apply(this, arguments);
+            }
+
+            onMouseUp.toString = function () {
+                return _onMouseUp3.toString();
+            };
+
+            return onMouseUp;
+        }(function () {
+            if (!didMove) {
+                _this6.setState({ variableEditorOpen: !wasOpen });
+            }
+
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            onMouseMove = null;
+            onMouseUp = null;
+        });
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
 };
 
 GraphiQL.Logo = function GraphiQLLogo(props) {
-  return _react2.default.createElement(
-    'div',
-    { className: 'title' },
-    props.children || _react2.default.createElement(
-      'span',
-      null,
-      'Graph',
-      _react2.default.createElement(
-        'em',
-        null,
-        'i'
-      ),
-      'QL'
-    )
-  );
+    return _react2.default.createElement(
+        'div',
+        { className: 'title' },
+        props.children || _react2.default.createElement(
+            'span',
+            null,
+            'Graph',
+            _react2.default.createElement(
+                'em',
+                null,
+                'i'
+            ),
+            'QL'
+        )
+    );
 };
 
 // Configure the UI by providing this Component as a child of GraphiQL.
 GraphiQL.Toolbar = function GraphiQLToolbar(props) {
-  return _react2.default.createElement(
-    'div',
-    { className: 'toolbar' },
-    props.children
-  );
+    return _react2.default.createElement(
+        'div',
+        { className: 'toolbar' },
+        props.children
+    );
 };
 
 // Export main windows/panes to be used separately if desired.
@@ -2717,41 +2764,41 @@ GraphiQL.SelectOption = _ToolbarSelect.ToolbarSelectOption;
 
 // Configure the UI by providing this Component as a child of GraphiQL.
 GraphiQL.Footer = function GraphiQLFooter(props) {
-  return _react2.default.createElement(
-    'div',
-    { className: 'footer' },
-    props.children
-  );
+    return _react2.default.createElement(
+        'div',
+        { className: 'footer' },
+        props.children
+    );
 };
 
 var defaultQuery = '# Welcome to GraphiQL\n#\n# GraphiQL is an in-browser tool for writing, validating, and\n# testing GraphQL queries.\n#\n# Type queries into this side of the screen, and you will see intelligent\n# typeaheads aware of the current GraphQL type schema and live syntax and\n# validation errors highlighted within the text.\n#\n# GraphQL queries typically start with a "{" character. Lines that starts\n# with a # are ignored.\n#\n# An example GraphQL query might look like:\n#\n#     {\n#       field(arg: "value") {\n#         subField\n#       }\n#     }\n#\n# Keyboard shortcuts:\n#\n#  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)\n#\n#       Run Query:  Ctrl-Enter (or press the play button above)\n#\n#   Auto Complete:  Ctrl-Space (or just start typing)\n#\n\n';
 
 // Duck-type promise detection.
 function isPromise(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.then === 'function';
+    return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.then === 'function';
 }
 
 // Duck-type Observable.take(1).toPromise()
 function observableToPromise(observable) {
-  if (!isObservable(observable)) {
-    return observable;
-  }
-  return new Promise(function (resolve, reject) {
-    var subscription = observable.subscribe(function (v) {
-      resolve(v);
-      subscription.unsubscribe();
-    }, reject, function () {
-      reject(new Error('no value resolved'));
+    if (!isObservable(observable)) {
+        return observable;
+    }
+    return new Promise(function (resolve, reject) {
+        var subscription = observable.subscribe(function (v) {
+            resolve(v);
+            subscription.unsubscribe();
+        }, reject, function () {
+            reject(new Error('no value resolved'));
+        });
     });
-  });
 }
 
 // Duck-type observable detection.
 function isObservable(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.subscribe === 'function';
+    return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.subscribe === 'function';
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/CodeMirrorSizer":23,"../utility/StorageAPI":25,"../utility/debounce":26,"../utility/elementPosition":27,"../utility/fillLeafs":28,"../utility/find":29,"../utility/getQueryFacts":30,"../utility/getSelectedOperationName":31,"../utility/introspectionQueries":32,"./DocExplorer":1,"./ExecuteButton":11,"./QueryEditor":14,"./QueryHistory":15,"./ResultViewer":16,"./ToolbarButton":17,"./ToolbarGroup":18,"./ToolbarMenu":19,"./ToolbarSelect":20,"./VariableEditor":21,"graphql":95,"prop-types":233}],13:[function(require,module,exports){
+},{"../utility/CodeMirrorSizer":23,"../utility/StorageAPI":25,"../utility/debounce":26,"../utility/elementPosition":27,"../utility/fillLeafs":28,"../utility/find":29,"../utility/getQueryFacts":30,"../utility/getSelectedOperationName":31,"../utility/introspectionQueries":32,"./DocExplorer":1,"./ExecuteButton":11,"./QueryEditor":14,"./QueryHistory":15,"./ResultViewer":16,"./ToolbarButton":17,"./ToolbarGroup":18,"./ToolbarMenu":19,"./ToolbarSelect":20,"./VariableEditor":21,"graphql":95,"prop-types":236,"react-hot-keys":239}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2917,7 +2964,7 @@ HistoryQuery.propTypes = {
 };
 exports.default = HistoryQuery;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":233}],14:[function(require,module,exports){
+},{"prop-types":236}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3220,7 +3267,7 @@ QueryEditor.propTypes = {
   editorTheme: _propTypes2.default.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/normalizeWhitespace":33,"../utility/onHasCompletion":34,"codemirror":65,"codemirror-graphql/hint":36,"codemirror-graphql/info":37,"codemirror-graphql/jump":38,"codemirror-graphql/lint":39,"codemirror-graphql/mode":40,"codemirror/addon/comment/comment":52,"codemirror/addon/dialog/dialog":53,"codemirror/addon/edit/closebrackets":54,"codemirror/addon/edit/matchbrackets":55,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/hint/show-hint":59,"codemirror/addon/lint/lint":60,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/search":62,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"graphql":95,"markdown-it":172,"prop-types":233}],15:[function(require,module,exports){
+},{"../utility/normalizeWhitespace":33,"../utility/onHasCompletion":34,"codemirror":65,"codemirror-graphql/hint":36,"codemirror-graphql/info":37,"codemirror-graphql/jump":38,"codemirror-graphql/lint":39,"codemirror-graphql/mode":40,"codemirror/addon/comment/comment":52,"codemirror/addon/dialog/dialog":53,"codemirror/addon/edit/closebrackets":54,"codemirror/addon/edit/matchbrackets":55,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/hint/show-hint":59,"codemirror/addon/lint/lint":60,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/search":62,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"graphql":95,"markdown-it":175,"prop-types":236}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3406,7 +3453,7 @@ QueryHistory.propTypes = {
   storage: _propTypes2.default.object
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/QueryStore":24,"./HistoryQuery":13,"graphql":95,"prop-types":233}],16:[function(require,module,exports){
+},{"../utility/QueryStore":24,"./HistoryQuery":13,"graphql":95,"prop-types":236}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3573,7 +3620,7 @@ ResultViewer.propTypes = {
   ResultsTooltip: _propTypes2.default.any
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"codemirror":65,"codemirror-graphql/results/mode":41,"codemirror-graphql/utils/info-addon":46,"codemirror/addon/dialog/dialog":53,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/search":62,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"prop-types":233}],17:[function(require,module,exports){
+},{"codemirror":65,"codemirror-graphql/results/mode":41,"codemirror-graphql/utils/info-addon":46,"codemirror/addon/dialog/dialog":53,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/search":62,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"prop-types":236}],17:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3664,7 +3711,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":233}],18:[function(require,module,exports){
+},{"prop-types":236}],18:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -3857,7 +3904,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":233}],20:[function(require,module,exports){
+},{"prop-types":236}],20:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4033,7 +4080,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":233}],21:[function(require,module,exports){
+},{"prop-types":236}],21:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -4292,7 +4339,7 @@ VariableEditor.propTypes = {
   editorTheme: _propTypes2.default.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/onHasCompletion":34,"codemirror":65,"codemirror-graphql/variables/hint":49,"codemirror-graphql/variables/lint":50,"codemirror-graphql/variables/mode":51,"codemirror/addon/dialog/dialog":53,"codemirror/addon/edit/closebrackets":54,"codemirror/addon/edit/matchbrackets":55,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/hint/show-hint":59,"codemirror/addon/lint/lint":60,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"prop-types":233}],22:[function(require,module,exports){
+},{"../utility/onHasCompletion":34,"codemirror":65,"codemirror-graphql/variables/hint":49,"codemirror-graphql/variables/lint":50,"codemirror-graphql/variables/mode":51,"codemirror/addon/dialog/dialog":53,"codemirror/addon/edit/closebrackets":54,"codemirror/addon/edit/matchbrackets":55,"codemirror/addon/fold/brace-fold":56,"codemirror/addon/fold/foldgutter":58,"codemirror/addon/hint/show-hint":59,"codemirror/addon/lint/lint":60,"codemirror/addon/search/jump-to-line":61,"codemirror/addon/search/searchcursor":63,"codemirror/keymap/sublime":64,"prop-types":236}],22:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5069,7 +5116,7 @@ function renderType(type) {
   }
   return '<a class="typeName">' + type.name + '</a>';
 }
-},{"codemirror":65,"graphql":95,"markdown-it":172}],35:[function(require,module,exports){
+},{"codemirror":65,"graphql":95,"markdown-it":175}],35:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5563,7 +5610,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":244}],36:[function(require,module,exports){
+},{"util/":248}],36:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -20208,7 +20255,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":229}],69:[function(require,module,exports){
+},{"_process":232}],69:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -20277,7 +20324,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":67,"_process":229}],70:[function(require,module,exports){
+},{"./emptyFunction":67,"_process":232}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21339,7 +21386,7 @@ function getDefinitionForFragmentDefinition(path, text, definition) {
   };
 }
 }).call(this,require('_process'))
-},{"_process":229,"assert":35,"graphql-language-service-utils":84}],74:[function(require,module,exports){
+},{"_process":232,"assert":35,"graphql-language-service-utils":84}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23885,7 +23932,7 @@ function getFieldDef(schema, parentType, fieldName) {
   }
   return parentType.getFields()[fieldName];
 }
-},{"../error":88,"../jsutils/invariant":97,"../jsutils/isNullish":99,"../language/kinds":105,"../type/definition":115,"../type/directives":116,"../type/introspection":118,"../type/schema":120,"../utilities/typeFromAST":138,"./values":93,"iterall":169}],92:[function(require,module,exports){
+},{"../error":88,"../jsutils/invariant":97,"../jsutils/isNullish":99,"../language/kinds":105,"../type/definition":115,"../type/directives":116,"../type/introspection":118,"../type/schema":120,"../utilities/typeFromAST":138,"./values":93,"iterall":172}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24179,7 +24226,7 @@ function coerceValue(type, value) {
 
   return parsed;
 }
-},{"../error":88,"../jsutils/find":96,"../jsutils/invariant":97,"../jsutils/isInvalid":98,"../jsutils/isNullish":99,"../jsutils/keyMap":100,"../language/kinds":105,"../language/printer":109,"../type/definition":115,"../utilities/isValidJSValue":133,"../utilities/isValidLiteralValue":134,"../utilities/typeFromAST":138,"../utilities/valueFromAST":139,"iterall":169}],94:[function(require,module,exports){
+},{"../error":88,"../jsutils/find":96,"../jsutils/invariant":97,"../jsutils/isInvalid":98,"../jsutils/isNullish":99,"../jsutils/keyMap":100,"../language/kinds":105,"../language/printer":109,"../type/definition":115,"../utilities/isValidJSValue":133,"../utilities/isValidLiteralValue":134,"../utilities/typeFromAST":138,"../utilities/valueFromAST":139,"iterall":172}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27884,7 +27931,7 @@ function asyncMapValue(value, callback) {
 function iteratorResult(value) {
   return { value: value, done: false };
 }
-},{"iterall":169}],114:[function(require,module,exports){
+},{"iterall":172}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28003,7 +28050,7 @@ function createSourceEventStream(schema, document, rootValue, contextValue, vari
 
   return subscription;
 }
-},{"../execution/execute":91,"../jsutils/invariant":97,"../type/schema":120,"./mapAsyncIterator":113,"iterall":169}],115:[function(require,module,exports){
+},{"../execution/execute":91,"../jsutils/invariant":97,"../type/schema":120,"./mapAsyncIterator":113,"iterall":172}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30396,7 +30443,7 @@ function formatWarning(error) {
   return formatted.trim();
 }
 }).call(this,require('_process'))
-},{"_process":229}],123:[function(require,module,exports){
+},{"_process":232}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30558,7 +30605,7 @@ function astFromValue(value, type) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":97,"../jsutils/isInvalid":98,"../jsutils/isNullish":99,"../language/kinds":105,"../type/definition":115,"../type/scalars":119,"iterall":169}],124:[function(require,module,exports){
+},{"../jsutils/invariant":97,"../jsutils/isInvalid":98,"../jsutils/isNullish":99,"../language/kinds":105,"../type/definition":115,"../type/scalars":119,"iterall":172}],124:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32785,7 +32832,7 @@ function isValidJSValue(value, type) {
 
   return [];
 }
-},{"../jsutils/invariant":97,"../jsutils/isNullish":99,"../type/definition":115,"iterall":169}],134:[function(require,module,exports){
+},{"../jsutils/invariant":97,"../jsutils/isNullish":99,"../type/definition":115,"iterall":172}],134:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36450,6 +36497,424 @@ var ValidationContext = exports.ValidationContext = function () {
   return ValidationContext;
 }();
 },{"../error":88,"../jsutils/invariant":97,"../language/kinds":105,"../language/visitor":111,"../type/schema":120,"../utilities/TypeInfo":121,"./specifiedRules":167}],169:[function(require,module,exports){
+/*!
+ * hotkeys-js v3.3.8
+ * A simple micro-library for defining and dispatching keyboard shortcuts. It has no dependencies.
+ * 
+ * Copyright (c) 2018 kenny wong <wowohoo@qq.com>
+ * http://jaywcjlove.github.io/hotkeys
+ * 
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+var isff = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase().indexOf('firefox') > 0 : false;
+
+// 绑定事件
+function addEvent(object, event, method) {
+  if (object.addEventListener) {
+    object.addEventListener(event, method, false);
+  } else if (object.attachEvent) {
+    object.attachEvent('on' + event, function () {
+      method(window.event);
+    });
+  }
+}
+
+// 修饰键转换成对应的键码
+function getMods(modifier, key) {
+  var mods = key.slice(0, key.length - 1);
+  for (var i = 0; i < mods.length; i++) {
+    mods[i] = modifier[mods[i].toLowerCase()];
+  }return mods;
+}
+
+// 处理传的key字符串转换成数组
+function getKeys(key) {
+  if (!key) key = '';
+
+  key = key.replace(/\s/g, ''); // 匹配任何空白字符,包括空格、制表符、换页符等等
+  var keys = key.split(','); // 同时设置多个快捷键，以','分割
+  var index = keys.lastIndexOf('');
+
+  // 快捷键可能包含','，需特殊处理
+  for (; index >= 0;) {
+    keys[index - 1] += ',';
+    keys.splice(index, 1);
+    index = keys.lastIndexOf('');
+  }
+
+  return keys;
+}
+
+// 比较修饰键的数组
+function compareArray(a1, a2) {
+  var arr1 = a1.length >= a2.length ? a1 : a2;
+  var arr2 = a1.length >= a2.length ? a2 : a1;
+  var isIndex = true;
+
+  for (var i = 0; i < arr1.length; i++) {
+    if (arr2.indexOf(arr1[i]) === -1) isIndex = false;
+  }
+  return isIndex;
+}
+
+var _keyMap = { // 特殊键
+  backspace: 8,
+  tab: 9,
+  clear: 12,
+  enter: 13,
+  return: 13,
+  esc: 27,
+  escape: 27,
+  space: 32,
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+  del: 46,
+  delete: 46,
+  ins: 45,
+  insert: 45,
+  home: 36,
+  end: 35,
+  pageup: 33,
+  pagedown: 34,
+  capslock: 20,
+  '⇪': 20,
+  ',': 188,
+  '.': 190,
+  '/': 191,
+  '`': 192,
+  '-': isff ? 173 : 189,
+  '=': isff ? 61 : 187,
+  ';': isff ? 59 : 186,
+  '\'': 222,
+  '[': 219,
+  ']': 221,
+  '\\': 220
+};
+
+var _modifier = { // 修饰键
+  '⇧': 16,
+  shift: 16,
+  '⌥': 18,
+  alt: 18,
+  option: 18,
+  '⌃': 17,
+  ctrl: 17,
+  control: 17,
+  '⌘': isff ? 224 : 91,
+  cmd: isff ? 224 : 91,
+  command: isff ? 224 : 91
+};
+var _downKeys = []; // 记录摁下的绑定键
+var modifierMap = {
+  16: 'shiftKey',
+  18: 'altKey',
+  17: 'ctrlKey'
+};
+var _mods = { 16: false, 18: false, 17: false };
+var _handlers = {};
+
+// F1~F12 特殊键
+for (var k = 1; k < 20; k++) {
+  _keyMap['f' + k] = 111 + k;
+}
+
+// 兼容Firefox处理
+modifierMap[isff ? 224 : 91] = 'metaKey';
+_mods[isff ? 224 : 91] = false;
+
+var _scope = 'all'; // 默认热键范围
+var isBindElement = false; // 是否绑定节点
+
+// 返回键码
+var code = function code(x) {
+  return _keyMap[x.toLowerCase()] || _modifier[x.toLowerCase()] || x.toUpperCase().charCodeAt(0);
+};
+
+// 设置获取当前范围（默认为'所有'）
+function setScope(scope) {
+  _scope = scope || 'all';
+}
+// 获取当前范围
+function getScope() {
+  return _scope || 'all';
+}
+// 获取摁下绑定键的键值
+function getPressedKeyCodes() {
+  return _downKeys.slice(0);
+}
+
+// 表单控件控件判断 返回 Boolean
+function filter(event) {
+  var target = event.target || event.srcElement;
+  var tagName = target.tagName;
+  // 忽略这些情况下快捷键无效
+
+  return !(tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA' || target.isContentEditable);
+}
+
+// 判断摁下的键是否为某个键，返回true或者false
+function isPressed(keyCode) {
+  if (typeof keyCode === 'string') {
+    keyCode = code(keyCode); // 转换成键码
+  }
+  return _downKeys.indexOf(keyCode) !== -1;
+}
+
+// 循环删除handlers中的所有 scope(范围)
+function deleteScope(scope, newScope) {
+  var handlers = void 0;
+  var i = void 0;
+
+  // 没有指定scope，获取scope
+  if (!scope) scope = getScope();
+
+  for (var key in _handlers) {
+    if (Object.prototype.hasOwnProperty.call(_handlers, key)) {
+      handlers = _handlers[key];
+      for (i = 0; i < handlers.length;) {
+        if (handlers[i].scope === scope) handlers.splice(i, 1);else i++;
+      }
+    }
+  }
+
+  // 如果scope被删除，将scope重置为all
+  if (getScope() === scope) setScope(newScope || 'all');
+}
+
+// 清除修饰键
+function clearModifier(event) {
+  var key = event.keyCode || event.which || event.charCode;
+  var i = _downKeys.indexOf(key);
+
+  // 从列表中清除按压过的键
+  if (i >= 0) _downKeys.splice(i, 1);
+
+  // 修饰键 shiftKey altKey ctrlKey (command||metaKey) 清除
+  if (key === 93 || key === 224) key = 91;
+  if (key in _mods) {
+    _mods[key] = false;
+
+    // 将修饰键重置为false
+    for (var k in _modifier) {
+      if (_modifier[k] === key) hotkeys[k] = false;
+    }
+  }
+}
+
+// 解除绑定某个范围的快捷键
+function unbind(key, scope) {
+  var multipleKeys = getKeys(key);
+  var keys = void 0;
+  var mods = [];
+  var obj = void 0;
+
+  for (var i = 0; i < multipleKeys.length; i++) {
+    // 将组合快捷键拆分为数组
+    keys = multipleKeys[i].split('+');
+
+    // 记录每个组合键中的修饰键的键码 返回数组
+    if (keys.length > 1) mods = getMods(_modifier, keys);
+
+    // 获取除修饰键外的键值key
+    key = keys[keys.length - 1];
+    key = key === '*' ? '*' : code(key);
+
+    // 判断是否传入范围，没有就获取范围
+    if (!scope) scope = getScope();
+
+    // 如何key不在 _handlers 中返回不做处理
+    if (!_handlers[key]) return;
+
+    // 清空 handlers 中数据，
+    // 让触发快捷键键之后没有事件执行到达解除快捷键绑定的目的
+    for (var r = 0; r < _handlers[key].length; r++) {
+      obj = _handlers[key][r];
+      // 判断是否在范围内并且键值相同
+      if (obj.scope === scope && compareArray(obj.mods, mods)) {
+        _handlers[key][r] = {};
+      }
+    }
+  }
+}
+
+// 对监听对应快捷键的回调函数进行处理
+function eventHandler(event, handler, scope) {
+  var modifiersMatch = void 0;
+
+  // 看它是否在当前范围
+  if (handler.scope === scope || handler.scope === 'all') {
+    // 检查是否匹配修饰符（如果有返回true）
+    modifiersMatch = handler.mods.length > 0;
+
+    for (var y in _mods) {
+      if (Object.prototype.hasOwnProperty.call(_mods, y)) {
+        if (!_mods[y] && handler.mods.indexOf(+y) > -1 || _mods[y] && handler.mods.indexOf(+y) === -1) modifiersMatch = false;
+      }
+    }
+
+    // 调用处理程序，如果是修饰键不做处理
+    if (handler.mods.length === 0 && !_mods[16] && !_mods[18] && !_mods[17] && !_mods[91] || modifiersMatch || handler.shortcut === '*') {
+      if (handler.method(event, handler) === false) {
+        if (event.preventDefault) event.preventDefault();else event.returnValue = false;
+        if (event.stopPropagation) event.stopPropagation();
+        if (event.cancelBubble) event.cancelBubble = true;
+      }
+    }
+  }
+}
+
+// 处理keydown事件
+function dispatch(event) {
+  var asterisk = _handlers['*'];
+  var key = event.keyCode || event.which || event.charCode;
+
+  // 搜集绑定的键
+  if (_downKeys.indexOf(key) === -1) _downKeys.push(key);
+
+  // Gecko(Firefox)的command键值224，在Webkit(Chrome)中保持一致
+  // Webkit左右command键值不一样
+  if (key === 93 || key === 224) key = 91;
+
+  if (key in _mods) {
+    _mods[key] = true;
+
+    // 将特殊字符的key注册到 hotkeys 上
+    for (var k in _modifier) {
+      if (_modifier[k] === key) hotkeys[k] = true;
+    }
+
+    if (!asterisk) return;
+  }
+
+  // 将modifierMap里面的修饰键绑定到event中
+  for (var e in _mods) {
+    if (Object.prototype.hasOwnProperty.call(_mods, e)) {
+      _mods[e] = event[modifierMap[e]];
+    }
+  }
+
+  // 表单控件过滤 默认表单控件不触发快捷键
+  if (!hotkeys.filter.call(this, event)) return;
+
+  // 获取范围 默认为all
+  var scope = getScope();
+
+  // 对任何快捷键都需要做的处理
+  if (asterisk) {
+    for (var i = 0; i < asterisk.length; i++) {
+      if (asterisk[i].scope === scope) eventHandler(event, asterisk[i], scope);
+    }
+  }
+  // key 不在_handlers中返回
+  if (!(key in _handlers)) return;
+
+  for (var _i = 0; _i < _handlers[key].length; _i++) {
+    // 找到处理内容
+    eventHandler(event, _handlers[key][_i], scope);
+  }
+}
+
+function hotkeys(key, option, method) {
+  var keys = getKeys(key); // 需要处理的快捷键列表
+  var mods = [];
+  var scope = 'all'; // scope默认为all，所有范围都有效
+  var element = document; // 快捷键事件绑定节点
+  var i = 0;
+
+  // 对为设定范围的判断
+  if (method === undefined && typeof option === 'function') {
+    method = option;
+  }
+
+  if (Object.prototype.toString.call(option) === '[object Object]') {
+    if (option.scope) scope = option.scope; // eslint-disable-line
+    if (option.element) element = option.element; // eslint-disable-line
+  }
+
+  if (typeof option === 'string') scope = option;
+
+  // 对于每个快捷键进行处理
+  for (; i < keys.length; i++) {
+    key = keys[i].split('+'); // 按键列表
+    mods = [];
+
+    // 如果是组合快捷键取得组合快捷键
+    if (key.length > 1) mods = getMods(_modifier, key);
+
+    // 将非修饰键转化为键码
+    key = key[key.length - 1];
+    key = key === '*' ? '*' : code(key); // *表示匹配所有快捷键
+
+    // 判断key是否在_handlers中，不在就赋一个空数组
+    if (!(key in _handlers)) _handlers[key] = [];
+
+    _handlers[key].push({
+      scope: scope,
+      mods: mods,
+      shortcut: keys[i],
+      method: method,
+      key: keys[i]
+    });
+  }
+  // 在全局document上设置快捷键
+  if (typeof element !== 'undefined' && !isBindElement) {
+    isBindElement = true;
+    addEvent(element, 'keydown', function (e) {
+      dispatch(e);
+    });
+    addEvent(element, 'keyup', function (e) {
+      clearModifier(e);
+    });
+  }
+}
+
+var _api = {
+  setScope: setScope,
+  getScope: getScope,
+  deleteScope: deleteScope,
+  getPressedKeyCodes: getPressedKeyCodes,
+  isPressed: isPressed,
+  filter: filter,
+  unbind: unbind
+};
+for (var a in _api) {
+  if (Object.prototype.hasOwnProperty.call(_api, a)) {
+    hotkeys[a] = _api[a];
+  }
+}
+
+if (typeof window !== 'undefined') {
+  var _hotkeys = window.hotkeys;
+  hotkeys.noConflict = function (deep) {
+    if (deep && window.hotkeys === hotkeys) {
+      window.hotkeys = _hotkeys;
+    }
+    return hotkeys;
+  };
+  window.hotkeys = hotkeys;
+}
+
+module.exports = hotkeys;
+
+},{}],170:[function(require,module,exports){
+/*! hotkeys-js v3.3.8 | MIT (c) 2018 kenny wong <wowohoo@qq.com> | http://jaywcjlove.github.io/hotkeys */
+"use strict";var isff="undefined"!=typeof navigator&&0<navigator.userAgent.toLowerCase().indexOf("firefox");function addEvent(e,o,t){e.addEventListener?e.addEventListener(o,t,!1):e.attachEvent&&e.attachEvent("on"+o,function(){t(window.event)})}function getMods(e,o){for(var t=o.slice(0,o.length-1),n=0;n<t.length;n++)t[n]=e[t[n].toLowerCase()];return t}function getKeys(e){e||(e="");for(var o=(e=e.replace(/\s/g,"")).split(","),t=o.lastIndexOf("");0<=t;)o[t-1]+=",",o.splice(t,1),t=o.lastIndexOf("");return o}function compareArray(e,o){for(var t=e.length<o.length?o:e,n=e.length<o.length?e:o,r=!0,s=0;s<t.length;s++)-1===n.indexOf(t[s])&&(r=!1);return r}for(var _keyMap={backspace:8,tab:9,clear:12,enter:13,return:13,esc:27,escape:27,space:32,left:37,up:38,right:39,down:40,del:46,delete:46,ins:45,insert:45,home:36,end:35,pageup:33,pagedown:34,capslock:20,"\u21ea":20,",":188,".":190,"/":191,"`":192,"-":isff?173:189,"=":isff?61:187,";":isff?59:186,"'":222,"[":219,"]":221,"\\":220},_modifier={"\u21e7":16,shift:16,"\u2325":18,alt:18,option:18,"\u2303":17,ctrl:17,control:17,"\u2318":isff?224:91,cmd:isff?224:91,command:isff?224:91},_downKeys=[],modifierMap={16:"shiftKey",18:"altKey",17:"ctrlKey"},_mods={16:!1,18:!1,17:!1},_handlers={},k=1;k<20;k++)_keyMap["f"+k]=111+k;var _scope="all",isBindElement=_mods[isff?224:91]=!(modifierMap[isff?224:91]="metaKey"),code=function(e){return _keyMap[e.toLowerCase()]||_modifier[e.toLowerCase()]||e.toUpperCase().charCodeAt(0)};function setScope(e){_scope=e||"all"}function getScope(){return _scope||"all"}function getPressedKeyCodes(){return _downKeys.slice(0)}function filter(e){var o=e.target||e.srcElement,t=o.tagName;return!("INPUT"===t||"SELECT"===t||"TEXTAREA"===t||o.isContentEditable)}function isPressed(e){return"string"==typeof e&&(e=code(e)),-1!==_downKeys.indexOf(e)}function deleteScope(e,o){var t=void 0,n=void 0;for(var r in e||(e=getScope()),_handlers)if(Object.prototype.hasOwnProperty.call(_handlers,r))for(t=_handlers[r],n=0;n<t.length;)t[n].scope===e?t.splice(n,1):n++;getScope()===e&&setScope(o||"all")}function clearModifier(e){var o=e.keyCode||e.which||e.charCode,t=_downKeys.indexOf(o);if(t<0||_downKeys.splice(t,1),93!==o&&224!==o||(o=91),o in _mods)for(var n in _mods[o]=!1,_modifier)_modifier[n]===o&&(hotkeys[n]=!1)}function unbind(e,o){for(var t=getKeys(e),n=void 0,r=[],s=void 0,i=0;i<t.length;i++){if(1<(n=t[i].split("+")).length&&(r=getMods(_modifier,n)),e="*"===(e=n[n.length-1])?"*":code(e),o||(o=getScope()),!_handlers[e])return;for(var d=0;d<_handlers[e].length;d++)(s=_handlers[e][d]).scope===o&&compareArray(s.mods,r)&&(_handlers[e][d]={})}}function eventHandler(e,o,t){var n=void 0;if(o.scope===t||"all"===o.scope){for(var r in n=0<o.mods.length,_mods)Object.prototype.hasOwnProperty.call(_mods,r)&&(!_mods[r]&&-1<o.mods.indexOf(+r)||_mods[r]&&-1===o.mods.indexOf(+r))&&(n=!1);(0!==o.mods.length||_mods[16]||_mods[18]||_mods[17]||_mods[91])&&!n&&"*"!==o.shortcut||!1===o.method(e,o)&&(e.preventDefault?e.preventDefault():e.returnValue=!1,e.stopPropagation&&e.stopPropagation(),e.cancelBubble&&(e.cancelBubble=!0))}}function dispatch(e){var o=_handlers["*"],t=e.keyCode||e.which||e.charCode;if(-1===_downKeys.indexOf(t)&&_downKeys.push(t),93!==t&&224!==t||(t=91),t in _mods){for(var n in _mods[t]=!0,_modifier)_modifier[n]===t&&(hotkeys[n]=!0);if(!o)return}for(var r in _mods)Object.prototype.hasOwnProperty.call(_mods,r)&&(_mods[r]=e[modifierMap[r]]);if(hotkeys.filter.call(this,e)){var s=getScope();if(o)for(var i=0;i<o.length;i++)o[i].scope===s&&eventHandler(e,o[i],s);if(t in _handlers)for(var d=0;d<_handlers[t].length;d++)eventHandler(e,_handlers[t][d],s)}}function hotkeys(e,o,t){var n=getKeys(e),r=[],s="all",i=document,d=0;for(void 0===t&&"function"==typeof o&&(t=o),"[object Object]"===Object.prototype.toString.call(o)&&(o.scope&&(s=o.scope),o.element&&(i=o.element)),"string"==typeof o&&(s=o);d<n.length;d++)r=[],1<(e=n[d].split("+")).length&&(r=getMods(_modifier,e)),(e="*"===(e=e[e.length-1])?"*":code(e))in _handlers||(_handlers[e]=[]),_handlers[e].push({scope:s,mods:r,shortcut:n[d],method:t,key:n[d]});void 0===i||isBindElement||(isBindElement=!0,addEvent(i,"keydown",function(e){dispatch(e)}),addEvent(i,"keyup",function(e){clearModifier(e)}))}var _api={setScope:setScope,getScope:getScope,deleteScope:deleteScope,getPressedKeyCodes:getPressedKeyCodes,isPressed:isPressed,filter:filter,unbind:unbind};for(var a in _api)Object.prototype.hasOwnProperty.call(_api,a)&&(hotkeys[a]=_api[a]);if("undefined"!=typeof window){var _hotkeys=window.hotkeys;hotkeys.noConflict=function(e){return e&&window.hotkeys===hotkeys&&(window.hotkeys=_hotkeys),hotkeys},window.hotkeys=hotkeys}module.exports=hotkeys;
+},{}],171:[function(require,module,exports){
+(function (process){
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = require('./dist/hotkeys.common.min.js');
+} else {
+  module.exports = require('./dist/hotkeys.common.js');
+}
+
+}).call(this,require('_process'))
+},{"./dist/hotkeys.common.js":169,"./dist/hotkeys.common.min.js":170,"_process":232}],172:[function(require,module,exports){
 /**
  * Copyright (c) 2016, Lee Byron
  * All rights reserved.
@@ -37107,7 +37572,7 @@ function forAwaitEach(source, callback, thisArg) {
 }
 exports.forAwaitEach = forAwaitEach
 
-},{}],170:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 'use strict';
 
 
@@ -37746,7 +38211,7 @@ LinkifyIt.prototype.onCompile = function onCompile() {
 
 module.exports = LinkifyIt;
 
-},{"./lib/re":171}],171:[function(require,module,exports){
+},{"./lib/re":174}],174:[function(require,module,exports){
 'use strict';
 
 
@@ -37925,13 +38390,13 @@ module.exports = function (opts) {
   return re;
 };
 
-},{"uc.micro/categories/Cc/regex":236,"uc.micro/categories/P/regex":238,"uc.micro/categories/Z/regex":239,"uc.micro/properties/Any/regex":241}],172:[function(require,module,exports){
+},{"uc.micro/categories/Cc/regex":240,"uc.micro/categories/P/regex":242,"uc.micro/categories/Z/regex":243,"uc.micro/properties/Any/regex":245}],175:[function(require,module,exports){
 'use strict';
 
 
 module.exports = require('./lib/');
 
-},{"./lib/":181}],173:[function(require,module,exports){
+},{"./lib/":184}],176:[function(require,module,exports){
 // HTML5 entities map: { name -> utf16string }
 //
 'use strict';
@@ -37939,7 +38404,7 @@ module.exports = require('./lib/');
 /*eslint quotes:0*/
 module.exports = require('entities/maps/entities.json');
 
-},{"entities/maps/entities.json":66}],174:[function(require,module,exports){
+},{"entities/maps/entities.json":66}],177:[function(require,module,exports){
 // List of valid html blocks names, accorting to commonmark spec
 // http://jgm.github.io/CommonMark/spec.html#html-blocks
 
@@ -38012,7 +38477,7 @@ module.exports = [
   'ul'
 ];
 
-},{}],175:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 // Regexps to match html elements
 
 'use strict';
@@ -38042,7 +38507,7 @@ var HTML_OPEN_CLOSE_TAG_RE = new RegExp('^(?:' + open_tag + '|' + close_tag + ')
 module.exports.HTML_TAG_RE = HTML_TAG_RE;
 module.exports.HTML_OPEN_CLOSE_TAG_RE = HTML_OPEN_CLOSE_TAG_RE;
 
-},{}],176:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
 // Utilities
 //
 'use strict';
@@ -38319,7 +38784,7 @@ exports.isPunctChar         = isPunctChar;
 exports.escapeRE            = escapeRE;
 exports.normalizeReference  = normalizeReference;
 
-},{"./entities":173,"mdurl":227,"uc.micro":240,"uc.micro/categories/P/regex":238}],177:[function(require,module,exports){
+},{"./entities":176,"mdurl":230,"uc.micro":244,"uc.micro/categories/P/regex":242}],180:[function(require,module,exports){
 // Just a shortcut for bulk export
 'use strict';
 
@@ -38328,7 +38793,7 @@ exports.parseLinkLabel       = require('./parse_link_label');
 exports.parseLinkDestination = require('./parse_link_destination');
 exports.parseLinkTitle       = require('./parse_link_title');
 
-},{"./parse_link_destination":178,"./parse_link_label":179,"./parse_link_title":180}],178:[function(require,module,exports){
+},{"./parse_link_destination":181,"./parse_link_label":182,"./parse_link_title":183}],181:[function(require,module,exports){
 // Parse link destination
 //
 'use strict';
@@ -38410,7 +38875,7 @@ module.exports = function parseLinkDestination(str, pos, max) {
   return result;
 };
 
-},{"../common/utils":176}],179:[function(require,module,exports){
+},{"../common/utils":179}],182:[function(require,module,exports){
 // Parse link label
 //
 // this function assumes that first character ("[") already matches;
@@ -38460,7 +38925,7 @@ module.exports = function parseLinkLabel(state, start, disableNested) {
   return labelEnd;
 };
 
-},{}],180:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 // Parse link title
 //
 'use strict';
@@ -38515,7 +38980,7 @@ module.exports = function parseLinkTitle(str, pos, max) {
   return result;
 };
 
-},{"../common/utils":176}],181:[function(require,module,exports){
+},{"../common/utils":179}],184:[function(require,module,exports){
 // Main parser class
 
 'use strict';
@@ -39098,7 +39563,7 @@ MarkdownIt.prototype.renderInline = function (src, env) {
 
 module.exports = MarkdownIt;
 
-},{"./common/utils":176,"./helpers":177,"./parser_block":182,"./parser_core":183,"./parser_inline":184,"./presets/commonmark":185,"./presets/default":186,"./presets/zero":187,"./renderer":188,"linkify-it":170,"mdurl":227,"punycode":235}],182:[function(require,module,exports){
+},{"./common/utils":179,"./helpers":180,"./parser_block":185,"./parser_core":186,"./parser_inline":187,"./presets/commonmark":188,"./presets/default":189,"./presets/zero":190,"./renderer":191,"linkify-it":173,"mdurl":230,"punycode":238}],185:[function(require,module,exports){
 /** internal
  * class ParserBlock
  *
@@ -39222,7 +39687,7 @@ ParserBlock.prototype.State = require('./rules_block/state_block');
 
 module.exports = ParserBlock;
 
-},{"./ruler":189,"./rules_block/blockquote":190,"./rules_block/code":191,"./rules_block/fence":192,"./rules_block/heading":193,"./rules_block/hr":194,"./rules_block/html_block":195,"./rules_block/lheading":196,"./rules_block/list":197,"./rules_block/paragraph":198,"./rules_block/reference":199,"./rules_block/state_block":200,"./rules_block/table":201}],183:[function(require,module,exports){
+},{"./ruler":192,"./rules_block/blockquote":193,"./rules_block/code":194,"./rules_block/fence":195,"./rules_block/heading":196,"./rules_block/hr":197,"./rules_block/html_block":198,"./rules_block/lheading":199,"./rules_block/list":200,"./rules_block/paragraph":201,"./rules_block/reference":202,"./rules_block/state_block":203,"./rules_block/table":204}],186:[function(require,module,exports){
 /** internal
  * class Core
  *
@@ -39282,7 +39747,7 @@ Core.prototype.State = require('./rules_core/state_core');
 
 module.exports = Core;
 
-},{"./ruler":189,"./rules_core/block":202,"./rules_core/inline":203,"./rules_core/linkify":204,"./rules_core/normalize":205,"./rules_core/replacements":206,"./rules_core/smartquotes":207,"./rules_core/state_core":208}],184:[function(require,module,exports){
+},{"./ruler":192,"./rules_core/block":205,"./rules_core/inline":206,"./rules_core/linkify":207,"./rules_core/normalize":208,"./rules_core/replacements":209,"./rules_core/smartquotes":210,"./rules_core/state_core":211}],187:[function(require,module,exports){
 /** internal
  * class ParserInline
  *
@@ -39461,7 +39926,7 @@ ParserInline.prototype.State = require('./rules_inline/state_inline');
 
 module.exports = ParserInline;
 
-},{"./ruler":189,"./rules_inline/autolink":209,"./rules_inline/backticks":210,"./rules_inline/balance_pairs":211,"./rules_inline/emphasis":212,"./rules_inline/entity":213,"./rules_inline/escape":214,"./rules_inline/html_inline":215,"./rules_inline/image":216,"./rules_inline/link":217,"./rules_inline/newline":218,"./rules_inline/state_inline":219,"./rules_inline/strikethrough":220,"./rules_inline/text":221,"./rules_inline/text_collapse":222}],185:[function(require,module,exports){
+},{"./ruler":192,"./rules_inline/autolink":212,"./rules_inline/backticks":213,"./rules_inline/balance_pairs":214,"./rules_inline/emphasis":215,"./rules_inline/entity":216,"./rules_inline/escape":217,"./rules_inline/html_inline":218,"./rules_inline/image":219,"./rules_inline/link":220,"./rules_inline/newline":221,"./rules_inline/state_inline":222,"./rules_inline/strikethrough":223,"./rules_inline/text":224,"./rules_inline/text_collapse":225}],188:[function(require,module,exports){
 // Commonmark default options
 
 'use strict';
@@ -39543,7 +40008,7 @@ module.exports = {
   }
 };
 
-},{}],186:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 // markdown-it default options
 
 'use strict';
@@ -39586,7 +40051,7 @@ module.exports = {
   }
 };
 
-},{}],187:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 // "Zero" preset, with nothing enabled. Useful for manual configuring of simple
 // modes. For example, to parse bold/italic only.
 
@@ -39650,7 +40115,7 @@ module.exports = {
   }
 };
 
-},{}],188:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 /**
  * class Renderer
  *
@@ -39987,7 +40452,7 @@ Renderer.prototype.render = function (tokens, options, env) {
 
 module.exports = Renderer;
 
-},{"./common/utils":176}],189:[function(require,module,exports){
+},{"./common/utils":179}],192:[function(require,module,exports){
 /**
  * class Ruler
  *
@@ -40341,7 +40806,7 @@ Ruler.prototype.getRules = function (chainName) {
 
 module.exports = Ruler;
 
-},{}],190:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 // Block quotes
 
 'use strict';
@@ -40628,7 +41093,7 @@ module.exports = function blockquote(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],191:[function(require,module,exports){
+},{"../common/utils":179}],194:[function(require,module,exports){
 // Code block (4 spaces padded)
 
 'use strict';
@@ -40664,7 +41129,7 @@ module.exports = function code(state, startLine, endLine/*, silent*/) {
   return true;
 };
 
-},{}],192:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 // fences (``` lang, ~~~ lang)
 
 'use strict';
@@ -40760,7 +41225,7 @@ module.exports = function fence(state, startLine, endLine, silent) {
   return true;
 };
 
-},{}],193:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 // heading (#, ##, ...)
 
 'use strict';
@@ -40817,7 +41282,7 @@ module.exports = function heading(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],194:[function(require,module,exports){
+},{"../common/utils":179}],197:[function(require,module,exports){
 // Horizontal rule
 
 'use strict';
@@ -40864,7 +41329,7 @@ module.exports = function hr(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],195:[function(require,module,exports){
+},{"../common/utils":179}],198:[function(require,module,exports){
 // HTML block
 
 'use strict';
@@ -40940,7 +41405,7 @@ module.exports = function html_block(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/html_blocks":174,"../common/html_re":175}],196:[function(require,module,exports){
+},{"../common/html_blocks":177,"../common/html_re":178}],199:[function(require,module,exports){
 // lheading (---, ===)
 
 'use strict';
@@ -41025,7 +41490,7 @@ module.exports = function lheading(state, startLine, endLine/*, silent*/) {
   return true;
 };
 
-},{}],197:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 // Lists
 
 'use strict';
@@ -41363,7 +41828,7 @@ module.exports = function list(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],198:[function(require,module,exports){
+},{"../common/utils":179}],201:[function(require,module,exports){
 // Paragraph
 
 'use strict';
@@ -41417,7 +41882,7 @@ module.exports = function paragraph(state, startLine/*, endLine*/) {
   return true;
 };
 
-},{}],199:[function(require,module,exports){
+},{}],202:[function(require,module,exports){
 'use strict';
 
 
@@ -41617,7 +42082,7 @@ module.exports = function reference(state, startLine, _endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],200:[function(require,module,exports){
+},{"../common/utils":179}],203:[function(require,module,exports){
 // Parser state class
 
 'use strict';
@@ -41849,7 +42314,7 @@ StateBlock.prototype.Token = Token;
 
 module.exports = StateBlock;
 
-},{"../common/utils":176,"../token":223}],201:[function(require,module,exports){
+},{"../common/utils":179,"../token":226}],204:[function(require,module,exports){
 // GFM table, non-standard
 
 'use strict';
@@ -42047,7 +42512,7 @@ module.exports = function table(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":176}],202:[function(require,module,exports){
+},{"../common/utils":179}],205:[function(require,module,exports){
 'use strict';
 
 
@@ -42065,7 +42530,7 @@ module.exports = function block(state) {
   }
 };
 
-},{}],203:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 module.exports = function inline(state) {
@@ -42080,7 +42545,7 @@ module.exports = function inline(state) {
   }
 };
 
-},{}],204:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 // Replace link-like texts with link nodes.
 //
 // Currently restricted by `md.validateLink()` to http/https/ftp
@@ -42215,7 +42680,7 @@ module.exports = function linkify(state) {
   }
 };
 
-},{"../common/utils":176}],205:[function(require,module,exports){
+},{"../common/utils":179}],208:[function(require,module,exports){
 // Normalize input string
 
 'use strict';
@@ -42237,7 +42702,7 @@ module.exports = function inline(state) {
   state.src = str;
 };
 
-},{}],206:[function(require,module,exports){
+},{}],209:[function(require,module,exports){
 // Simple typographyc replacements
 //
 // (c) (C) → ©
@@ -42346,7 +42811,7 @@ module.exports = function replace(state) {
   }
 };
 
-},{}],207:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 // Convert straight quotation marks to typographic ones
 //
 'use strict';
@@ -42541,7 +43006,7 @@ module.exports = function smartquotes(state) {
   }
 };
 
-},{"../common/utils":176}],208:[function(require,module,exports){
+},{"../common/utils":179}],211:[function(require,module,exports){
 // Core state object
 //
 'use strict';
@@ -42563,7 +43028,7 @@ StateCore.prototype.Token = Token;
 
 module.exports = StateCore;
 
-},{"../token":223}],209:[function(require,module,exports){
+},{"../token":226}],212:[function(require,module,exports){
 // Process autolinks '<protocol:...>'
 
 'use strict';
@@ -42637,7 +43102,7 @@ module.exports = function autolink(state, silent) {
   return false;
 };
 
-},{}],210:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 // Parse backticks
 
 'use strict';
@@ -42682,7 +43147,7 @@ module.exports = function backtick(state, silent) {
   return true;
 };
 
-},{}],211:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 // For each opening emphasis-like marker find a matching closing one
 //
 'use strict';
@@ -42728,7 +43193,7 @@ module.exports = function link_pairs(state) {
   }
 };
 
-},{}],212:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 // Process *this* and _that_
 //
 'use strict';
@@ -42857,7 +43322,7 @@ module.exports.postProcess = function emphasis(state) {
   }
 };
 
-},{}],213:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 // Process html entity - &#123;, &#xAF;, &quot;, ...
 
 'use strict';
@@ -42907,7 +43372,7 @@ module.exports = function entity(state, silent) {
   return true;
 };
 
-},{"../common/entities":173,"../common/utils":176}],214:[function(require,module,exports){
+},{"../common/entities":176,"../common/utils":179}],217:[function(require,module,exports){
 // Process escaped chars and hardbreaks
 
 'use strict';
@@ -42961,7 +43426,7 @@ module.exports = function escape(state, silent) {
   return true;
 };
 
-},{"../common/utils":176}],215:[function(require,module,exports){
+},{"../common/utils":179}],218:[function(require,module,exports){
 // Process html tags
 
 'use strict';
@@ -43010,7 +43475,7 @@ module.exports = function html_inline(state, silent) {
   return true;
 };
 
-},{"../common/html_re":175}],216:[function(require,module,exports){
+},{"../common/html_re":178}],219:[function(require,module,exports){
 // Process ![image](<src> "title")
 
 'use strict';
@@ -43164,7 +43629,7 @@ module.exports = function image(state, silent) {
   return true;
 };
 
-},{"../common/utils":176}],217:[function(require,module,exports){
+},{"../common/utils":179}],220:[function(require,module,exports){
 // Process [link](<to> "stuff")
 
 'use strict';
@@ -43316,7 +43781,7 @@ module.exports = function link(state, silent) {
   return true;
 };
 
-},{"../common/utils":176}],218:[function(require,module,exports){
+},{"../common/utils":179}],221:[function(require,module,exports){
 // Proceess '\n'
 
 'use strict';
@@ -43360,7 +43825,7 @@ module.exports = function newline(state, silent) {
   return true;
 };
 
-},{"../common/utils":176}],219:[function(require,module,exports){
+},{"../common/utils":179}],222:[function(require,module,exports){
 // Inline parser state
 
 'use strict';
@@ -43492,7 +43957,7 @@ StateInline.prototype.Token = Token;
 
 module.exports = StateInline;
 
-},{"../common/utils":176,"../token":223}],220:[function(require,module,exports){
+},{"../common/utils":179,"../token":226}],223:[function(require,module,exports){
 // ~~strike through~~
 //
 'use strict';
@@ -43611,7 +44076,7 @@ module.exports.postProcess = function strikethrough(state) {
   }
 };
 
-},{}],221:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 // Skip text characters for text token, place those to pending buffer
 // and increment current pos
 
@@ -43702,7 +44167,7 @@ module.exports = function text(state, silent) {
   return true;
 };*/
 
-},{}],222:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 // Merge adjacent text nodes into one, and re-calculate all token levels
 //
 'use strict';
@@ -43737,7 +44202,7 @@ module.exports = function text_collapse(state) {
   }
 };
 
-},{}],223:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 // Token class
 
 'use strict';
@@ -43936,7 +44401,7 @@ Token.prototype.attrJoin = function attrJoin(name, value) {
 
 module.exports = Token;
 
-},{}],224:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 
 'use strict';
 
@@ -44060,7 +44525,7 @@ decode.componentChars = '';
 
 module.exports = decode;
 
-},{}],225:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 
 'use strict';
 
@@ -44160,7 +44625,7 @@ encode.componentChars = "-_.!~*'()";
 
 module.exports = encode;
 
-},{}],226:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 
 'use strict';
 
@@ -44187,7 +44652,7 @@ module.exports = function format(url) {
   return result;
 };
 
-},{}],227:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 
 
@@ -44196,7 +44661,7 @@ module.exports.decode = require('./decode');
 module.exports.format = require('./format');
 module.exports.parse  = require('./parse');
 
-},{"./decode":224,"./encode":225,"./format":226,"./parse":228}],228:[function(require,module,exports){
+},{"./decode":227,"./encode":228,"./format":229,"./parse":231}],231:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -44510,7 +44975,7 @@ Url.prototype.parseHost = function(host) {
 
 module.exports = urlParse;
 
-},{}],229:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -44696,7 +45161,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],230:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44761,7 +45226,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":234,"_process":229,"fbjs/lib/invariant":68,"fbjs/lib/warning":69}],231:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":237,"_process":232,"fbjs/lib/invariant":68,"fbjs/lib/warning":69}],234:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44817,7 +45282,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"fbjs/lib/emptyFunction":67,"fbjs/lib/invariant":68}],232:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":67,"fbjs/lib/invariant":68}],235:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45299,7 +45764,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":230,"./lib/ReactPropTypesSecret":234,"_process":229,"fbjs/lib/emptyFunction":67,"fbjs/lib/invariant":68,"fbjs/lib/warning":69}],233:[function(require,module,exports){
+},{"./checkPropTypes":233,"./lib/ReactPropTypesSecret":237,"_process":232,"fbjs/lib/emptyFunction":67,"fbjs/lib/invariant":68,"fbjs/lib/warning":69}],236:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45333,7 +45798,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":231,"./factoryWithTypeCheckers":232,"_process":229}],234:[function(require,module,exports){
+},{"./factoryWithThrowingShims":234,"./factoryWithTypeCheckers":235,"_process":232}],237:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45349,7 +45814,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],235:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -45886,15 +46351,122 @@ module.exports = ReactPropTypesSecret;
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],236:[function(require,module,exports){
-module.exports=/[\0-\x1F\x7F-\x9F]/
-},{}],237:[function(require,module,exports){
-module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804\uDCBD|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
-},{}],238:[function(require,module,exports){
-module.exports=/[!-#%-\*,-/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E44\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD807[\uDC41-\uDC45\uDC70\uDC71]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
 },{}],239:[function(require,module,exports){
+(function (process,global){
+'use strict';
+
+exports.__esModule = true;
+exports.default = undefined;
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _hotkeysJs = require('hotkeys-js');
+
+var _hotkeysJs2 = _interopRequireDefault(_hotkeysJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+_hotkeysJs2.default.filter = function (event) {
+  var tagName = (event.target || event.srcElement).tagName;
+  _hotkeysJs2.default.setScope(/^(INPUT|TEXTAREA|SELECT)$/.test(tagName) ? 'input' : 'other');
+  return true;
+};
+
+var ReactHotkeys = function (_Component) {
+  _inherits(ReactHotkeys, _Component);
+
+  function ReactHotkeys(props) {
+    _classCallCheck(this, ReactHotkeys);
+
+    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
+
+    _this.onKeyDown = _this.onKeyDown.bind(_this);
+    _this.onKeyUp = _this.onKeyUp.bind(_this);
+    _this.handleKeyUpEvent = _this.handleKeyUpEvent.bind(_this);
+    _this.isKeyDown = false;
+    _this.handle = {};
+    return _this;
+  }
+
+  ReactHotkeys.prototype.componentDidMount = function componentDidMount() {
+    _hotkeysJs2.default.unbind(this.props.keyName);
+    (0, _hotkeysJs2.default)(this.props.keyName, this.onKeyDown);
+    document.addEventListener('keyup', this.handleKeyUpEvent);
+  };
+
+  ReactHotkeys.prototype.componentWillUnmount = function componentWillUnmount() {
+    _hotkeysJs2.default.unbind(this.props.keyName);
+    this.isKeyDown = true;
+    this.handle = {};
+    document.removeEventListener('keyup', this.handleKeyUpEvent);
+  };
+
+  ReactHotkeys.prototype.onKeyUp = function onKeyUp(e, handle) {
+    var onKeyUp = this.props.onKeyUp;
+
+    onKeyUp(handle.shortcut, e, handle);
+  };
+
+  ReactHotkeys.prototype.onKeyDown = function onKeyDown(e, handle) {
+    var onKeyDown = this.props.onKeyDown;
+
+    if (this.isKeyDown) return;
+    this.isKeyDown = true;
+    this.handle = handle;
+    onKeyDown(handle.shortcut, e, handle);
+  };
+
+  ReactHotkeys.prototype.handleKeyUpEvent = function handleKeyUpEvent(e) {
+    if (!this.isKeyDown) return;
+    this.isKeyDown = false;
+    if (this.props.keyName.indexOf(this.handle.shortcut) < 0) return;
+    this.onKeyUp(e, this.handle);
+    this.handle = {};
+  };
+
+  ReactHotkeys.prototype.render = function render() {
+    return this.props.children || null;
+  };
+
+  return ReactHotkeys;
+}(_react.Component);
+
+exports.default = ReactHotkeys;
+
+
+ReactHotkeys.propTypes = process.env.NODE_ENV !== "production" ? {
+  keyName: _propTypes2.default.string,
+  onKeyDown: _propTypes2.default.func,
+  onKeyUp: _propTypes2.default.func
+} : {};
+
+ReactHotkeys.defaultProps = {
+  onKeyUp: function onKeyUp() {},
+  onKeyDown: function onKeyDown() {}
+};
+module.exports = exports['default'];
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":232,"hotkeys-js":171,"prop-types":236}],240:[function(require,module,exports){
+module.exports=/[\0-\x1F\x7F-\x9F]/
+},{}],241:[function(require,module,exports){
+module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804\uDCBD|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
+},{}],242:[function(require,module,exports){
+module.exports=/[!-#%-\*,-/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E44\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD807[\uDC41-\uDC45\uDC70\uDC71]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
+},{}],243:[function(require,module,exports){
 module.exports=/[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/
-},{}],240:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 'use strict';
 
 exports.Any = require('./properties/Any/regex');
@@ -45903,9 +46475,9 @@ exports.Cf  = require('./categories/Cf/regex');
 exports.P   = require('./categories/P/regex');
 exports.Z   = require('./categories/Z/regex');
 
-},{"./categories/Cc/regex":236,"./categories/Cf/regex":237,"./categories/P/regex":238,"./categories/Z/regex":239,"./properties/Any/regex":241}],241:[function(require,module,exports){
+},{"./categories/Cc/regex":240,"./categories/Cf/regex":241,"./categories/P/regex":242,"./categories/Z/regex":243,"./properties/Any/regex":245}],245:[function(require,module,exports){
 module.exports=/[\0-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/
-},{}],242:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -45930,14 +46502,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],243:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],244:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -46527,5 +47099,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":243,"_process":229,"inherits":242}]},{},[22])(22)
+},{"./support/isBuffer":247,"_process":232,"inherits":246}]},{},[22])(22)
 });
