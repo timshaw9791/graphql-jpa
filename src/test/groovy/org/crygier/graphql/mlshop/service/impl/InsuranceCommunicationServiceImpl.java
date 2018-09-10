@@ -83,7 +83,7 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         salesman=salesmanRepository.findById(salesman.getId()).get();
         insuranceCommunication.distribute(salesman);
         insuranceCommunication.setDistributeTime(System.currentTimeMillis());
-        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication();
+        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         insuranceCommunication.setAdminist(administ);
         InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
         verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());
