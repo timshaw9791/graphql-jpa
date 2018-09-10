@@ -40,7 +40,7 @@ public class ModifyController {
 
 
     @RequestMapping(path = "/registeruser", method = RequestMethod.POST)
-    User registerUser(@RequestParam(name = "user", required = true) User user) {
+    User registerUser(@RequestBody User user) {
         return userService.register(user);
     }
 
