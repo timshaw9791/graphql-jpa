@@ -38,9 +38,6 @@ public class InsuranceServiceImpl implements InsuranceService {
     @Override
     public Insurance update(Insurance insurance) {
 
-        insurance.getCustomerName();
-
-
         return insuranceRepository.save(insurance);
 
 
@@ -49,7 +46,6 @@ public class InsuranceServiceImpl implements InsuranceService {
     @Override
     @Transactional
     public Insurance save(Insurance insurance) {
-        //保存保险单的同时生成 保险沟通单
         InsuranceCommunication insuranceCommunication = new InsuranceCommunication();
         insuranceCommunication.setStatus(CarCommunicationStatusEnum.D);
         insuranceCommunication.setInsurance(insurance);

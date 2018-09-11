@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login","/client/**","/mlshop/getcode","/mlshop/verify","/registeruser","/forgetpassword","/sts").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**").authenticated()
                 // .antMatchers("/agency/**").hasAnyRole("ADMIN")
                 .and()
                 .formLogin()

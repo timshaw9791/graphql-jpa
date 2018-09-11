@@ -242,7 +242,7 @@ public class StatisticServiceImpl implements StatisticService {
         /*待回访客户*/
         Long waitReplyCustomer;
 
-        /*回访客户*/
+        /*已回访客户*/
         Long replyCustomer;
 
         /*订单客户*/
@@ -271,7 +271,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         waitAllocateCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime, endTime, CarCommunicationStatusEnum.A);
 
-        replyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndType(startTime, endTime, CarCommunicationTypeEnum.B);
+        replyCustomer = carCommunicationRepository.countByUpdatetimeBetweenAndStatus(startTime, endTime, CarCommunicationStatusEnum.C);
 
         orderCustomer = orderRepository.countByCreatetimeBetween(startTime, endTime);
 
