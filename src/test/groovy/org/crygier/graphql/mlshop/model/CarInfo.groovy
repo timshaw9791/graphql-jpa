@@ -5,12 +5,9 @@ import cn.wzvtcsoft.x.bos.domain.Bostype
 import groovy.transform.CompileStatic
 import org.crygier.graphql.annotation.SchemaDocumentation
 
-import javax.persistence.CascadeType
 import javax.persistence.Entity
-import javax.persistence.OneToMany
 import javax.persistence.PrePersist
 import javax.persistence.PreUpdate
-
 /**
  * @author Curtain
  * @date 2018/7/27 19:41
@@ -59,12 +56,12 @@ class CarInfo extends BosEntity {
     @SchemaDocumentation("车型亮点")
     String carBrightPoints;
 
-    @SchemaDocumentation("金融方案")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
-    Set<FinancialScheme> financialSchemesItems = new HashSet<>();
-
-    @SchemaDocumentation("方案扫描件（核算方案）")
-    String schemeScan;
+//    @SchemaDocumentation("金融方案")
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+//    Set<FinancialScheme> financialSchemesItems = new HashSet<>();
+//
+//    @SchemaDocumentation("方案扫描件（核算方案）")
+//    String schemeScan;
 
     @SchemaDocumentation("车身颜色")
     String color;
