@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl
 
+import org.crygier.graphql.mlshop.model.FinancialScheme
 import org.crygier.graphql.mlshop.model.VehiclePrice
 import org.crygier.graphql.mlshop.repo.VehiclePriceRepository
 import org.crygier.graphql.mlshop.utils.BeanCopyUtil
@@ -25,6 +26,10 @@ class VehiclePriceServiceImpl implements org.crygier.graphql.mlshop.service.Vehi
     @Override
     VehiclePrice save(VehiclePrice vehiclePrice) {
         VehiclePrice v = vehiclePriceRepository.findByShopAndCarInfo(vehiclePrice.getShop(),vehiclePrice.getCarInfo());
+        //设置更新时间
+        for (FinancialScheme financialScheme :v.getFinancialSchemesItems()){
+            financialScheme.setSchemeTime(System.currentTimeMillis());
+        }
 
         if (v!=null){
            BeanUtils.copyProperties(vehiclePrice,v,BeanCopyUtil.getNullPropertyNames(vehiclePrice));
