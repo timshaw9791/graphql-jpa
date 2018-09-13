@@ -1,0 +1,28 @@
+<!--
+ *  Copyright (c) Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the license found in the
+ *  LICENSE file in the root directory of this source tree.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div>去支付...</div>
+</body>
+<script>
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        return (r != null) ? unescape(r[2]) : null;
+    }
+
+    var url = "https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=" + GetQueryString("prepay_id") + "&package=" + GetQueryString("package") + "&redirect_url=http%3A%2F%2Fmenglongchuxing.cn%2Fmlshop%2Fpay%2Fpay.html";
+    window.location.href = url;
+    /*
+     var url="https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=wx1320534425968065b955934d4168228594&package=2809346416"+"&redirect_url=http%3A%2F%2Fmenglongchuxing.cn%2Fmlshop%2Fpay%2Fpay.html";
+    */
+</script>
+</html>
