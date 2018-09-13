@@ -128,4 +128,7 @@ public class Order extends BosEntity {
     @SchemaDocumentation("退款时间")
     long refundTime;
 
+    @SchemaDocumentation("管理员")
+    @ManyToOne
+    Administ administ;
 }

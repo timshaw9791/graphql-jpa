@@ -1,5 +1,6 @@
 package org.crygier.graphql.mlshop.service.impl;
 
+import org.crygier.graphql.mlshop.model.Administ;
 import org.crygier.graphql.mlshop.model.Order;
 import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.model.enums.OrderAllocateStatusEnum;
@@ -9,6 +10,7 @@ import org.crygier.graphql.mlshop.repo.OrderRepository;
 import org.crygier.graphql.mlshop.service.OrderService;
 import org.crygier.graphql.mlshop.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPayStatusEnum(OrderPayStatusEnum.REFUND);
         order.setOrderStatusEnum(OrderStatusEnum.REFUND);
         order.setRefundTime(System.currentTimeMillis());
+        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        order.setAdminist(administ);
         return orderRepository.save(order);
     }
 
