@@ -59,7 +59,7 @@ public class VerificationServiceImpl implements VerificationService {
                 throw new RuntimeException("Get verify code fail. type not true");
         }
         redisTemplate.opsForValue().set(number, randomNum);
-        return randomNum;
+        return "";
     }
 
     @Override

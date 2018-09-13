@@ -24,19 +24,6 @@ class UserController {
     @Autowired
     private UserService userService;
 
-    @SchemaDocumentation("用户注册")
-    @GRequestMapping(path = "/registeruser", method = RequestMethod.POST)
-    User registerUser(@RequestParam(name = "user", required = true) User user) {
-        return userService.register(user);
-    }
-
-    @SchemaDocumentation("忘记密码")
-    @GRequestMapping("/forgetpassword")
-    String forgetPassword(@RequestParam(name = "phone",required = true)String phone,
-                          @RequestParam(name = "password",required = true)String password){
-        userService.forgetPassword(phone,password);
-        return "success";
-    }
 
     @SchemaDocumentation("修改密码")
     @GRequestMapping(path = "/modifypassword", method = RequestMethod.POST)

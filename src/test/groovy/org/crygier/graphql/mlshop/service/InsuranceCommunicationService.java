@@ -71,4 +71,10 @@ public interface InsuranceCommunicationService {
      */
     void saveAll(Collection collection);
 
+    /**
+     * 查找所有
+     * @return
+     */
+    List<InsuranceCommunication> findAll();
+
 }

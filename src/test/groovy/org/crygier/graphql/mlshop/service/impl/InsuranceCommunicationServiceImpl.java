@@ -52,6 +52,11 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
     }
 
     @Override
+    public List<InsuranceCommunication> findAll() {
+        return insuranceCommunicationRepository.findAll();
+    }
+
+    @Override
     public void saveAll(Collection collection) {
         insuranceCommunicationRepository.saveAll(collection);
     }
@@ -78,7 +83,7 @@ public class InsuranceCommunicationServiceImpl implements InsuranceCommunication
         salesman=salesmanRepository.findById(salesman.getId()).get();
         insuranceCommunication.distribute(salesman);
         insuranceCommunication.setDistributeTime(System.currentTimeMillis());
-        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication();
+        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         insuranceCommunication.setAdminist(administ);
         InsuranceCommunication result = insuranceCommunicationRepository.save(insuranceCommunication);
         verificationService.visitCode(salesman.getTel(),insuranceCommunication.getNumber());

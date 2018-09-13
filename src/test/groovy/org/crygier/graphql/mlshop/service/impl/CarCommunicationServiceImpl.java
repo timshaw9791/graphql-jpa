@@ -80,7 +80,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         carCommunication.setSalesman(salesman);
         carCommunication.setDistributeTime(System.currentTimeMillis());
         carCommunication.setStatus(CarCommunicationStatusEnum.B);
-        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication();
+        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         carCommunication.setAdminist(administ);
         if (salesman.getTel()==null || "".equals(salesman.getTel())){
             throw new MLShopRunTimeException("分配失败，业务员手机号为空，不能在分配时发送短信");

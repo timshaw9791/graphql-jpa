@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -67,8 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login","/client/**").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/login","/client/**","/mlshop/getcode","/mlshop/verify","/registeruser","/forgetpassword","/sts","/mlshop/pay","/mlshop/notify","/graphql").permitAll()
+                .antMatchers("/**").authenticated()
                 // .antMatchers("/agency/**").hasAnyRole("ADMIN")
                 .and()
                 .formLogin()
@@ -80,7 +81,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         /*避免用户多地登录*/
         http.sessionManagement().maximumSessions(1);
+    }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //解决静态资源被拦截的问题
+        web.ignoring().antMatchers("/graphql/**");
     }
 
     @Bean

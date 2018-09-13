@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
  * @date 2018/7/28 10:49
  */
 
-@SchemaDocumentation("买车沟通")
+@SchemaDocumentation("买车沟通 ")
 @GRestController("mlshop")
 @RestController
 @CompileStatic
