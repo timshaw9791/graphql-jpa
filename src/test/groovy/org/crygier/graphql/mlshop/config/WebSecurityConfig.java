@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login", "/client/**", "/mlshop/getcode", "/mlshop/verify", "/registeruser", "/forgetpassword", "/sts", "/mlshop/pay", "/mlshop/notify", "/graphql").permitAll()
+                .antMatchers("/login", "/client/**", "/mlshop/getcode", "/mlshop/verify", "/registeruser", "/forgetpassword", "/sts", "/mlshop/pay", "/mlshop/notify", "/graphql","/bargain/findbarginsetting").permitAll()
                 .antMatchers("/**").authenticated()
                 // .antMatchers("/agency/**").hasAnyRole("ADMIN")
                 .and()
