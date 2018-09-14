@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login", "/client/**", "/mlshop/getcode", "/mlshop/verify", "/registeruser", "/forgetpassword", "/sts", "/mlshop/pay", "/mlshop/notify", "/graphql").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**").authenticated()
                 // .antMatchers("/agency/**").hasAnyRole("ADMIN")
                 .and()
                 .formLogin()
@@ -88,6 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //解决静态资源被拦截的问题
         web.ignoring().antMatchers("/graphql/**");
         web.ignoring().mvcMatchers("/pay/**");
+        web.ignoring().mvcMatchers("/mlshop/pay/**");
     }
 
     @Bean

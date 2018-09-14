@@ -66,21 +66,14 @@ public class PayServiceImpl implements PayService {
     @Override
     public PayResponse weChatPay(String orderId, HttpServletRequest httpServletRequest) {
 
-//        Order order = orderService.findOne(orderId);
-
-//        PayRequest payRequest = new PayRequest();
-//        payRequest.setOrderAmount(1L);
-//        payRequest.setOrderId(order.getId());
-//        payRequest.setOrderName("猛龙商城");
-//        payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
-//        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
+        Order order = orderService.findOne(orderId);
 
         PayRequest payRequest = new PayRequest();
         payRequest.setOrderAmount(1L);
-        payRequest.setOrderId(orderId);
+        payRequest.setOrderId(order.getId());
         payRequest.setOrderName("猛龙商城");
         payRequest.setSpbillCreateIp(IPAddressUtil.getIPAddress(httpServletRequest));
-        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Android\",\"app_name\": \"猛龙商城\",\"package_name\": \"com.raptorsTravel.raptorsMal\"}}");
+        payRequest.setSceneInfo("{\"h5_info\": {\"type\":\"Wap\",\"wap_url\": \"http://menglongchuxing.cn\",\"wap_name\": \"猛龙商城\"}}");
 
         return weChatPayService.h5pay(payRequest);
 
