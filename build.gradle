@@ -122,7 +122,7 @@ model {
 
 bootRun{
     classpath = sourceSets.test.runtimeClasspath
-    jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"]
+    jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,address=7777,suspend=n"]
     args '--debug'
 
 }
