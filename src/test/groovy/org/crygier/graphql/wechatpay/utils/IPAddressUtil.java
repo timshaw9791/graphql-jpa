@@ -12,9 +12,7 @@ public class IPAddressUtil {
         String ip = null;
 
         //X-Forwarded-For：Squid 服务代理
-//        String ipAddresses = request.getHeader("X-Forwarded-For");
-
-        String ipAddresses = null;
+        String ipAddresses = request.getHeader("x-forwarded-for");
 
         if (ipAddresses == null || ipAddresses.length() == 0 || "unknown".equalsIgnoreCase(ipAddresses)) {
             //Proxy-Client-IP：apache 服务代理
