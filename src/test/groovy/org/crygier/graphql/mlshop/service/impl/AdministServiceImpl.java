@@ -60,6 +60,14 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ update(Administ administ) {
+
+        //只有总管理员才能修改普通管理员
+        Administ admin = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!("Role_Admin".equals(admin.getRole()))){
+            throw new MLShopRunTimeException("权限不足，你不能添加新的管理员");
+        }
+
         Administ result =  findOne(administ.getId());
 
         if (result.getPassword()==null){
