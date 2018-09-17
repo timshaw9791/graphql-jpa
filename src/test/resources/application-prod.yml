@@ -1,0 +1,29 @@
+spring:
+  datasource:
+     driver-class-name: com.mysql.jdbc.Driver
+     username: root
+     password: 1234
+     url: jdbc:mysql://127.0.0.1:3306/mlshop?useSSL=false&characterEncoding=utf-8
+  jpa:
+     show-sql: true
+     hibernate:
+       ddl-auto: update
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password:
+    port: 6379
+
+logging:
+  level: info
+  level.org.hibernate.type.descriptor.sql: trace
+  level.org.hibernate.SQL: debug
+  #level.org.hibernate.loader: debug
+
+wechat:
+  appId: wx5f6c931e05b2b39a
+  appSecret:
+  mchId: 1512065311
+  mchKey: BawUezX73SHVbo2AFZCbyK2Htq1ZZER7
+  keyPath: /home/qc/mlshop/graphql-jpa/src/test/resources/static/pay/h.p12
+  notifyUrl: http://test.menglongchuxing.cn/mlshop/notify
