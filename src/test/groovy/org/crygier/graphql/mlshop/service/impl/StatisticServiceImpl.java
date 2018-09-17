@@ -79,7 +79,7 @@ public class StatisticServiceImpl implements StatisticService {
             //新订单
             if (OrderStatusEnum.NEW.equals(order.getOrderStatusEnum())) {
                 newOrder++;
-                if (OrderPayStatusEnum.PAID.equals(order.getPayStatusEnum())){
+                if (OrderPayStatusEnum.PAID.equals(order.getPayStatusEnum())) {
                     underwayOrder++;
                 }
             }
@@ -164,7 +164,8 @@ public class StatisticServiceImpl implements StatisticService {
         Map<String, ArrayList<Long>> map = new HashMap<>();
 
 
-        //设定初始结束时间
+        //设定初始时间
+        startTime = startTime - 30 * 86400000;
         Long endTime = startTime + 86400000;
 
         //统计 30天内 每天的数据
@@ -175,8 +176,8 @@ public class StatisticServiceImpl implements StatisticService {
             Long customerCount = 0L;
             List<Order> orderList = orderRepository.findByCreatetimeBetween(startTime, endTime);
 
-            //统计销售数量
 
+            //统计销售数量
             for (Order order : orderList) {
                 if (order.getCount() != null) {
                     carSaleCount = order.getCount() + carSaleCount;
@@ -187,12 +188,13 @@ public class StatisticServiceImpl implements StatisticService {
                 }
 
             }
-
+            //统计用户人数
+            customerCount = customerRepository.countByCreatetimeBetween(startTime,endTime);
 
             carSaleList.add(carSaleCount);
             orderCountList.add(orderCount);
             orderAmountList.add(orderAmount);
-            customerCountList.add(carSaleCount);
+            customerCountList.add(customerCount);
 
             startTime = endTime;
             endTime += 86400000;
@@ -216,7 +218,7 @@ public class StatisticServiceImpl implements StatisticService {
         list.add(orderStatistic(startTime, endTime));
         list.add(carStatistic(startTime, endTime));
         list.add(receiveStatistic(startTime, endTime));
-        list.add(chartStatistic(startTime));
+        list.add(chartStatistic(endTime));
 
         return list;
     }
