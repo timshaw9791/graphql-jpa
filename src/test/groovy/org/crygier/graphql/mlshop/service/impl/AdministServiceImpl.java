@@ -5,6 +5,7 @@ import org.crygier.graphql.mlshop.model.Administ;
 import org.crygier.graphql.mlshop.repo.AdministRepository;
 import org.crygier.graphql.mlshop.service.AdministService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,23 @@ public class AdministServiceImpl implements AdministService {
     @Override
     public Administ save(Administ administ) {
 
+        //只有总管理员才能创建普通管理员
+        Administ admin = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!("Role_Admin".equals(admin.getRole()))){
+            throw new MLShopRunTimeException("权限不足，你不能添加新的管理员");
+        }
+
         Optional<Administ> administOptional = administRepository.findByUsername(administ.getUsername());
 
         if (administOptional.isPresent()){
             throw new MLShopRunTimeException("用户已存在,请重新填写用户名");
         }
+
+        //普通管理员
+        administ.setRole("Role_Normal");
+
+
         //todo  密码加密
 //        administ.setPassword(MD5Util.generate(administ.getPassword()));
 
@@ -69,6 +82,13 @@ public class AdministServiceImpl implements AdministService {
 
     @Override
     public Administ modifyPassword(Administ administ) {
+
+        Administ admin = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!("Role_Admin".equals(admin.getRole())) && !(admin.getId().equals(administ.getId()))){
+            throw new MLShopRunTimeException("权限不足，你不能修改其他管理员的密码");
+        }
+
 
         Administ result = findOne(administ.getId());
 //        result.setPassword(MD5Util.generate(administ.getPassword()));

@@ -165,8 +165,8 @@ public class StatisticServiceImpl implements StatisticService {
 
 
         //设定初始时间
-        startTime = startTime - 30 * 86400000;
-        Long endTime = startTime + 86400000;
+        startTime = startTime - (30L * 86400000L);
+        Long endTime = startTime + 86400000L;
 
         //统计 30天内 每天的数据
         for (int i = 0; i < 30; i++) {

@@ -29,8 +29,8 @@ public class Administ extends BosEntity implements UserDetails{
     @SchemaDocumentation("出生年月")
     String birthday;
 
-//    @SchemaDocumentation("客户等级")
-//    CustomerLevelEnum level;
+    @SchemaDocumentation("等级")
+    String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
