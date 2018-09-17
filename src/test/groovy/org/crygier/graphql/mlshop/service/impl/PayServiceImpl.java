@@ -43,7 +43,7 @@ public class PayServiceImpl implements PayService {
 //        }
 
         //订单支付
-        orderService.paid(order.getId());
+        orderService.paid(order.getId(),"微信支付");
 
         return payResponse;
     }

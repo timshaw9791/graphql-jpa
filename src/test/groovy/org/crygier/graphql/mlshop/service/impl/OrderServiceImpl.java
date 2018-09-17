@@ -41,10 +41,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order paid(String id) {
+    public Order paid(String id,String payMode) {
         Order order = findOne(id);
 
         order.setPayStatusEnum(OrderPayStatusEnum.PAID);
+        order.setPayMode(payMode);
 
         return orderRepository.save(order);
     }

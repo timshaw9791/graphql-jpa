@@ -54,7 +54,7 @@ public interface OrderService {
      * @param id
      * @return
      */
-    Order paid(String id);
+    Order paid(String id,String payMode);
 
     /**
      * 退款
