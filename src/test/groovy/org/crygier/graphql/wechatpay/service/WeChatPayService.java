@@ -15,7 +15,7 @@ import java.util.Map;
 public interface WeChatPayService {
 
     /**
-     * 公众号支付
+     * 公众号h5支付
      * @param request
      * @return
      */
@@ -27,6 +27,8 @@ public interface WeChatPayService {
      * @return
      */
     PayResponse h5pay(PayRequest request);
+
+
 
     /**
      * 验证支付结果. 包括同步和异步.

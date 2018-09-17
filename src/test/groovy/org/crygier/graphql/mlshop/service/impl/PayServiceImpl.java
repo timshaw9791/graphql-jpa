@@ -55,7 +55,9 @@ public class PayServiceImpl implements PayService {
         Order order = orderService.findOne(orderId);
 
         refundRequest.setOrderId(orderId);
-        refundRequest.setOrderAmount(order.getFrontMoney());
+        //todo  测试时退款金额 1分
+//        refundRequest.setOrderAmount(order.getFrontMoney());
+        refundRequest.setOrderAmount(1L);
 
         RefundResponse refundResponse = weChatPayService.refund(refundRequest);
 

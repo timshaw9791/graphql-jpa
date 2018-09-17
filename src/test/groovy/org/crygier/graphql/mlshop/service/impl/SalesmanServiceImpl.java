@@ -1,4 +1,4 @@
-package org.crygier.graphql.wechatpay.service.impl;
+package org.crygier.graphql.mlshop.service.impl;
 
 import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.repo.SalesmanRepository;
