@@ -19,8 +19,19 @@ class VehiclePriceServiceImpl implements org.crygier.graphql.mlshop.service.Vehi
 
     @Override
     VehiclePrice update(VehiclePrice vehiclePrice) {
+        if (vehiclePrice.getShop()==null || vehiclePrice.getCarInfo()==null){
+            throw new MLShopRunTimeException("添加失败，信息不完整");
+        }
 
-        save(vehiclePrice);
+        if (vehiclePrice.getFinancialSchemesItems()!=null){
+            //设置更新时间
+            for (FinancialScheme financialScheme : vehiclePrice.getFinancialSchemesItems()) {
+                if (financialScheme.getSchemeTime() == null || "".equals(financialScheme.getSchemeTime()))
+                    financialScheme.setSchemeTime(System.currentTimeMillis());
+            }
+        }
+
+        return vehiclePriceRepository.save(vehiclePrice);;
     }
 
     @Override
