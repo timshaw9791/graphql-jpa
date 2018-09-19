@@ -42,7 +42,7 @@ class CarInfo extends BosEntity {
 //    Shop shop;
 
     @SchemaDocumentation("销售数量")
-    String  salesVolume;
+    Long salesVolume;
 
     @SchemaDocumentation("图片")
     String image;

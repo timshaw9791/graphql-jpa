@@ -21,6 +21,11 @@ class VehiclePriceServiceImpl implements org.crygier.graphql.mlshop.service.Vehi
 
     @Override
     VehiclePrice update(VehiclePrice vehiclePrice) {
+
+        if (vehiclePrice.getShop()==null || vehiclePrice.getCarInfo()==null){
+            throw new MLShopRunTimeException("更新失败，信息不完整");
+        }
+
         VehiclePrice result = vehiclePriceRepository.findByShopAndCarInfo(vehiclePrice.getShop(), vehiclePrice.getCarInfo());
 
         BeanUtils.copyProperties(vehiclePrice, result, BeanCopyUtil.getNullPropertyNames(vehiclePrice));
@@ -30,6 +35,11 @@ class VehiclePriceServiceImpl implements org.crygier.graphql.mlshop.service.Vehi
 
     @Override
     VehiclePrice save(VehiclePrice vehiclePrice) {
+
+        if (vehiclePrice.getShop()==null || vehiclePrice.getCarInfo()==null){
+            throw new MLShopRunTimeException("添加失败，信息不完整");
+        }
+
         VehiclePrice result = vehiclePriceRepository.findByShopAndCarInfo(vehiclePrice.getShop(), vehiclePrice.getCarInfo());
 
         if (result!=null){
