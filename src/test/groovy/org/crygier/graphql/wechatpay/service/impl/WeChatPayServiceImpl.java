@@ -46,7 +46,33 @@ public class WeChatPayServiceImpl implements WeChatPayService {
 
     @Override
     public PayResponse pay(PayRequest request) {
-        return null;
+        WeChatPayRequest weChatPayRequest = new WeChatPayRequest();
+        weChatPayRequest.setOutTradeNo(request.getOrderId());
+        weChatPayRequest.setTotalFee(request.getOrderAmount());
+        weChatPayRequest.setBody(request.getOrderName());
+        weChatPayRequest.setOpenid(request.getOpenid());
+
+        weChatPayRequest.setTradeType("JSAPI");
+        weChatPayRequest.setSpbillCreateIp("8.8.8.8");
+
+        WeChatPaySyncResponse response = unifiedorder(weChatPayRequest);
+
+        return buildH5PayResponse(response);
+    }
+
+    @Override
+    public PayResponse appPay(PayRequest request) {
+        WeChatPayRequest weChatPayRequest = new WeChatPayRequest();
+        weChatPayRequest.setOutTradeNo(request.getOrderId());
+        weChatPayRequest.setTotalFee(request.getOrderAmount());
+        weChatPayRequest.setBody(request.getOrderName());
+        weChatPayRequest.setSpbillCreateIp(request.getSpbillCreateIp());
+
+        weChatPayRequest.setTradeType("APP");
+
+        WeChatPaySyncResponse response = unifiedorder(weChatPayRequest);
+
+        return buildH5PayResponse(response);
     }
 
     @Override
@@ -60,13 +86,23 @@ public class WeChatPayServiceImpl implements WeChatPayService {
         weChatPayRequest.setSpbillCreateIp(request.getSpbillCreateIp());
 
         weChatPayRequest.setTradeType("MWEB");
+
+        WeChatPaySyncResponse response = unifiedorder(weChatPayRequest);
+
+        return buildH5PayResponse(response);
+    }
+
+    /*统一下单*/
+    private WeChatPaySyncResponse unifiedorder(WeChatPayRequest weChatPayRequest) {
+
+        //配置秘钥信息
         weChatPayRequest.setAppid(weChatPayConfig.getAppId());
         weChatPayRequest.setMchId(weChatPayConfig.getMchId());
         weChatPayRequest.setNotifyUrl(weChatPayConfig.getNotifyUrl());
         weChatPayRequest.setNonceStr(RandomUtil.getRandomStr());
 
+        //签名
         weChatPayRequest.setSign(SignatureUtil.sign(buildMap(weChatPayRequest), weChatPayConfig.getMchKey()));
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WeChatPayConstants.WE_CHAT_PAY_BASE_URL)
@@ -75,13 +111,13 @@ public class WeChatPayServiceImpl implements WeChatPayService {
                 .build();
         String xml = XmlUtil.toXMl(weChatPayRequest);
         System.out.println(xml);
-        RequestBody body = RequestBody.create(MediaType.parse("application/xml; charset=utf-8"),xml);
+        RequestBody body = RequestBody.create(MediaType.parse("application/xml; charset=utf-8"), xml);
         Call<WeChatPaySyncResponse> call = retrofit.create(WeChatPayApi.class).unifiedOrder(body);
-        Response<WeChatPaySyncResponse> retrofitResponse  = null;
-        try{
+        Response<WeChatPaySyncResponse> retrofitResponse = null;
+        try {
             retrofitResponse = call.execute();
             System.out.println(retrofitResponse.body());
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         if (!retrofitResponse.isSuccessful()) {
@@ -90,14 +126,13 @@ public class WeChatPayServiceImpl implements WeChatPayService {
         WeChatPaySyncResponse response = retrofitResponse.body();
 //        log.info("【微信统一支付】response={}", JsonUtil.toJson(response));
 
-        if(!response.getReturnCode().equals("SUCCESS")) {
+        if (!response.getReturnCode().equals("SUCCESS")) {
             throw new RuntimeException("【微信统一支付】发起支付, returnCode != SUCCESS, returnMsg = " + response.getReturnMsg());
         }
         if (!response.getResultCode().equals("SUCCESS")) {
             throw new RuntimeException("【微信统一支付】发起支付, resultCode != SUCCESS, err_code = " + response.getErrCode() + " err_code_des=" + response.getErrCodeDes());
         }
-
-        return buildH5PayResponse(response);
+        return response;
     }
 
     @Override
@@ -163,13 +198,15 @@ public class WeChatPayServiceImpl implements WeChatPayService {
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .client(okHttpClient.build())
                 .build();
+
         String xml = XmlUtil.toXMl(weChatPayRefundRequest);
-        RequestBody body = RequestBody.create(MediaType.parse("application/xml; charset=utf-8"),xml);
+        RequestBody body = RequestBody.create(MediaType.parse("application/xml; charset=utf-8"), xml);
         Call<WeChatPayRefundResponse> call = retrofit.create(WeChatPayApi.class).refund(body);
-        Response<WeChatPayRefundResponse> retrofitResponse  = null;
-        try{
+        Response<WeChatPayRefundResponse> retrofitResponse = null;
+
+        try {
             retrofitResponse = call.execute();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         if (!retrofitResponse.isSuccessful()) {
@@ -177,20 +214,20 @@ public class WeChatPayServiceImpl implements WeChatPayService {
         }
         WeChatPayRefundResponse response = retrofitResponse.body();
 
-        if(!response.getReturnCode().equals(WeChatPayConstants.SUCCESS)) {
+        if (!response.getReturnCode().equals(WeChatPayConstants.SUCCESS)) {
             throw new RuntimeException("【微信退款】发起退款, returnCode != SUCCESS, returnMsg = " + response.getReturnMsg());
         }
         if (!response.getResultCode().equals(WeChatPayConstants.SUCCESS)) {
             throw new RuntimeException("【微信退款】发起退款, resultCode != SUCCESS, err_code = " + response.getErrCode() + " err_code_des=" + response.getErrCodeDes());
         }
 
-//        log.info("【微信退款】发起退款, response={}", JsonUtil.toJson(retrofitResponse.body()));
         return buildRefundResponse(response);
     }
 
 
     /**
      * 构造map
+     *
      * @param weChatPayRequest
      * @return
      */
@@ -206,7 +243,7 @@ public class WeChatPayServiceImpl implements WeChatPayService {
         map.put("spbill_create_ip", weChatPayRequest.getSpbillCreateIp());
         map.put("total_fee", String.valueOf(weChatPayRequest.getTotalFee()));
         map.put("trade_type", weChatPayRequest.getTradeType());
-        map.put("scene_info",weChatPayRequest.getSceneInfo());
+        map.put("scene_info", weChatPayRequest.getSceneInfo());
 
         return map;
     }
@@ -274,6 +311,7 @@ public class WeChatPayServiceImpl implements WeChatPayService {
 
     /**
      * 支付回调参数
+     *
      * @param response
      * @return
      */
@@ -288,6 +326,7 @@ public class WeChatPayServiceImpl implements WeChatPayService {
 
     /**
      * 退款返回参数
+     *
      * @param response
      * @return
      */

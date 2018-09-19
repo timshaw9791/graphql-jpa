@@ -28,6 +28,12 @@ public interface WeChatPayService {
      */
     PayResponse h5pay(PayRequest request);
 
+    /**
+     * App支付
+     * @param request
+     * @return
+     */
+    PayResponse appPay(PayRequest request);
 
 
     /**
