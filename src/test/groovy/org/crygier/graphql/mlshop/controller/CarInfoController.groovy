@@ -45,4 +45,12 @@ public class CarInfoController {
         this.carInfoService.deleteById(carInfo.getId());
         return carInfo;
     }
+
+    @SchemaDocumentation("恢复车辆信息")
+    @Exclude
+    @GRequestMapping(path = "/enablecarinfo", method = RequestMethod.POST)
+    CarInfo enableCarInfo(@RequestParam(name = "carinfo", required = true) CarInfo carInfo) {
+        this.carInfoService.enableCarInfo(carInfo.getId());
+        return carInfo;
+    }
 }

@@ -50,4 +50,8 @@ public class CarCommunication extends BosEntity {
     @SchemaDocumentation("分配人")
     @ManyToOne
     Administ administ;
+
+//    @SchemaDocumentation("门店")
+//    @ManyToOne
+//    Shop shop;
 }

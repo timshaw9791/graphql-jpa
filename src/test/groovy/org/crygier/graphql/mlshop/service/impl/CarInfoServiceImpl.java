@@ -46,6 +46,13 @@ public class CarInfoServiceImpl implements CarInfoService {
     }
 
     @Override
+    public void enableCarInfo(String id) {
+        CarInfo carInfo = findOne(id);
+        carInfo.setDisabled(false);
+        carInfoRepository.save(carInfo);
+    }
+
+    @Override
     public List<CarInfo> findByUpdateTime(Long startTime, Long endTime) {
         return carInfoRepository.findByUpdatetimeBetween(startTime,endTime);
     }

@@ -48,4 +48,12 @@ class VehiclePriceController {
         vehiclePrice.setDisabled(true);
         return this.vehiclePriceRepository.save(vehiclePrice);
     }
+
+    @SchemaDocumentation("恢复车辆价格信息")
+    @Exclude
+    @GRequestMapping(path = "/ebablevehicleprice", method = RequestMethod.POST)
+    VehiclePrice ebableVehiclePrice(@RequestParam(name = "vehicleprice", required = true) VehiclePrice vehiclePrice) {
+        vehiclePrice.setDisabled(false);
+        return this.vehiclePriceRepository.save(vehiclePrice);
+    }
 }

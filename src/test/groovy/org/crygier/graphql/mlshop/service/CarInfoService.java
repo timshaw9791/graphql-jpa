@@ -41,4 +41,10 @@ public interface CarInfoService {
      */
     List<CarInfo> findByUpdateTime(Long startTime,Long endTime);
 
+    /**
+     * 启用汽车信息
+     * @param id
+     */
+    void enableCarInfo(String id);
+
 }
