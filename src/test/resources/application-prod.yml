@@ -26,4 +26,4 @@ wechat:
   mchId: 1512065311
   mchKey: BawUezX73SHVbo2AFZCbyK2Htq1ZZER7
   keyPath: /home/qc/mlshop/graphql-jpa/src/test/resources/static/pay/h.p12
-  notifyUrl: http://test.menglongchuxing.cn/mlshop/notify
+  notifyUrl: http://ml.menglongqicheshangcheng/mlshop/notify
