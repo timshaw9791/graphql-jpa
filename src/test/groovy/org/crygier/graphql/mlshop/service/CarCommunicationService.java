@@ -30,6 +30,8 @@ public interface    CarCommunicationService {
      */
     CarCommunication save(CarCommunication carCommunication);
 
+    CarCommunication update(CarCommunication carCommunication);
+
     /**
      * 添加买车沟通记录
      *

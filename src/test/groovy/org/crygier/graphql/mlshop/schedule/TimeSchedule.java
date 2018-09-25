@@ -20,14 +20,16 @@ import java.util.List;
 public class TimeSchedule {
 
     /*超时订单设置*/
-    @Scheduled(cron = "00 00 00 * * ?")
+//    @Scheduled(cron = "00 00 00 * * ?")
+    @Scheduled(fixedRate = 1000 * 60 * 5)
     public void updateCommunicationStatus() {
 
         CarCommunicationService carCommunicationService = (CarCommunicationService) SpringUtil.getBean("carCommunicationServiceImpl");
         InsuranceCommunicationService insuranceCommunicationService = (InsuranceCommunicationService) SpringUtil.getBean("insuranceCommunicationServiceImpl");
 
         //查找分配时间在5天前  状态为已回访的订单
-        Long time = System.currentTimeMillis()-(86400000*5);
+        //todo  测试   暂时改为5分钟前
+        Long time = System.currentTimeMillis()-(60000*5);
         List<CarCommunication> carCommunicationList = carCommunicationService.findByDistributeTimeBeforeAndStatus(time, CarCommunicationStatusEnum.C);
         List<InsuranceCommunication> insuranceCommunicationList = insuranceCommunicationService.findByDistributeTimeBeforeAndStatus(time, CarCommunicationStatusEnum.C);
 

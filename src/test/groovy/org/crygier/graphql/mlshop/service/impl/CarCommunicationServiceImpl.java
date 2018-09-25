@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Curtain
@@ -52,7 +53,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     @Override
     public CarCommunication findOne(String id) {
         Optional<CarCommunication> optional = carCommunicationRepository.findById(id);
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             return optional.get();
         }
         throw new MLShopRunTimeException("未找到车辆沟通单信息");
@@ -65,7 +66,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
 
     @Override
     public List<CarCommunication> findByDistributeTimeBeforeAndStatus(Long distributeTime, CarCommunicationStatusEnum status) {
-        return carCommunicationRepository.findByDistributeTimeBeforeAndStatus(distributeTime,status);
+        return carCommunicationRepository.findByDistributeTimeBeforeAndStatus(distributeTime, status);
     }
 
     @Override
@@ -84,16 +85,32 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         carCommunication.setStatus(CarCommunicationStatusEnum.B);
         Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         carCommunication.setAdminist(administ);
-        if (salesman.getTel()==null || "".equals(salesman.getTel())){
+        if (salesman.getTel() == null || "".equals(salesman.getTel())) {
             throw new MLShopRunTimeException("分配失败，业务员手机号为空，不能在分配时发送短信");
         }
-        verificationService.visitCode(salesman.getTel(),carCommunication.getNumber());
+        verificationService.visitCode(salesman.getTel(), carCommunication.getNumber());
         CarCommunication result = carCommunicationRepository.save(carCommunication);
         return result;
     }
 
     @Override
+    public CarCommunication update(CarCommunication carCommunication) {
+        updateCustomer(carCommunication.getCustomer());
+        return carCommunicationRepository.save(carCommunication);
+    }
+
+    @Override
     public CarCommunication save(CarCommunication carCommunication) {
+        Administ administ = (Administ) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        carCommunication.setAdminist(administ);
+        carCommunication.setDistributeTime(System.currentTimeMillis());
+
+        Set<CommunicationRecord> communicationItems = carCommunication.getCommunicationItems();
+
+        for (CommunicationRecord communicationRecord : communicationItems) {
+            communicationRecord.setSalesman(carCommunication.getSalesman());
+        }
+
         updateCustomer(carCommunication.getCustomer());
         return carCommunicationRepository.save(carCommunication);
     }
@@ -102,8 +119,8 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     public void updateCustomer(Customer customer) {
         Customer result = customerRepository.findById(customer.getId()).get();
         CustomerLevelEnum value = customer.getLevel();
-        if (value != null && !("".equals(value.getValue())) && !(value.equals(result.getLevel()))) {
-            result.setLevel(value);
+        if (value != null && !(value.equals(customer.getLevel()))) {
+            result.setLevel(customer.getLevel());
             customerRepository.save(result);
         }
     }
