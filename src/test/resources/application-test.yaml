@@ -14,6 +14,11 @@ spring:
     password:
     port: 6379
 
+spring:
+  server:
+    tomcat:
+      max-http-post-size: 10240
+
 logging:
   level: info
   level.org.hibernate.type.descriptor.sql: trace

@@ -40,10 +40,12 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
 
     @Override
     public CarCommunication addRecord(String carCommunicationId, CommunicationRecord communicationRecord) {
+
         CarCommunication carCommunication = findOne(carCommunicationId);
         communicationRecord.setAdminist(carCommunication.getAdminist());
         carCommunication.getCommunicationItems().add(communicationRecord);
         carCommunication.setStatus(communicationRecord.getStatus());
+        updateCustomer(carCommunication.getCustomer());
         return carCommunicationRepository.save(carCommunication);
     }
 
@@ -100,7 +102,7 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
     public void updateCustomer(Customer customer) {
         Customer result = customerRepository.findById(customer.getId()).get();
         CustomerLevelEnum value = customer.getLevel();
-        if (value != null && !("".equals(value.getValue())) && !(value.equals(result.getLevel().getValue()))) {
+        if (value != null && !("".equals(value.getValue())) && !(value.equals(result.getLevel()))) {
             result.setLevel(value);
             customerRepository.save(result);
         }
