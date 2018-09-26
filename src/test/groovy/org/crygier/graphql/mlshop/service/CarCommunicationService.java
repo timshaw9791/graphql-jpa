@@ -6,7 +6,6 @@ import org.crygier.graphql.mlshop.model.Customer;
 import org.crygier.graphql.mlshop.model.Salesman;
 import org.crygier.graphql.mlshop.model.enums.CarCommunicationStatusEnum;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -66,9 +65,9 @@ public interface    CarCommunicationService {
 
     /**
      * 保存全部
-     * @param collection
+     * @param carCommunications
      */
-    void saveAll(Collection collection);
+    void saveAll(List<CarCommunication> carCommunications);
 
 
     /**
