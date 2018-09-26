@@ -108,7 +108,10 @@ public class CarCommunicationServiceImpl implements CarCommunicationService {
         Set<CommunicationRecord> communicationItems = carCommunication.getCommunicationItems();
 
         for (CommunicationRecord communicationRecord : communicationItems) {
-            communicationRecord.setSalesman(carCommunication.getSalesman());
+            //todo 应该带的是外面那层的业务员
+            carCommunication.setSalesman(communicationRecord.getSalesman());
+            communicationRecord.setAdminist(carCommunication.getAdminist());
+            communicationRecord.setWatchTime(String.valueOf(System.currentTimeMillis()));
         }
 
         updateCustomer(carCommunication.getCustomer());

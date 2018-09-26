@@ -29,7 +29,7 @@ public class TimeSchedule {
 
         //查找分配时间在5天前  状态为已回访的订单
         //todo  测试   暂时改为5分钟前
-        Long time = System.currentTimeMillis()-(60000*5);
+        Long time = System.currentTimeMillis();
         List<CarCommunication> carCommunicationList = carCommunicationService.findByDistributeTimeBeforeAndStatus(time, CarCommunicationStatusEnum.C);
         List<InsuranceCommunication> insuranceCommunicationList = insuranceCommunicationService.findByDistributeTimeBeforeAndStatus(time, CarCommunicationStatusEnum.C);
 
