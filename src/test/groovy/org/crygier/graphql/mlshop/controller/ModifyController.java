@@ -68,6 +68,11 @@ public class ModifyController {
         return statisticService.allStatistic(startTime,endTime);
     }
 
+    @RequestMapping("/findorderbyid")
+    public Object findOrderById(@RequestParam("id") String id){
+        return orderService.findOne(id);
+    }
+
     @RequestMapping("/addorder")
     public Order order(@RequestBody Order order) {
         return orderService.save(order);
