@@ -231,9 +231,9 @@ public class JpaDataFetcher implements DataFetcher {
                 result = cb.like(path, (String) value);
                 break;
             case IN:
-                List<Object> inList = Stream.of(v.split(",")).collect(Collectors.toList());
-                for (int i=0;i<inList.size();i++){
-                    inList.set(i,convertFilterValue(path.getJavaType(), (String) inList.get(i)));
+                List<Object> inList = Stream.of(v.split(",")).map(s -> (s.startsWith("'") && s.endsWith("'") ? s.substring(1, s.length() - 1) : s)).collect(Collectors.toList());
+                for (int i = 0; i < inList.size(); i++) {
+                    inList.set(i, convertFilterValue(path.getJavaType(), (String) inList.get(i)));
                 }
                 result = path.in(inList);
                 break;
